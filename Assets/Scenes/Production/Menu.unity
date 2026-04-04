@@ -708,6 +708,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 34966855680
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:4fa7df6764a1a4da098828730b4a0e28
+      objectReference: {fileID: 0}
     - target: {fileID: 5077808317065276296, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -998,13 +1006,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 52092198912
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:4fa7df6764a1a4da098828730b4a0e28
+      objectReference: {fileID: 0}
     - target: {fileID: 5077808317065276296, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8351621349314680507, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: m_text
-      value: Exit
+      value: Quit
       objectReference: {fileID: 0}
     - target: {fileID: 8351621349314680507, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: m_fontSize
@@ -1991,6 +2007,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998304607365200977, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 8609849344
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:4fa7df6764a1a4da098828730b4a0e28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760356042486549535, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
+      propertyPath: m_UpdateString.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5077808317065276296, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
