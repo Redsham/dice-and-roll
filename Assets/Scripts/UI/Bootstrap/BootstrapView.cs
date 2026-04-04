@@ -16,14 +16,16 @@ namespace UI.Bootstrap
 
 		[Inject] private readonly BootstrapService m_Bootstrap;
 
+		
 		private void Start()
 		{
 			m_Bootstrap.Message.Subscribe(UpdateMessage).AddTo(this);
-			
-			LMotion.Create(0f, -360f, 1f)
+
+			LMotion.Create(0f, -360f, 1.0f)
 			       .WithEase(Ease.Linear)
 			       .WithLoops(-1)
-			       .BindToEulerAnglesZ(m_Circular);
+			       .BindToEulerAnglesZ(m_Circular)
+			       .AddTo(this);
 		}
 
 		private void UpdateMessage(string msg)
