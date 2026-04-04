@@ -65,6 +65,9 @@ namespace Infrastructure.Services.Scenes
 				hook.OnSceneTransitionProgress(progress);
 			}
 		}
+		
+		/// Gets the name of the currently active scene.
+		public string GetActiveScene() => SceneManager.GetActiveScene().name;
 
 	}
 }
