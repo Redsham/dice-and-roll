@@ -12,13 +12,18 @@ namespace UI.Bootstrap
 	public class BootstrapView : MonoBehaviour
 	{
 		[SerializeField] private TextMeshProUGUI m_MessageText;
+		[SerializeField] private RectTransform   m_Circular;
 
-		[Inject]
-		private readonly BootstrapService m_Bootstrap;
+		[Inject] private readonly BootstrapService m_Bootstrap;
 
 		private void Start()
 		{
 			m_Bootstrap.Message.Subscribe(UpdateMessage).AddTo(this);
+			
+			LMotion.Create(0f, -360f, 1f)
+			       .WithEase(Ease.Linear)
+			       .WithLoops(-1)
+			       .BindToEulerAnglesZ(m_Circular);
 		}
 
 		private void UpdateMessage(string msg)
