@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Settings Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Settings
+  m_TableCollectionNameGuidString: aca27947b7ed64c848645271deb7e751
+  m_Entries:
+  - m_Id: 7724851200
+    m_Key: ui_settings_section_game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41140871168
+    m_Key: ui_settings_section_graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67250413568
+    m_Key: ui_settings_section_audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85285920768
+    m_Key: ui_settings_section_controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 220183126016
+    m_Key: ui_settings_reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 262440738816
+    m_Key: ui_settings_save
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 371576763331641644
+  references:
+    version: 2
+    RefIds:
+    - rid: 371576763331641644
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1775346779673
