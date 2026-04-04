@@ -1,3 +1,4 @@
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ namespace UI.Elements.Buttons
 	{
 		public int Index { get; set; }
 		
+		[Title("Ratio Button")]
 		[SerializeField] private Image m_Selected;
 		
 		public void OnSelect()

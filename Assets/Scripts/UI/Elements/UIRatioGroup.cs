@@ -1,6 +1,5 @@
 using System;
 using R3;
-using TriInspector;
 using UI.Elements.Buttons;
 using UnityEngine;
 
@@ -12,7 +11,6 @@ namespace UI.Elements
 		/// Index of the currently selected button. -1 if no button is selected.
 		public readonly ReactiveProperty<int> SelectedIndex = new(-1);
 
-		[Title("Ratio Group")]
 		[SerializeField] private int m_DefaultIndex = 0;
 		[SerializeField] private bool m_Loop;
 		
