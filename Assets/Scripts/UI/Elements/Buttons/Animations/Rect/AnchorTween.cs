@@ -4,7 +4,7 @@ using TriInspector;
 using UnityEngine;
 
 
-namespace UI.Elements.Buttons.Animations
+namespace UI.Elements.Buttons.Animations.Rect
 {
 	public class AnchorTween : BaseTween
 	{

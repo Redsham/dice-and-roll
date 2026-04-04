@@ -236,6 +236,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6705807391832640805, guid: 040d9e26da7e0442393133472d4d083c, type: 3}
   m_PrefabInstance: {fileID: 6356167099470704718}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &553655579510202264 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6889204079108009942, guid: 040d9e26da7e0442393133472d4d083c, type: 3}
+  m_PrefabInstance: {fileID: 6356167099470704718}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1968312327849098342 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4856426237642296360, guid: 040d9e26da7e0442393133472d4d083c, type: 3}
@@ -260,11 +265,12 @@ MonoBehaviour:
   m_IconComponent: {fileID: 2866715919439152068}
   m_HoverTweens:
   - rid: 371576763331641598
-  - rid: 371576763331641600
+  - rid: 371576763331641605
   m_UnhoverTweens:
   - rid: 371576763331641599
   m_PressedTweens:
   - rid: 371576763331641601
+  - rid: 371576763331641611
   references:
     version: 2
     RefIds:
@@ -286,17 +292,6 @@ MonoBehaviour:
         m_TargetColor: {r: 0.9490196, g: 0.019607844, b: 0.1882353, a: 0}
         m_ResetOnPlay: 0
         m_ResetColor: {r: 1, g: 1, b: 1, a: 1}
-    - rid: 371576763331641600
-      type: {class: AnchorTween, ns: UI.Elements.Buttons.Animations, asm: Assembly-CSharp}
-      data:
-        Duration: 0.25
-        Ease: 5
-        m_TargetRect: {fileID: 5782137234947962210}
-        m_AnchorMin: {x: 0, y: 0}
-        m_AnchorMax: {x: 1, y: 1}
-        m_ResetOnPlay: 1
-        m_ResetAnchorMin: {x: 0, y: 0}
-        m_ResetAnchorMax: {x: 0, y: 1}
     - rid: 371576763331641601
       type: {class: ColorTween, ns: UI.Elements.Buttons.Animations, asm: Assembly-CSharp}
       data:
@@ -306,6 +301,26 @@ MonoBehaviour:
         m_TargetColor: {r: 0.9490196, g: 0.019607844, b: 0.1882353, a: 1}
         m_ResetOnPlay: 1
         m_ResetColor: {r: 0.754717, g: 0.09611962, b: 0.215612, a: 1}
+    - rid: 371576763331641605
+      type: {class: AnchorTween, ns: UI.Elements.Buttons.Animations.Rect, asm: Assembly-CSharp}
+      data:
+        Duration: 0.25
+        Ease: 8
+        m_TargetRect: {fileID: 5782137234947962210}
+        m_AnchorMin: {x: 0, y: 0}
+        m_AnchorMax: {x: 1, y: 1}
+        m_ResetOnPlay: 1
+        m_ResetAnchorMin: {x: 0, y: 0}
+        m_ResetAnchorMax: {x: 0, y: 1}
+    - rid: 371576763331641611
+      type: {class: ScalePunchTween, ns: UI.Elements.Buttons.Animations.Punch, asm: Assembly-CSharp}
+      data:
+        Duration: 0.25
+        Ease: 0
+        TargetRect: {fileID: 553655579510202264}
+        Frequency: 2
+        DampingRatio: 5
+        m_PunchScale: {x: 0.3, y: -0.3}
 --- !u!114 &2866715919439152068 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9222592192174437258, guid: 040d9e26da7e0442393133472d4d083c, type: 3}

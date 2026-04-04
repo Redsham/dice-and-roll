@@ -9,14 +9,20 @@ namespace UI.Elements.Buttons.Components
 	{
 		[SerializeField] private RectTransform m_Icon;
 		[SerializeField] private RectTransform m_Content;
-		[SerializeField] private float         m_Spacing                = 8f;
-		[SerializeField] private bool          m_HideSpacingWithoutIcon = true;
+
+		[Range(0f, 1f)]
+		[SerializeField] private float m_IconScale = 1f;
+
+		[SerializeField] private float m_Spacing                = 8f;
+		[SerializeField] private bool  m_HideSpacingWithoutIcon = true;
 
 		private bool HasIcon    => m_Icon    != null && m_Icon.gameObject.activeSelf;
 		private bool HasContent => m_Content != null && m_Content.gameObject.activeSelf;
 
-		private float InnerWidth  => rectTransform.rect.width  - padding.horizontal;
-		private float InnerHeight => rectTransform.rect.height - padding.vertical;
+		private float InnerWidth  => Mathf.Max(0, rectTransform.rect.width  - padding.horizontal);
+		private float InnerHeight => Mathf.Max(0, rectTransform.rect.height - padding.vertical);
+
+		private float IconSize => HasIcon ? InnerHeight * Mathf.Clamp01(m_IconScale) : 0f;
 
 		public float Spacing
 		{
@@ -28,8 +34,10 @@ namespace UI.Elements.Buttons.Components
 		{
 			base.CalculateLayoutInputHorizontal();
 
-			float iconSize = HasIcon ? Mathf.Max(0, InnerHeight) : 0f;
-			float gap      = (HasIcon && HasContent) || (!m_HideSpacingWithoutIcon && HasContent) ? m_Spacing : 0f;
+			float iconSize = IconSize;
+			float gap = (HasIcon && HasContent) || (!m_HideSpacingWithoutIcon && HasContent)
+				            ? m_Spacing
+				            : 0f;
 
 			float contentMin  = HasContent ? LayoutUtility.GetMinWidth(m_Content) : 0f;
 			float contentPref = HasContent ? LayoutUtility.GetPreferredWidth(m_Content) : 0f;
@@ -42,7 +50,7 @@ namespace UI.Elements.Buttons.Components
 
 		public override void CalculateLayoutInputVertical()
 		{
-			float iconSize    = HasIcon ? Mathf.Max(0, InnerHeight) : 0f;
+			float iconSize    = IconSize;
 			float contentMin  = HasContent ? LayoutUtility.GetMinHeight(m_Content) : 0f;
 			float contentPref = HasContent ? LayoutUtility.GetPreferredHeight(m_Content) : 0f;
 
@@ -56,13 +64,14 @@ namespace UI.Elements.Buttons.Components
 		{
 			float x      = padding.left;
 			float y      = padding.top;
-			float height = Mathf.Max(0, InnerHeight);
+			float height = InnerHeight;
 
 			if (HasIcon) {
-				float iconSize = height;
+				float iconSize = IconSize;
+				float iconY    = y + (height - iconSize) * 0.5f;
 
-				SetChildAlongAxis(m_Icon, 0, x, iconSize);
-				SetChildAlongAxis(m_Icon, 1, y, height);
+				SetChildAlongAxis(m_Icon, 0, x,     iconSize);
+				SetChildAlongAxis(m_Icon, 1, iconY, iconSize);
 
 				x += iconSize;
 
@@ -78,12 +87,28 @@ namespace UI.Elements.Buttons.Components
 			}
 		}
 
-		public override void SetLayoutVertical() { }
+		public override void SetLayoutVertical()
+		{
+
+		}
+
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			SetDirty();
+		}
+
+		protected override void OnRectTransformDimensionsChange()
+		{
+			base.OnRectTransformDimensionsChange();
+			SetDirty();
+		}
 
 		#if UNITY_EDITOR
 		protected override void OnValidate()
 		{
 			base.OnValidate();
+			m_IconScale = Mathf.Clamp01(m_IconScale);
 			SetDirty();
 		}
 		#endif
