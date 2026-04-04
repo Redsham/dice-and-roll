@@ -1,14 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using LitMotion;
+using TriInspector;
+using UnityEngine;
+
+
 namespace UI.Elements.Buttons
 {
 	public class UIAnimatedButton : UISimpleButton
 	{
-		protected override void OnHover()
+		public interface IButtonTween
 		{
-			
+			MotionHandle GetTween();
 		}
-		protected override void OnUnhover()
+
+		[Title("Tweens")]
+		[SerializeReference] private IButtonTween[] m_HoverTweens;
+		[SerializeReference] private IButtonTween[] m_UnhoverTweens;
+		[SerializeReference] private IButtonTween[] m_PressedTweens;
+
+		private readonly List<MotionHandle> m_Handles = new();
+
+
+		private void Start()
 		{
-			
+			foreach (IButtonTween tween in m_UnhoverTweens) {
+				tween.GetTween().Complete();
+			}
+		}
+
+		protected override void OnHover()   => DoTweens(m_HoverTweens);
+		protected override void OnUnhover() => DoTweens(m_UnhoverTweens);
+		protected override void OnPressed()
+		{
+			DoTweens(m_PressedTweens);
+			OnClick.Invoke();
+		}
+
+		private void DoTweens(IButtonTween[] tweens)
+		{
+			foreach (MotionHandle tween in m_Handles.Where(tween => tween.IsPlaying())) {
+				tween.Cancel();
+			}
+
+			m_Handles.Clear();
+
+			foreach (IButtonTween tween in tweens.Where(x => x != null)) {
+				m_Handles.Add(tween.GetTween());
+			}
 		}
 	}
 }

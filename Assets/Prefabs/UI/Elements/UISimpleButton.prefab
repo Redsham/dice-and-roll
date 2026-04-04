@@ -51,10 +51,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.Elements.Buttons.Components.IconTextButtonLayoutGroup
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 4
   m_Icon: {fileID: 6889204079108009942}
   m_Content: {fileID: 5120233869667231032}
@@ -152,7 +152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6889204079108009942
 RectTransform:
   m_ObjectHideFlags: 0
@@ -167,10 +167,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6705807391832640805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 32.5605, y: -32.5605}
+  m_SizeDelta: {x: 65.121, y: 65.121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &897652837689324764
 CanvasRenderer:
@@ -303,7 +303,8 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  m_Icon: {fileID: 9222592192174437258}
+  m_Icon: {fileID: 0}
+  m_IconComponent: {fileID: 9222592192174437258}
 --- !u!1 &8978495574197474198
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +406,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 4096
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
