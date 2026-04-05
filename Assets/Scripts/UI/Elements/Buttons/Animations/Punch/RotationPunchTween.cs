@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Punch
 {
+	[System.Serializable]
 	public class RotationPunchTween : PunchTween
 	{
 		[SerializeField] private float m_StartAngle = 0.0f;

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Punch
 {
+	[System.Serializable]
 	public abstract class PunchTween : BaseTween
 	{
 		[SerializeField] protected RectTransform TargetRect;

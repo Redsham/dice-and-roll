@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace UI.Elements.Buttons.Animations
 {
+	[System.Serializable]
 	public class ColorTween : BaseTween
 	{
 		[SerializeField] private Graphic m_TargetGraphic;

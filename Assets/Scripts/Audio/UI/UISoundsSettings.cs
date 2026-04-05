@@ -13,8 +13,9 @@ namespace Audio.UI
 		[System.Serializable]
 		public class UISound
 		{
-			[field: SerializeField] public UISoundsCue                Cue   { get; private set; }
-			[field: SerializeField] public AssetReferenceT<AudioClip> Sound { get; private set; }
+			[field: SerializeField]                    public UISoundsCue                Cue    { get; private set; }
+			[field: SerializeField]                    public AssetReferenceT<AudioClip> Sound  { get; private set; }
+			[field: SerializeField, Range(0.0f, 1.0f)] public float                      Volume { get; private set; } = 1.0f;
 		}
 
 		

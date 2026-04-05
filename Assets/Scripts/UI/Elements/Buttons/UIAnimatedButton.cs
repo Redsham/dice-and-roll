@@ -30,12 +30,16 @@ namespace UI.Elements.Buttons
 			}
 		}
 
-		protected override void OnHover()   => DoTweens(m_HoverTweens);
+		protected override void OnHover()
+		{
+			base.OnHover();
+			DoTweens(m_HoverTweens);
+		}
 		protected override void OnUnhover() => DoTweens(m_UnhoverTweens);
 		protected override void OnPressed()
 		{
+			base.OnPressed();
 			DoTweens(m_PressedTweens);
-			OnClick.Invoke();
 		}
 
 		private void DoTweens(IButtonTween[] tweens)

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Punch
 {
+	[System.Serializable]
 	public class ScalePunchTween : PunchTween
 	{
 		[SerializeField] private Vector2 m_PunchScale;

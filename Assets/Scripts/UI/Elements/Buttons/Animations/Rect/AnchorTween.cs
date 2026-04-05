@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Rect
 {
+	[System.Serializable]
 	public class AnchorTween : BaseTween
 	{
 		[SerializeField] private RectTransform m_TargetRect;

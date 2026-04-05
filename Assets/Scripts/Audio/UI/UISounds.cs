@@ -19,7 +19,7 @@ namespace Audio.UI
 		private static UISounds s_Instance;
 
 		private          AudioSource                        m_Source;
-		private readonly Dictionary<UISoundsCue, AudioClip> m_SoundMap = new();
+		private readonly Dictionary<UISoundsCue, UISoundsSettings.UISound> m_SoundMap = new();
 
 		// Constructor
 
@@ -39,28 +39,30 @@ namespace Audio.UI
 			if (IsReady) return;
 			if (!ValidateSettings()) return;
 
-			AudioClip[] clips = await LoadSounds();
-			BuildMap(clips);
+			await LoadSounds();
+			BuildMap();
 			BuildSource();
 
-			Debug.Log($"[{nameof(UISounds)}] Loaded {clips.Length} UI sounds.");
+			IsReady = true;
+			
+			Debug.Log($"[{nameof(UISounds)}] UISounds initialized.");
 		}
 
 		public static void Play(UISoundsCue cue)
 		{
 			if (!IsReady) return;
-			if(!s_Instance.m_SoundMap.TryGetValue(cue, out AudioClip clip)) {
+			if(!s_Instance.m_SoundMap.TryGetValue(cue, out UISoundsSettings.UISound sound)) {
 				Debug.LogWarning($"[{nameof(UISounds)}] No sound found for cue: {cue}");
 				return;
 			}
 			
-			s_Instance.m_Source.PlayOneShot(clip);
+			s_Instance.m_Source.PlayOneShot(sound.Sound.Asset as AudioClip, sound.Volume);
 		}
 
 
 		// Helpers
 
-		private async UniTask<AudioClip[]> LoadSounds()
+		private async UniTask LoadSounds()
 		{
 			UniTask<AudioClip>[] tasks = new UniTask<AudioClip>[m_Settings.Size];
 
@@ -69,9 +71,7 @@ namespace Audio.UI
 				tasks[i] = sound.Sound.LoadAssetAsync().ToUniTask();
 			}
 
-			AudioClip[] clips = await UniTask.WhenAll(tasks);
-
-			return clips;
+			await UniTask.WhenAll(tasks);
 		}
 		private bool ValidateSettings()
 		{
@@ -90,11 +90,11 @@ namespace Audio.UI
 
 			return true;
 		}
-		private void BuildMap(AudioClip[] clips)
+		private void BuildMap()
 		{
 			for (int i = 0; i < m_Settings.Size; i++) {
 				UISoundsSettings.UISound sound = m_Settings.Sounds[i];
-				m_SoundMap[sound.Cue] = clips[i];
+				m_SoundMap[sound.Cue] = sound;
 			}
 		}
 		private void BuildSource()

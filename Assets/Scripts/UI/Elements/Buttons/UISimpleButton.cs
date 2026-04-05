@@ -26,7 +26,7 @@ namespace UI.Elements.Buttons
 			}
 		}
 
-		protected override void OnHover()   { }
+		protected override void OnHover()   => OnHovered.Invoke();
 		protected override void OnUnhover() { }
 
 		protected override void OnPressed()  => OnClick.Invoke();

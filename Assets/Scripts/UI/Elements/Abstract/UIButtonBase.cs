@@ -11,6 +11,12 @@ namespace UI.Elements.Abstract
 		/// </summary>
 		public UnityEvent OnClick;
 
+		/// Button hovered event. This event is invoked when the button is hovered.
+		public UnityEvent OnHovered;
+		
+		/// Button unhovered event. This event is invoked when the button is unhovered.
+		public UnityEvent OnUnhovered;
+
 		// Hover
 		protected abstract void OnHover();
 		protected abstract void OnUnhover();

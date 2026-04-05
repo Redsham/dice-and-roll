@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 175647732884170180}
   - component: {fileID: 8405055809445698863}
   - component: {fileID: 607822983442201774}
+  - component: {fileID: 8991108875386548087}
   m_Layer: 5
   m_Name: UISimpleButton
   m_TagString: Untagged
@@ -304,8 +305,28 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
   m_Icon: {fileID: 0}
   m_IconComponent: {fileID: 9222592192174437258}
+--- !u!114 &8991108875386548087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4856426237642296360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddec4944cdf4a9bb3da358952066d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effects.UIButtonSounds
+  m_Click: 1
+  m_Hover: 1
 --- !u!1 &8978495574197474198
 GameObject:
   m_ObjectHideFlags: 0
