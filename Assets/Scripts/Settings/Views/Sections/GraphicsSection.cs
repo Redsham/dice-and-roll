@@ -75,52 +75,63 @@ namespace Settings.Views.Sections
 			if (m_FullscreenGroup != null) {
 				m_FullscreenGroup.OnSelected += index => {
 					Preferences.FullScreenMode = GetFullscreenMode(index);
+					NotifyPreferencesChanged();
 				};
 			}
 
 			if (m_VSyncGroup != null) {
 				m_VSyncGroup.OnSelected += index => {
 					Preferences.VSyncCount = index == 1 ? 1 : 0;
+					NotifyPreferencesChanged();
 				};
 			}
 
 			if (m_FrameRateDropdown != null) {
 				m_FrameRateDropdown.onValueChanged.AddListener(index => {
 					Preferences.TargetFrameRate = GetFrameRate(index);
+					NotifyPreferencesChanged();
 				});
 			}
 
 			if (m_AntiAliasingGroup != null) {
 				m_AntiAliasingGroup.OnSelected += index => {
 					Preferences.MsaaSamples = GetMsaaSamples(index);
+					NotifyPreferencesChanged();
 				};
 			}
 
 			if (m_HdrGroup != null) {
 				m_HdrGroup.OnSelected += index => {
 					Preferences.UseHdr = index == 1;
+					NotifyPreferencesChanged();
 				};
 			}
 
 			if (m_ShadowsGroup != null) {
-				m_ShadowsGroup.OnSelected += ApplyShadowMode;
+				m_ShadowsGroup.OnSelected += index => {
+					ApplyShadowMode(index);
+					NotifyPreferencesChanged();
+				};
 			}
 
 			if (m_SoftShadowsGroup != null) {
 				m_SoftShadowsGroup.OnSelected += index => {
 					Preferences.SoftShadows = index == 1;
+					NotifyPreferencesChanged();
 				};
 			}
 
 			if (m_RenderScaleSlider != null) {
 				m_RenderScaleSlider.Value.Subscribe(value => {
 					Preferences.RenderScale = Mathf.Lerp(0.5f, 1.5f, value);
+					NotifyPreferencesChanged();
 				}).AddTo(this);
 			}
 
 			if (m_ShadowDistanceSlider != null) {
 				m_ShadowDistanceSlider.Value.Subscribe(value => {
 					Preferences.ShadowDistance = Mathf.Lerp(0f, 100f, value);
+					NotifyPreferencesChanged();
 				}).AddTo(this);
 			}
 		}
@@ -277,6 +288,7 @@ namespace Settings.Views.Sections
 			Preferences.ResolutionWidth  = option.Width;
 			Preferences.ResolutionHeight = option.Height;
 			Preferences.RefreshRate      = ResolveRefreshRate(option.Width, option.Height, Preferences.RefreshRate);
+			NotifyPreferencesChanged();
 		}
 
 		private void ApplyShadowMode(int index)

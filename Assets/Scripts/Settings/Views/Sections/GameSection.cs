@@ -32,6 +32,7 @@ namespace Settings.Views.Sections
 			m_LanguageDropdown.onValueChanged.AddListener(index => {
 				LocalizationSettings.SelectedLocale = m_Locales[index];
 				Preferences.LanguageCode            = m_Locales[index].Identifier.Code;
+				NotifyPreferencesChanged();
 			});
 		}
 

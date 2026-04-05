@@ -60,6 +60,7 @@ namespace Settings.Views
 			SettingsSection section = m_Sections[m_SectionsGroup.SelectedIndex];
 			section.UntypedPreferences.New();
 			section.UntypedPreferences.Apply();
+			m_Preferences.NotifyCategoryChanged(section.UntypedPreferences);
 			section.Load();
 			
 			Debug.Log($"[{nameof(SettingsView)}] Reset {section.UntypedPreferences.GetType().Name} to defaults");

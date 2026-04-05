@@ -18,6 +18,10 @@ namespace Infrastructure.Services
 			new AudioPreferenceses(), new ControlsPreferenceses()
 		};
 
+		// Events
+
+		public event Action<PreferencesCategory> CategoryChanged;
+
 		// Access
 		
 		/// <summary>
@@ -87,7 +91,21 @@ namespace Infrastructure.Services
 		/// <summary>
 		/// Applies all categories to Unity runtime systems.
 		/// </summary>
-		public async UniTask Apply() => await ForEachCategory(category => category.Apply());
+		public async UniTask Apply()
+		{
+			foreach (PreferencesCategory category in m_Categories) {
+				await category.Apply();
+				NotifyCategoryChanged(category);
+			}
+		}
+
+		/// <summary>
+		/// Notifies listeners that a category values were changed and may need to be re-applied externally.
+		/// </summary>
+		public void NotifyCategoryChanged(PreferencesCategory category)
+		{
+			CategoryChanged?.Invoke(category);
+		}
 
 		// Helpers
 

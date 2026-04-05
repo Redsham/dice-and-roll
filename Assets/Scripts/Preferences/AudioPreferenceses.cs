@@ -17,7 +17,7 @@ namespace Preferences
 		/// </summary>
 		public float MasterVolume { get; set; }
 		/// <summary>
-		/// Mutes all audio when true.
+		/// UI volume multiplier.
 		/// </summary>
 		public float UIVolume { get; set; }
 		/// <summary>
@@ -39,6 +39,7 @@ namespace Preferences
 		public override void New()
 		{
 			MasterVolume  = 1f;
+			UIVolume      = 1f;
 			MusicVolume   = 1f;
 			EffectsVolume = 1f;
 		}

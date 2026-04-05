@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-9182206379678940511
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 2cbd27be81376478993555a5ae8e1f2b
+  m_EffectName: Attenuation
+  m_MixLevel: 4b442f5f0fd54485fa7caec47b82cc1b
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!243 &-2263062132604798647
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -19,6 +33,25 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!243 &-1035018237135094656
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Music
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 82cba8a3dc8114edd8288cd4a4067a68
+  m_Children: []
+  m_Volume: 634b00f07a2404c6aa4a8cea623bb0ae
+  m_Pitch: 91978b163509949c1ba0ae98178a3248
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -9182206379678940511}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -34,12 +67,21 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: 50d5ba0273f9d44428fecd093c22ef6b
+    name: MasterVolume
+  - guid: 634b00f07a2404c6aa4a8cea623bb0ae
+    name: MusicVolume
+  - guid: f97df078e034941f2abab354401a1fdc
+    name: SFXVolume
+  - guid: 8c5d188a05c5040afa5cd1896b75c8ea
+    name: UIVolume
   m_AudioMixerGroupViews:
   - guids:
     - 690238f29c6114295845094dd9609811
     - a40a2f36a85b442c8a1fd4d062aca333
     - 3f03132c2eda14445ba6ea8a421df293
+    - 82cba8a3dc8114edd8288cd4a4067a68
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -55,6 +97,7 @@ AudioMixerGroupController:
   m_Children:
   - {fileID: -2263062132604798647}
   - {fileID: 7281148665919517742}
+  - {fileID: -1035018237135094656}
   m_Volume: 50d5ba0273f9d44428fecd093c22ef6b
   m_Pitch: cee3689800d5e4124aa362c43acef272
   m_Send: 00000000000000000000000000000000

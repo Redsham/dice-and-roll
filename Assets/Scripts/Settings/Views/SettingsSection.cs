@@ -55,6 +55,11 @@ namespace Settings.Views
 
 		protected T Preferences { get; private set; }
 
+		protected void NotifyPreferencesChanged()
+		{
+			PreferencesService.NotifyCategoryChanged(Preferences);
+		}
+
 		// Lifecycle
 
 		/// <inheritdoc />

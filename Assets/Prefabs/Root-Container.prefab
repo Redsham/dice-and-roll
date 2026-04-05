@@ -49,3 +49,4 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   m_UISoundsSettings: {fileID: 11400000, guid: cab81d8a4a5614d4ab665d929df1b0d5, type: 2}
+  m_AudioMixer: {fileID: 24100000, guid: 880a6c0371b79470e861029a2e98bde1, type: 2}

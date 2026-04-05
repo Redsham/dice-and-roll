@@ -29,6 +29,7 @@ namespace Infrastructure.Services
 		[Inject] private readonly SceneService       m_SceneService;
 		[Inject] private readonly UIFade             m_Fade;
 		[Inject] private readonly PreferencesService m_Preferences;
+		[Inject] private readonly AudioMixerService  m_AudioMixerService;
 		[Inject] private readonly UISounds           m_UISounds;
 
 		// Lifecycle
