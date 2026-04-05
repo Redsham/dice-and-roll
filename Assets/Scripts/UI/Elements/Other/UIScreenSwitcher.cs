@@ -17,11 +17,15 @@ namespace UI.Elements.Other
 		[SerializeField] private Screen[] m_Screens;
 		private                  int      m_ActiveScreenIndex = -1;
 
+
 		private void Start()
 		{
-			Switch(0);
+			if(m_Screens.Length > 0 && m_ActiveScreenIndex == -1 && m_Screens[0].Object != null)
+				Switch(0);
 		}
 
+		// Switch
+		
 		public void Switch(int index)
 		{
 			if (m_ActiveScreenIndex == index) return;
