@@ -17,6 +17,11 @@ namespace UI.Elements.Other
 		[SerializeField] private Screen[] m_Screens;
 		private                  int      m_ActiveScreenIndex = -1;
 
+		private void Start()
+		{
+			Switch(0);
+		}
+
 		public void Switch(int index)
 		{
 			if (m_ActiveScreenIndex == index) return;
