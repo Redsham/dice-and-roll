@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Services;
 using R3;
@@ -35,13 +34,14 @@ namespace Settings.Views
 				m_ObjectResolver.Inject(section);
 				
 				section.InitPreferences();
-				section.Init();
+				section.Build();
 				section.Load();
+				section.Bind();
 			}
 			
 			m_SaveButton.OnClick.AddListener(Hide);
 			m_ResetButton.OnClick.AddListener(ResetSection);
-			m_SectionsGroup.SelectedIndex.Subscribe(index => m_SectionsSwitcher.Switch(index)).AddTo(this);
+			m_SectionsGroup.OnSelected += m_SectionsSwitcher.Switch;
 		}
 
 		public void Show()
@@ -57,7 +57,7 @@ namespace Settings.Views
 
 		public void ResetSection()
 		{
-			SettingsSection section = m_Sections[m_SectionsGroup.SelectedIndex.CurrentValue];
+			SettingsSection section = m_Sections[m_SectionsGroup.SelectedIndex];
 			section.UntypedPreferences.New();
 			section.UntypedPreferences.Apply();
 			section.Load();

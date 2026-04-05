@@ -39,8 +39,8 @@ namespace UI.Elements
 
 		public void SetValue(float value)
 		{
-			Value.Value = value;
 			m_Slider.SetValueWithoutNotify(value);
+			Value.Value = value;
 		}
 	}
 }

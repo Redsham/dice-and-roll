@@ -23,13 +23,7 @@ namespace UI.Elements.Buttons
 		private readonly List<MotionHandle> m_Handles = new();
 
 
-		private void Start()
-		{
-			foreach (IButtonTween tween in m_UnhoverTweens) {
-				tween.GetTween().Complete();
-			}
-		}
-		private void OnDisable()
+		private void OnEnable()
 		{
 			foreach (IButtonTween tween in m_UnhoverTweens) {
 				tween.GetTween().Complete();

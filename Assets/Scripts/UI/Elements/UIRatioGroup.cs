@@ -8,8 +8,8 @@ namespace UI.Elements
 {
 	public class UIRatioGroup : MonoBehaviour
 	{
-		/// Index of the currently selected button. -1 if no button is selected.
-		public readonly ReactiveProperty<int> SelectedIndex = new(-1);
+		public int               SelectedIndex { get; private set; } = -1;
+		public event Action<int> OnSelected = delegate { };
 
 		[SerializeField] private int m_DefaultIndex = 0;
 		[SerializeField] private bool m_Loop;
@@ -43,19 +43,22 @@ namespace UI.Elements
 		/// Select the button at the specified index
 		/// </summary>
 		/// <param name="index">Index of the button to select</param>
-		public void Select(int index)
+		public void Select(int index, bool notify = true)
 		{
-			if (SelectedIndex.CurrentValue == index) return;
+			if (SelectedIndex == index) return;
 			if (index < 0 && index >= m_Buttons.Length) {
 				Debug.LogError($"[{nameof(UIRatioGroup)}] Invalid index: {index}");
 				return;
 			}
 
-			if (SelectedIndex.CurrentValue != -1)
-				m_Buttons[SelectedIndex.CurrentValue].OnDeselect();
+			if (SelectedIndex != -1)
+				m_Buttons[SelectedIndex].OnDeselect();
 
-			SelectedIndex.Value = index;
+			SelectedIndex = index;
 			m_Buttons[index].OnSelect();
+			
+			if(notify)
+				OnSelected.Invoke(index);
 		}
 
 		/// <summary>
@@ -64,12 +67,12 @@ namespace UI.Elements
 		/// </summary>
 		public void Next()
 		{
-			if (SelectedIndex.CurrentValue == m_Buttons.Length - 1) {
+			if (SelectedIndex == m_Buttons.Length - 1) {
 				if (m_Loop) Select(0);
 				else return;
 			}
 			
-			Select(SelectedIndex.CurrentValue + 1);
+			Select(SelectedIndex + 1);
 		}
 		/// <summary>
 		/// Select the previous button in the group.
@@ -77,12 +80,12 @@ namespace UI.Elements
 		/// </summary>
 		public void Previous()
 		{
-			if (SelectedIndex.CurrentValue == 0) {
+			if (SelectedIndex == 0) {
 				if (m_Loop) Select(m_Buttons.Length - 1);
 				else return;
 			}
 			
-			Select(SelectedIndex.CurrentValue - 1);
+			Select(SelectedIndex - 1);
 		}
 	}
 }

@@ -154,6 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6598657317595619689}
   - component: {fileID: 9124422918713898664}
+  - component: {fileID: 1746788977879396562}
   m_Layer: 5
   m_Name: UISlider
   m_TagString: Untagged
@@ -234,6 +235,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1746788977879396562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342459532324881437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d070afa8cb574fc7a2ec68e27ed95b4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Elements.UISlider
+  m_Slider: {fileID: 9124422918713898664}
+  m_Text: {fileID: 0}
 --- !u!1 &6674185098738340897
 GameObject:
   m_ObjectHideFlags: 0

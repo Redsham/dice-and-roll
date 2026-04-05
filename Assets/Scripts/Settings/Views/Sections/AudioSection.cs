@@ -13,7 +13,7 @@ namespace Settings.Views.Sections
 		[SerializeField] private UISlider m_EffectVolume;
 
 
-		public override void Init()
+		public override void Bind()
 		{
 			m_MasterVolume.Value.Subscribe(value => { Preferences.MasterVolume  = value; }).AddTo(this);
 			m_MusicVolume.Value.Subscribe(value => { Preferences.MusicVolume    = value; }).AddTo(this);

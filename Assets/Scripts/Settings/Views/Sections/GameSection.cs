@@ -12,27 +12,32 @@ namespace Settings.Views.Sections
 	{
 		[SerializeField] private TMP_Dropdown m_LanguageDropdown;
 
-		
-		public override void Init()
+		private List<Locale> m_Locales;
+
+
+		public override void Build()
 		{
 			m_LanguageDropdown.ClearOptions();
 
-			List<Locale> locales = LocalizationSettings.AvailableLocales.Locales;
-			foreach (Locale locale in locales) {
+			m_Locales = LocalizationSettings.AvailableLocales.Locales;
+			foreach (Locale locale in m_Locales) {
 				m_LanguageDropdown.options.Add(new(locale.name));
 			}
 
 			m_LanguageDropdown.RefreshShownValue();
+		}
 
+		public override void Bind()
+		{
 			m_LanguageDropdown.onValueChanged.AddListener(index => {
-				LocalizationSettings.SelectedLocale                    = locales[index];
-				Preferences.LanguageCode = locales[index].Identifier.Code;
+				LocalizationSettings.SelectedLocale = m_Locales[index];
+				Preferences.LanguageCode            = m_Locales[index].Identifier.Code;
 			});
 		}
+
 		public override void Load()
 		{
-			List<Locale> locales = LocalizationSettings.AvailableLocales.Locales;
-			m_LanguageDropdown.SetValueWithoutNotify(locales.IndexOf(LocalizationSettings.SelectedLocale));
+			m_LanguageDropdown.SetValueWithoutNotify(m_Locales.IndexOf(LocalizationSettings.SelectedLocale));
 		}
 	}
 }
