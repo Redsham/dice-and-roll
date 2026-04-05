@@ -13,19 +13,24 @@ namespace Infrastructure.Services
 	{
 		// State
 
-		private readonly PreferenceCategory[] m_Categories = {
-			new GamePreferences(), new GraphicsPreferences(),
-			new AudioPreferences(), new ControlsPreferences()
+		private readonly PreferencesCategory[] m_Categories = {
+			new GamePreferenceses(), new GraphicsPreferenceses(),
+			new AudioPreferenceses(), new ControlsPreferenceses()
 		};
 
 		// Access
+		
+		/// <summary>
+		/// Indicates whether preferences have been loaded and applied at least once, and are thus ready to be used.
+		/// </summary>
+		public bool IsReady { get; private set; }
 
 		/// <summary>
 		/// Returns a preference category by its concrete type.
 		/// </summary>
-		public T Get<T>() where T : PreferenceCategory
+		public T Get<T>() where T : PreferencesCategory
 		{
-			foreach (PreferenceCategory category in m_Categories) {
+			foreach (PreferencesCategory category in m_Categories) {
 				if (category is T t) {
 					return t;
 				}
@@ -42,11 +47,13 @@ namespace Infrastructure.Services
 		public async UniTask New()
 		{
 			ResetAllToDefaults();
-			await ApplyAll();
+			await Apply();
 			
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences initialized");
 			
 			await Save();
+			
+			IsReady = true;
 		}
 
 		/// <summary>
@@ -70,28 +77,30 @@ namespace Infrastructure.Services
 			}
 
 			await ForEachCategory(category => category.Load());
-			await ApplyAll();
+			await Apply();
+
+			IsReady = true;
 			
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences loaded");
 		}
+		
+		/// <summary>
+		/// Applies all categories to Unity runtime systems.
+		/// </summary>
+		public async UniTask Apply() => await ForEachCategory(category => category.Apply());
 
 		// Helpers
 
 		private void ResetAllToDefaults()
 		{
-			foreach (PreferenceCategory category in m_Categories) {
+			foreach (PreferencesCategory category in m_Categories) {
 				category.New();
 			}
 		}
 
-		private UniTask ApplyAll()
+		private async UniTask ForEachCategory(Func<PreferencesCategory, UniTask> action)
 		{
-			return ForEachCategory(category => category.Apply());
-		}
-
-		private async UniTask ForEachCategory(Func<PreferenceCategory, UniTask> action)
-		{
-			foreach (PreferenceCategory category in m_Categories) {
+			foreach (PreferencesCategory category in m_Categories) {
 				await action(category);
 			}
 		}

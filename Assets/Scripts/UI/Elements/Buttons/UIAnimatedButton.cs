@@ -29,6 +29,12 @@ namespace UI.Elements.Buttons
 				tween.GetTween().Complete();
 			}
 		}
+		private void OnDisable()
+		{
+			foreach (IButtonTween tween in m_UnhoverTweens) {
+				tween.GetTween().Complete();
+			}
+		}
 
 		protected override void OnHover()   => DoTweens(m_HoverTweens);
 		protected override void OnUnhover() => DoTweens(m_UnhoverTweens);
