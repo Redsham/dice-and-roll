@@ -48,3 +48,4 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  m_UISoundsSettings: {fileID: 11400000, guid: cab81d8a4a5614d4ab665d929df1b0d5, type: 2}

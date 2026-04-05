@@ -1,7 +1,9 @@
+using Audio.UI;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Services.Scenes;
 using R3;
 using UI.Effects;
+using VContainer;
 
 
 namespace Infrastructure.Services
@@ -16,30 +18,19 @@ namespace Infrastructure.Services
 		/// <summary>
 		/// Indicates that bootstrap initialization has finished.
 		/// </summary>
-		public bool                     Initialized { get; private set; } = false;
+		public bool Initialized { get; private set; } = false;
 		/// <summary>
 		/// Human-readable bootstrap progress message.
 		/// </summary>
-		public ReactiveProperty<string> Message     { get; }              = new();
-		
+		public ReactiveProperty<string> Message { get; } = new();
+
 		// Dependencies
 
-		private readonly SceneService       m_SceneService;
-		private readonly UIFade             m_Fade;
-		private readonly PreferencesService m_Preferences;
+		[Inject] private readonly SceneService       m_SceneService;
+		[Inject] private readonly UIFade             m_Fade;
+		[Inject] private readonly PreferencesService m_Preferences;
+		[Inject] private readonly UISounds           m_UISounds;
 
-		// Construction
-
-		/// <summary>
-		/// Creates a bootstrap service instance.
-		/// </summary>
-		public BootstrapService(SceneService sceneService, UIFade fade, PreferencesService preferences)
-		{
-			m_SceneService = sceneService;
-			m_Fade = fade;
-			m_Preferences = preferences;
-		}
-		
 		// Lifecycle
 
 		/// <summary>
@@ -48,6 +39,7 @@ namespace Infrastructure.Services
 		public async UniTask Initialize()
 		{
 			await LoadSettings();
+			await LoadUISounds();
 			Initialized = true;
 		}
 
@@ -78,6 +70,12 @@ namespace Infrastructure.Services
 		{
 			Message.Value = "Loading settings...";
 			await m_Preferences.Load();
+		}
+
+		private async UniTask LoadUISounds()
+		{
+			Message.Value = "Loading UI sounds...";
+			await m_UISounds.Init();
 		}
 	}
 }

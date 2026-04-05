@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168b0d8d908445968eec7bfe9448f77a, type: 3}
+  m_Name: UISoundSettings
+  m_EditorClassIdentifier: Assembly-CSharp::Audio.UI.UISoundsSettings
+  m_Sounds:
+  - <Cue>k__BackingField: 0
+    <Sound>k__BackingField:
+      m_AssetGUID: 9ca7680e13b6547b8bbe0f2367bd3b63
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - <Cue>k__BackingField: 1
+    <Sound>k__BackingField:
+      m_AssetGUID: f3d23f831a17c41f1afd9b0d5baa106d
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  m_Source:
+    PlayOnAwake: 0
+    Loop: 0
+    Mute: 0
+    Volume: 1
+    Pitch: 1
+    PanStereo: 0
+    Spatialize: 0
+    SpatializePostEffects: 0
+    SpatialBlend: 0
+    DopplerLevel: 1
+    Spread: 0
+    MinDistance: 500
+    MaxDistance: 500
+    RolloffMode: 1
+    Output: {fileID: -2263062132604798647, guid: 880a6c0371b79470e861029a2e98bde1, type: 2}
