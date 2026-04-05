@@ -6,35 +6,63 @@ using UI.Effects;
 
 namespace Infrastructure.Services
 {
+	/// <summary>
+	/// Initializes bootstrap-time services before the main flow continues.
+	/// </summary>
 	public class BootstrapService
 	{
+		// State
+
+		/// <summary>
+		/// Indicates that bootstrap initialization has finished.
+		/// </summary>
 		public bool                     Initialized { get; private set; } = false;
+		/// <summary>
+		/// Human-readable bootstrap progress message.
+		/// </summary>
 		public ReactiveProperty<string> Message     { get; }              = new();
 		
-		private readonly SceneService m_SceneService;
-		private readonly UIFade       m_Fade;
+		// Dependencies
 
-		
-		public BootstrapService(SceneService sceneService, UIFade fade)
+		private readonly SceneService       m_SceneService;
+		private readonly UIFade             m_Fade;
+		private readonly PreferencesService m_Preferences;
+
+		// Construction
+
+		/// <summary>
+		/// Creates a bootstrap service instance.
+		/// </summary>
+		public BootstrapService(SceneService sceneService, UIFade fade, PreferencesService preferences)
 		{
 			m_SceneService = sceneService;
 			m_Fade = fade;
+			m_Preferences = preferences;
 		}
 		
-		
+		// Lifecycle
+
+		/// <summary>
+		/// Initializes bootstrap-time systems.
+		/// </summary>
 		public async UniTask Initialize()
 		{
-			// Load settings
 			await LoadSettings();
-			
 			Initialized = true;
 		}
 
+		/// <summary>
+		/// Loads a game scene.
+		/// </summary>
 		public async UniTask LoadScene(string sceneName)
 		{
 			Message.Value = "Loading scene...";
 			await m_SceneService.LoadSceneAsync(sceneName);
 		}
+
+		/// <summary>
+		/// Loads the main menu scene with a fade transition.
+		/// </summary>
 		public async UniTask LoadMenu()
 		{
 			Message.Value = "Loading menu...";
@@ -44,10 +72,12 @@ namespace Infrastructure.Services
 			});
 		}
 
+		// Helpers
+
 		private async UniTask LoadSettings()
 		{
 			Message.Value = "Loading settings...";
-			await UniTask.WaitForSeconds(1.0f);
+			await m_Preferences.Load();
 		}
 	}
 }

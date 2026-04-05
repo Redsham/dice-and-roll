@@ -2,7 +2,10 @@
     "name": "Preferences",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:bd8bc466459de49fd9c75fb72c7cc2fe"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
