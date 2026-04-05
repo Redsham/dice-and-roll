@@ -32,10 +32,10 @@ namespace Preferences
 		}
 
 		/// <inheritdoc />
-		public override async UniTask Apply()
+		public override UniTask Apply()
 		{
 			if (!LocalizationSettings.HasSettings) {
-				return;
+				return UniTask.CompletedTask;
 			}
 
 			Locale locale = ResolveLocale(LanguageCode)
@@ -44,7 +44,7 @@ namespace Preferences
 			                ?? LocalizationSettings.AvailableLocales?.Locales?[0];
 
 			if (locale == null) {
-				return;
+				return UniTask.CompletedTask;
 			}
 
 			LanguageCode = locale.Identifier.Code;
@@ -52,6 +52,8 @@ namespace Preferences
 			if (LocalizationSettings.SelectedLocale != locale) {
 				LocalizationSettings.SelectedLocale = locale;
 			}
+			
+			return UniTask.CompletedTask;
 		}
 
 		// Serialization
