@@ -103,6 +103,30 @@ MonoBehaviour:
     m_Key: ui_settings_property_shadows_distance
     m_Metadata:
       m_Items: []
+  - m_Id: 295972918779904
+    m_Key: ui_settings_property_ui_volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297295584157696
+    m_Key: ui_settings_property_shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297859059539968
+    m_Key: ui_settings_value_high
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297935316180992
+    m_Key: ui_settings_value_low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 298148118388736
+    m_Key: ui_settings_property_soft_shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 299096182087680
+    m_Key: ui_settings_property_anti_aliasing
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

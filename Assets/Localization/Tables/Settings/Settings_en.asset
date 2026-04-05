@@ -106,6 +106,30 @@ MonoBehaviour:
     m_Localized: Shadows Distance
     m_Metadata:
       m_Items: []
+  - m_Id: 295972918779904
+    m_Localized: UI Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297295584157696
+    m_Localized: Shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297859059539968
+    m_Localized: High
+    m_Metadata:
+      m_Items: []
+  - m_Id: 297935316180992
+    m_Localized: Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 298148118388736
+    m_Localized: Soft Shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 299096182087680
+    m_Localized: Anti-Aliasing
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
