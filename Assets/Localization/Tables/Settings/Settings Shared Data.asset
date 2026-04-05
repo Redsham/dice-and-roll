@@ -39,6 +39,70 @@ MonoBehaviour:
     m_Key: ui_settings_save
     m_Metadata:
       m_Items: []
+  - m_Id: 233395475963904
+    m_Key: ui_settings_property_language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234120641765376
+    m_Key: ui_settings_title_display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234241794236416
+    m_Key: ui_settings_property_resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234382483775488
+    m_Key: ui_settings_property_framerate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234460434915328
+    m_Key: ui_settings_property_display_mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235014196289536
+    m_Key: ui_settings_value_off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235171243614208
+    m_Key: ui_settings_value_on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235271697195008
+    m_Key: ui_settings_value_fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235406992859136
+    m_Key: ui_settings_value_borderless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235489033445376
+    m_Key: ui_settings_value_windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237754733551616
+    m_Key: ui_settings_property_sfx_volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237904998686720
+    m_Key: ui_settings_property_music_volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238015954804736
+    m_Key: ui_settings_property_master_volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238690214338560
+    m_Key: ui_settings_title_graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238980313374720
+    m_Key: ui_settings_property_render_scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 239306915438592
+    m_Key: ui_settings_property_shadows_distance
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

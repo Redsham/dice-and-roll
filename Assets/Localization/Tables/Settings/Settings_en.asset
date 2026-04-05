@@ -42,6 +42,70 @@ MonoBehaviour:
     m_Localized: Save & exit
     m_Metadata:
       m_Items: []
+  - m_Id: 233395475963904
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234120641765376
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234241794236416
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234382483775488
+    m_Localized: Framerate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 234460434915328
+    m_Localized: Display Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235014196289536
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235171243614208
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235271697195008
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235406992859136
+    m_Localized: Borderless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 235489033445376
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237754733551616
+    m_Localized: SFX Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237904998686720
+    m_Localized: Music Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238015954804736
+    m_Localized: Master Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238690214338560
+    m_Localized: Graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 238980313374720
+    m_Localized: Render Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 239306915438592
+    m_Localized: Shadows Distance
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
