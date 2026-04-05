@@ -15,6 +15,7 @@ namespace Infrastructure.Scopes.Root
 
 			// Register services
 			builder.Register<SceneService>(Lifetime.Singleton);
+			builder.Register<PreferencesService>(Lifetime.Singleton);
 			builder.Register<UIFade>(Lifetime.Singleton);
 			builder.Register<BootstrapService>(Lifetime.Singleton);
 
