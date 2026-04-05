@@ -138,8 +138,8 @@ namespace Settings.Views.Sections
 
 			HashSet<string> uniqueOptions = new();
 			foreach (Resolution resolution in Screen.resolutions) {
-				ResolutionOption option = new(resolution.width, resolution.height, Mathf.RoundToInt((float)resolution.refreshRateRatio.value));
-				if (!uniqueOptions.Add(option.Label)) {
+				ResolutionOption option = new(resolution.width, resolution.height);
+				if (!uniqueOptions.Add(option.Key)) {
 					continue;
 				}
 
@@ -148,7 +148,7 @@ namespace Settings.Views.Sections
 			}
 
 			if (m_ResolutionOptions.Count == 0) {
-				ResolutionOption fallback = new(Screen.width, Screen.height, Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value));
+				ResolutionOption fallback = new(Screen.width, Screen.height);
 				m_ResolutionOptions.Add(fallback);
 				m_ResolutionDropdown.options.Add(new TMP_Dropdown.OptionData(fallback.Label));
 			}
@@ -184,9 +184,8 @@ namespace Settings.Views.Sections
 
 			for (int index = 0; index < m_ResolutionOptions.Count; index++) {
 				ResolutionOption option = m_ResolutionOptions[index];
-				int score = Mathf.Abs(option.Width    - Preferences.ResolutionWidth)  * 10
-				            + Mathf.Abs(option.Height - Preferences.ResolutionHeight) * 10
-				            + Mathf.Abs(option.RefreshRate - Preferences.RefreshRate);
+				int score = Mathf.Abs(option.Width - Preferences.ResolutionWidth) * 10
+				            + Mathf.Abs(option.Height - Preferences.ResolutionHeight) * 10;
 
 				if (score < bestScore) {
 					bestScore     = score;
@@ -277,7 +276,7 @@ namespace Settings.Views.Sections
 			ResolutionOption option = m_ResolutionOptions[index];
 			Preferences.ResolutionWidth  = option.Width;
 			Preferences.ResolutionHeight = option.Height;
-			Preferences.RefreshRate      = option.RefreshRate;
+			Preferences.RefreshRate      = ResolveRefreshRate(option.Width, option.Height, Preferences.RefreshRate);
 		}
 
 		private void ApplyShadowMode(int index)
@@ -356,16 +355,39 @@ namespace Settings.Views.Sections
 		{
 			public readonly int Width;
 			public readonly int Height;
-			public readonly int RefreshRate;
 
-			public string Label => $"{Width}x{Height} @ {RefreshRate}Hz";
+			public string Key => $"{Width}x{Height}";
+			public string Label => Key;
 
-			public ResolutionOption(int width, int height, int refreshRate)
+			public ResolutionOption(int width, int height)
 			{
-				Width       = width;
-				Height      = height;
-				RefreshRate = refreshRate;
+				Width  = width;
+				Height = height;
 			}
+		}
+
+		private static int ResolveRefreshRate(int width, int height, int preferredRefreshRate)
+		{
+			int resolvedRefreshRate = 0;
+			int bestScore           = int.MaxValue;
+
+			foreach (Resolution resolution in Screen.resolutions) {
+				if (resolution.width != width || resolution.height != height) {
+					continue;
+				}
+
+				int refreshRate = Mathf.RoundToInt((float)resolution.refreshRateRatio.value);
+				int score       = Mathf.Abs(refreshRate - preferredRefreshRate);
+
+				if (score < bestScore || score == bestScore && refreshRate > resolvedRefreshRate) {
+					bestScore           = score;
+					resolvedRefreshRate = refreshRate;
+				}
+			}
+
+			return resolvedRefreshRate > 0
+				? resolvedRefreshRate
+				: Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
 		}
 	}
 }
