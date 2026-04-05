@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Preferences;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Infrastructure.Services
 	{
 		private readonly PreferenceCategory[] Categories = {
 			new GamePreferences(), new GraphicsPreferences(),
-			new AudioPrefrences(), new ControlsPreferences()
+			new AudioPreferences(), new ControlsPreferences()
 		};
 
 		public T Get<T>() where T : PreferenceCategory
@@ -24,7 +25,7 @@ namespace Infrastructure.Services
 
 		public void New()
 		{
-			foreach (var category in Categories) {
+			foreach (PreferenceCategory category in Categories) {
 				category.New();
 			}
 			
@@ -32,18 +33,18 @@ namespace Infrastructure.Services
 			
 			Save();
 		}
-		public void Save()
+		public async UniTask Save()
 		{
-			foreach (var category in Categories) {
-				category.Save();
+			foreach (PreferenceCategory category in Categories) {
+				await category.Save();
 			}
 			
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences saved");
 		}
-		public void Load()
+		public async UniTask Load()
 		{
-			foreach (var category in Categories) {
-				category.Load();
+			foreach (PreferenceCategory category in Categories) {
+				await category.Load();
 			}
 			
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences loaded");

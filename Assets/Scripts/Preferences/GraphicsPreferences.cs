@@ -1,3 +1,6 @@
+using Cysharp.Threading.Tasks;
+
+
 namespace Preferences
 {
 	public class GraphicsPreferences : PreferenceCategory
@@ -7,13 +10,13 @@ namespace Preferences
 		{
 			
 		}
-		public override void Load()
+		public override UniTask Load()
 		{
-			
+			return UniTask.CompletedTask;
 		}
-		public override void Save()
+		public override UniTask Save()
 		{
-			
+			return UniTask.CompletedTask;
 		}
 	}
 }

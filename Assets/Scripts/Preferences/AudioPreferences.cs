@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Preferences
 {
-	public class GamePreferences : PreferenceCategory
+	public class AudioPreferences : PreferenceCategory
 	{
 
 		public override void New()

@@ -1,9 +1,12 @@
+using Cysharp.Threading.Tasks;
+
+
 namespace Preferences
 {
 	public abstract class PreferenceCategory
 	{
 		public abstract void New();
-		public abstract void Load();
-		public abstract void Save();
+		public abstract UniTask Load();
+		public abstract UniTask Save();
 	}
 }
