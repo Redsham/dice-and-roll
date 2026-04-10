@@ -28,9 +28,9 @@ namespace UI.Menu
 				#if UNITY_EDITOR
 				UnityEditor.EditorApplication.isPlaying = false;
 				return;
-				#endif
-
+				#else
 				Application.Quit();
+				#endif
 			}).Forget();
 		}
 	}

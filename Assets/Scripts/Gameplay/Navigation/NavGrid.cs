@@ -10,19 +10,17 @@ namespace Gameplay.Navigation
 	{
 		// === Inspector ===
 
-		[SerializeField] private int  m_Width             = 15;
-		[SerializeField] private int  m_Height            = 15;
-		[SerializeField] private bool m_AllowDiagonalMove = true;
+		[SerializeField] private int  m_Width = 15;
+		[SerializeField] private int  m_Height = 15;
 		[SerializeField] private bool m_AllowCornerCutting;
 
 		// === Grid ===
 
 		public FlatArray2D<NavNode> Nodes;
 
-		public int  Width              => m_Width;
-		public int  Height             => m_Height;
-		public int  NodeCount          => m_Width * m_Height;
-		public bool AllowDiagonalMove  => m_AllowDiagonalMove;
+		public int  Width => m_Width;
+		public int  Height => m_Height;
+		public int  NodeCount => m_Width * m_Height;
 		public bool AllowCornerCutting => m_AllowCornerCutting;
 
 		// === Runtime ===
@@ -53,6 +51,16 @@ namespace Gameplay.Navigation
 			}
 
 			EnsureRuntimeState();
+		}
+
+		public Vector3 GetCellWorldCorner(int x, int y)
+		{
+			return transform.position + (transform.right * x) + (transform.forward * y);
+		}
+
+		public Vector3 GetCellWorldCenter(int x, int y)
+		{
+			return GetCellWorldCorner(x, y) + ((transform.right + transform.forward) * 0.5f);
 		}
 
 		// === Queries ===
@@ -128,11 +136,6 @@ namespace Gameplay.Navigation
 			where TWeightProvider : struct, INavTraversalCostProvider
 		{
 			EnsureReady();
-			if (m_AllowDiagonalMove) {
-				NavDiagonalConnectionProvider connections = default;
-				return m_Pathfinder.TryFindPath(this, startIndex, goalIndex, ref connections, ref weightProvider, pathBuffer, out result);
-			}
-
 			NavOrthogonalConnectionProvider orthogonalConnections = default;
 			return m_Pathfinder.TryFindPath(this, startIndex, goalIndex, ref orthogonalConnections, ref weightProvider, pathBuffer, out result);
 		}
