@@ -47,11 +47,17 @@ namespace Utilities
 				action(t);
 			}
 		}
+		public void Resize(int width, int height)
+		{
+			Width = width;
+			Height = height;
+			Data = new T[width * height];
+		}
 		
 		// === Utilities ===
 
 		public int        ToIndex(int       x, int y) => x + (y * Width);
-		public Vector2Int ToCoordinates(int index) => new Vector2Int(index % Width, index / Width);
+		public Vector2Int ToCoordinates(int index) => new(index % Width, index / Width);
 
 		public bool IsInBounds(int        x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 		public bool IsInBounds(Vector2Int coordinates) => IsInBounds(coordinates.x, coordinates.y);

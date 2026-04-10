@@ -155,13 +155,13 @@ namespace Settings.Views.Sections
 				}
 
 				m_ResolutionOptions.Add(option);
-				m_ResolutionDropdown.options.Add(new TMP_Dropdown.OptionData(option.Label));
+				m_ResolutionDropdown.options.Add(new(option.Label));
 			}
 
 			if (m_ResolutionOptions.Count == 0) {
 				ResolutionOption fallback = new(Screen.width, Screen.height);
 				m_ResolutionOptions.Add(fallback);
-				m_ResolutionDropdown.options.Add(new TMP_Dropdown.OptionData(fallback.Label));
+				m_ResolutionDropdown.options.Add(new(fallback.Label));
 			}
 
 			m_ResolutionDropdown.RefreshShownValue();
@@ -176,7 +176,7 @@ namespace Settings.Views.Sections
 			m_FrameRateDropdown.ClearOptions();
 			foreach (int frameRate in m_FrameRateOptions) {
 				string label = frameRate <= 0 ? "Unlimited" : $"{frameRate} FPS";
-				m_FrameRateDropdown.options.Add(new TMP_Dropdown.OptionData(label));
+				m_FrameRateDropdown.options.Add(new(label));
 			}
 
 			m_FrameRateDropdown.RefreshShownValue();

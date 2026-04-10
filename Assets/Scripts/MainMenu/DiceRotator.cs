@@ -32,10 +32,10 @@ namespace MainMenu
             _basePosition = transform.localPosition;
 
             if (m_RandomizePhase) {
-                _phaseOffset = new Vector3(
-                    Random.Range(0f, 10f),
-                    Random.Range(0f, 10f),
-                    Random.Range(0f, 10f));
+                _phaseOffset = new(
+                                   Random.Range(0f, 10f),
+                                   Random.Range(0f, 10f),
+                                   Random.Range(0f, 10f));
             }
         }
 
@@ -47,10 +47,10 @@ namespace MainMenu
                 time * m_RotationSpeed,
                 m_RotationAxis.normalized);
 
-            Vector3 swayEuler = new Vector3(
-                Mathf.Sin((time + _phaseOffset.x) * m_SwayFrequency.x) * m_SwayAngles.x,
-                Mathf.Sin((time + _phaseOffset.y) * m_SwayFrequency.y) * m_SwayAngles.y,
-                Mathf.Sin((time + _phaseOffset.z) * m_SwayFrequency.z) * m_SwayAngles.z);
+            Vector3 swayEuler = new(
+                                    Mathf.Sin((time + _phaseOffset.x) * m_SwayFrequency.x) * m_SwayAngles.x,
+                                    Mathf.Sin((time + _phaseOffset.y) * m_SwayFrequency.y) * m_SwayAngles.y,
+                                    Mathf.Sin((time + _phaseOffset.z) * m_SwayFrequency.z) * m_SwayAngles.z);
 
             Quaternion sway = Quaternion.Euler(swayEuler);
 

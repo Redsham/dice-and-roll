@@ -13,7 +13,7 @@ namespace Infrastructure.Scopes.Settings
 		[Inject] private readonly PreferencesService m_Preferences;
 		[Inject] private readonly SettingsView       n_View;
 		
-		public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
+		public async UniTask StartAsync(CancellationToken cancellation = new())
 		{
 			await UniTask.WaitUntil(() => m_Preferences.IsReady, cancellationToken: cancellation);
 			n_View.Init();
