@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 namespace Gameplay.Nodes.Authoring
 {
-	public class DestructiblePropNodeBehaviour : NodeBehaviour, INodeDamageHandler, INodeProjectileImpactHandler
+	public class DestructiblePropNodeBehaviour : TileBehaviour, INodeDamageHandler, INodeProjectileImpactHandler
 	{
 		[Title("Destructible")]
 		[SerializeField, Min(1)] private int m_HitPoints = 1;

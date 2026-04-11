@@ -76,6 +76,7 @@ namespace Gameplay.Player.Runtime
 			DiceState initialState = DiceState.Create(startPosition);
 			m_Controller  = new(initialState);
 			CurrentHealth = m_Config.MaxHealth;
+			m_Player.SetGridPosition(initialState.Position);
 
 			m_DiceView.Initialize();
 			m_DiceView.Snap(initialState, m_NavigationService.Basis);
@@ -146,6 +147,7 @@ namespace Gameplay.Player.Runtime
 			try {
 				DiceState currentState = m_Controller.State;
 				DiceState appliedState = m_Controller.Roll(direction);
+				m_Player.SetGridPosition(appliedState.Position);
 				await m_DiceView.PlayRollAsync(currentState, appliedState, direction, m_NavigationService.Basis);
 				m_LevelNodeService.NotifyActorLeft(currentState.Position, m_Player.gameObject);
 				m_CombatResolverService.MoveActor(m_GridActor, currentState.Position, appliedState.Position);

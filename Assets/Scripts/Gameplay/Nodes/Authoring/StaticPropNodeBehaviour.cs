@@ -4,7 +4,7 @@ using TriInspector;
 
 namespace Gameplay.Nodes.Authoring
 {
-	public sealed class StaticPropNodeBehaviour : NodeBehaviour
+	public sealed class StaticPropNodeBehaviour : TileBehaviour
 	{
 		[Title("Static Prop")]
 		[ShowInInspector, ReadOnly]

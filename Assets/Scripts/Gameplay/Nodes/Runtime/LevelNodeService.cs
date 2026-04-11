@@ -10,31 +10,31 @@ namespace Gameplay.Nodes.Runtime
 {
 	public sealed class LevelNodeService : ILevelNodeService
 	{
-		private readonly Dictionary<Vector2Int, NodeBehaviour> m_Nodes = new();
+		private readonly Dictionary<Vector2Int, TileBehaviour> m_Tiles = new();
 
 		private NavGrid m_CurrentGrid;
 
-		public void BindLevel(NavGrid navGrid, NodeBehaviour[] nodes)
+		public void BindLevel(NavGrid navGrid, TileBehaviour[] tiles)
 		{
 			m_CurrentGrid = navGrid;
-			m_Nodes.Clear();
+			m_Tiles.Clear();
 
-			for (int i = 0; i < nodes.Length; i++) {
-				NodeBehaviour node = nodes[i];
-				node.ResetRuntimeState();
-				m_Nodes[node.GridPosition] = node;
+			for (int i = 0; i < tiles.Length; i++) {
+				TileBehaviour tile = tiles[i];
+				tile.ResetRuntimeState();
+				m_Tiles[tile.GridPosition] = tile;
 			}
 		}
 
 		public void ClearLevel()
 		{
 			m_CurrentGrid = null;
-			m_Nodes.Clear();
+			m_Tiles.Clear();
 		}
 
-		public bool TryGetNode(Vector2Int cell, out NodeBehaviour node)
+		public bool TryGetTile(Vector2Int cell, out TileBehaviour tile)
 		{
-			return m_Nodes.TryGetValue(cell, out node);
+			return m_Tiles.TryGetValue(cell, out tile);
 		}
 
 		public NodeProjectileImpactInfo PreviewProjectileImpact(Vector2Int cell, int incomingDamage, out NavCellOccupancy occupancy)
@@ -44,7 +44,7 @@ namespace Gameplay.Nodes.Runtime
 				return default;
 			}
 
-			if (!m_Nodes.TryGetValue(cell, out NodeBehaviour node) || node is not INodeProjectileImpactHandler projectileImpactHandler) {
+			if (!m_Tiles.TryGetValue(cell, out TileBehaviour tile) || tile is not INodeProjectileImpactHandler projectileImpactHandler) {
 				return new(
 				           consumedDamage: occupancy.StopsProjectileImmediately ? incomingDamage : 0,
 				           stopsProjectile: occupancy.StopsProjectileImmediately,
@@ -62,46 +62,46 @@ namespace Gameplay.Nodes.Runtime
 
 		public void NotifyActorEntered(Vector2Int cell, GameObject actor)
 		{
-			if (!m_Nodes.TryGetValue(cell, out NodeBehaviour node)) {
+			if (!m_Tiles.TryGetValue(cell, out TileBehaviour tile)) {
 				return;
 			}
 
-			if (node is INodeActorEnterHandler handler) {
+			if (tile is INodeActorEnterHandler handler) {
 				handler.OnActorEnter(new(actor, cell));
-				SyncNode(cell, node);
+				SyncTile(cell, tile);
 			}
 		}
 
 		public void NotifyActorLeft(Vector2Int cell, GameObject actor)
 		{
-			if (!m_Nodes.TryGetValue(cell, out NodeBehaviour node)) {
+			if (!m_Tiles.TryGetValue(cell, out TileBehaviour tile)) {
 				return;
 			}
 
-			if (node is INodeActorLeaveHandler handler) {
+			if (tile is INodeActorLeaveHandler handler) {
 				handler.OnActorLeave(new(actor, cell));
-				SyncNode(cell, node);
+				SyncTile(cell, tile);
 			}
 		}
 
 		public int ApplyDamage(Vector2Int cell, int damage, GameObject source = null)
 		{
-			if (damage <= 0 || !m_Nodes.TryGetValue(cell, out NodeBehaviour node) || node is not INodeDamageHandler damageHandler) {
+			if (damage <= 0 || !m_Tiles.TryGetValue(cell, out TileBehaviour tile) || tile is not INodeDamageHandler damageHandler) {
 				return 0;
 			}
 
 			NodeDamageResult result = damageHandler.ApplyDamage(new(source, cell, damage));
-			SyncNode(cell, node);
+			SyncTile(cell, tile);
 			return result.ConsumedDamage;
 		}
 
-		private void SyncNode(Vector2Int cell, NodeBehaviour node)
+		private void SyncTile(Vector2Int cell, TileBehaviour tile)
 		{
 			if (m_CurrentGrid == null) {
 				return;
 			}
 
-			NavCellOccupancy occupancy = node.CreateOccupancy();
+			NavCellOccupancy occupancy = tile.CreateOccupancy();
 			m_CurrentGrid.TrySetOccupancy(cell, occupancy);
 		}
 	}

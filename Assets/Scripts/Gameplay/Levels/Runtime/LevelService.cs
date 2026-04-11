@@ -73,7 +73,7 @@ namespace Gameplay.Levels.Runtime
 
 			CurrentLevel.Initialize();
 			m_NavigationService.BindLevel(CurrentLevel);
-			m_LevelNodeService.BindLevel(CurrentLevel.NavGrid, CurrentLevel.GetNodes());
+			m_LevelNodeService.BindLevel(CurrentLevel.NavGrid, CurrentLevel.GetTileBehaviours());
 
 			return CurrentLevel;
 		}

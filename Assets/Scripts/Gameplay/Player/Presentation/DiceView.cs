@@ -16,6 +16,8 @@ namespace Gameplay.Player.Presentation
 {
 	public class DiceView : MonoBehaviour, IDiceView
 	{
+		private const float HeightOffset = 0.5f;
+
 		private readonly DiceRotator m_Rotator = new();
 
 		[Title("Shoot")]
@@ -37,7 +39,7 @@ namespace Gameplay.Player.Presentation
 
 		public void Snap(DiceState state, GridBasis gridBasis)
 		{
-			transform.SetPositionAndRotation(gridBasis.GetCellCenter(state.Position), gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
+			transform.SetPositionAndRotation(GetCellPosition(state.Position, gridBasis), gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
 		}
 
 		public async UniTask PlayRollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
@@ -140,6 +142,11 @@ namespace Gameplay.Player.Presentation
 			};
 
 			return main.duration + startLifetime;
+		}
+
+		private static Vector3 GetCellPosition(Vector2Int cell, GridBasis gridBasis)
+		{
+			return gridBasis.GetCellCenter(cell) + gridBasis.Up * HeightOffset;
 		}
 	}
 }

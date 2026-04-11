@@ -20,6 +20,8 @@ namespace Gameplay.Enemies.Runtime
 {
 	public sealed class EnemyService : IEnemyService
 	{
+		private const float ActorHeightOffset = 0.5f;
+
 		// === Dependencies ===
 
 		private readonly GameplaySceneConfiguration m_Configuration;
@@ -95,8 +97,9 @@ namespace Gameplay.Enemies.Runtime
 			}
 
 			EnemyBehaviour enemyBehaviour = m_ObjectResolver.Instantiate(prefab, m_Configuration.ActorParent);
+			GridBasis basis = m_NavigationService.Basis;
 			enemyBehaviour.transform.SetPositionAndRotation(
-			                                                m_NavigationService.Basis.GetCellCenter(cell),
+			                                                basis.GetCellCenter(cell) + basis.Up * ActorHeightOffset,
 			                                                Quaternion.identity
 			                                               );
 
@@ -135,7 +138,7 @@ namespace Gameplay.Enemies.Runtime
 
 		private static void OverrideSpawnCell(EnemyBehaviour enemyBehaviour, Vector2Int cell)
 		{
-			enemyBehaviour.SetSpawnCell(cell);
+			enemyBehaviour.SetGridPosition(cell);
 		}
 	}
 }

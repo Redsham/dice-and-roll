@@ -10,6 +10,7 @@ namespace Gameplay.Player.Presentation
 	public class DiceRotator
 	{
 		private const float ROLL_DURATION = 0.3f;
+		private const float HeightOffset  = 0.5f;
 
 		private Transform m_Transform;
 
@@ -21,7 +22,7 @@ namespace Gameplay.Player.Presentation
 		public async UniTask RollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
 		{
 			m_Transform.SetPositionAndRotation(
-			                                   gridBasis.GetCellCenter(fromState.Position),
+			                                   GetCellPosition(fromState.Position, gridBasis),
 			                                   gridBasis.ToWorldRotation(fromState.Orientation.GetRotation())
 			                                  );
 
@@ -39,7 +40,7 @@ namespace Gameplay.Player.Presentation
 			             .ToUniTask();
 
 			m_Transform.SetPositionAndRotation(
-			                                   gridBasis.GetCellCenter(toState.Position),
+			                                   GetCellPosition(toState.Position, gridBasis),
 			                                   gridBasis.ToWorldRotation(toState.Orientation.GetRotation())
 			                                  );
 		}
@@ -57,7 +58,7 @@ namespace Gameplay.Player.Presentation
 
 		private static Vector3 GetPivot(Vector2Int position, RollDirection direction, GridBasis gridBasis)
 		{
-			Vector3 center       = gridBasis.GetCellCenter(position);
+			Vector3 center       = GetCellPosition(position, gridBasis);
 			float   halfCell     = gridBasis.CellSize * 0.5f;
 			Vector3 bottomOffset = -gridBasis.Up      * halfCell;
 
@@ -68,6 +69,11 @@ namespace Gameplay.Player.Presentation
 				RollDirection.West  => center + bottomOffset - gridBasis.Right                  * halfCell,
 				_                   => center
 			};
+		}
+
+		private static Vector3 GetCellPosition(Vector2Int position, GridBasis gridBasis)
+		{
+			return gridBasis.GetCellCenter(position) + gridBasis.Up * HeightOffset;
 		}
 	}
 }

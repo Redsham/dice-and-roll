@@ -79,6 +79,7 @@ namespace Gameplay.Enemies.Runtime
 			m_State.Facing          = enemyBehaviour.InitialFacing;
 			m_TraceBuffer           = new NavLineTraceStep[Mathf.Max(1, (enemyBehaviour as PawnEnemyBehaviour)?.Config.ShootRange ?? 1)];
 			m_BehaviourTree         = EnemyBehaviourTreeFactory.Create(this);
+			Behaviour.SetGridPosition(m_State.Position);
 			enemyBehaviour.BindRuntime(this);
 		}
 
@@ -208,6 +209,7 @@ namespace Gameplay.Enemies.Runtime
 			Vector2Int previousCell = m_State.Position;
 			m_State.Position = nextCell;
 			m_State.Facing   = direction;
+			Behaviour.SetGridPosition(nextCell);
 
 			await m_View.PlayMoveAsync(previousCell, nextCell, m_NavigationService.Basis, Config.MoveDuration, cancellationToken);
 			m_LevelNodeService.NotifyActorLeft(previousCell, Behaviour.gameObject);

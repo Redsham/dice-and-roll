@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382576f6958634783952574032c98f24, type: 3}
   m_Name: DiceConfig
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Player.Configuration.DiceConfig
+  <MaxHealth>k__BackingField: 12
   <ShootRange>k__BackingField: 2
-  <ShootBurstDelay>k__BackingField: 0.06
+  <ShootBurstDelay>k__BackingField: 0.1

@@ -24,7 +24,7 @@ namespace Gameplay.Enemies.Presentation
 		public void Snap(Vector2Int cell, RollDirection facing, GridBasis basis)
 		{
 			transform.SetPositionAndRotation(
-			                                 basis.GetCellCenter(cell),
+			                                 GetCellPosition(cell, basis),
 			                                 Quaternion.LookRotation(ToWorldDirection(facing, basis), basis.Up)
 			                                );
 		}
@@ -43,7 +43,7 @@ namespace Gameplay.Enemies.Presentation
 
 		public async UniTask PlayMoveAsync(Vector2Int from, Vector2Int to, GridBasis basis, float duration, CancellationToken cancellationToken)
 		{
-			await LMotion.Create(basis.GetCellCenter(from), basis.GetCellCenter(to), duration)
+			await LMotion.Create(GetCellPosition(from, basis), GetCellPosition(to, basis), duration)
 			             .BindToPosition(transform)
 			             .ToUniTask(cancellationToken: cancellationToken);
 		}
@@ -65,6 +65,11 @@ namespace Gameplay.Enemies.Presentation
 				RollDirection.West  => -basis.Right,
 				_                   => basis.Forward
 			};
+		}
+
+		private static Vector3 GetCellPosition(Vector2Int cell, GridBasis basis)
+		{
+			return basis.GetCellCenter(cell);
 		}
 	}
 }

@@ -63,6 +63,32 @@ namespace Gameplay.Navigation
 			return GetCellWorldCorner(x, y) + (transform.right + transform.forward) * 0.5f;
 		}
 
+		public Vector3 GetCellWorldPosition(Vector2Int coordinates, GridPositionAlignment alignment)
+		{
+			return alignment == GridPositionAlignment.Center
+				? GetCellWorldCenter(coordinates.x, coordinates.y)
+				: GetCellWorldCorner(coordinates.x, coordinates.y);
+		}
+
+		public Vector2Int GetCellCoordinates(Vector3 worldPosition)
+		{
+			return GetCellCoordinates(worldPosition, GridPositionAlignment.Corner);
+		}
+
+		public Vector2Int GetCellCoordinates(Vector3 worldPosition, GridPositionAlignment alignment)
+		{
+			Vector3 anchor  = alignment == GridPositionAlignment.Center
+				? worldPosition - (transform.right + transform.forward) * 0.5f
+				: worldPosition;
+			Vector3 delta   = anchor - transform.position;
+			Vector3 right   = transform.right.normalized;
+			Vector3 forward = transform.forward.normalized;
+			int     x       = Mathf.FloorToInt(Vector3.Dot(delta, right));
+			int     y       = Mathf.FloorToInt(Vector3.Dot(delta, forward));
+
+			return new(x, y);
+		}
+
 		// === Queries ===
 
 		public bool IsInBounds(int        x, int y) => x >= 0 && x < m_Width && y >= 0 && y < m_Height;

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Gameplay.Enemies.Authoring
 {
-	public abstract class EnemyBehaviour : MonoBehaviour
+	public abstract class EnemyBehaviour : MonoBehaviour, IGridPositionEntity
 	{
 		// === Identity ===
 
@@ -47,9 +47,9 @@ namespace Gameplay.Enemies.Authoring
 			m_RuntimeBound = runtimeHandle != null;
 		}
 
-		public void SetSpawnCell(Vector2Int cell)
+		public void SetGridPosition(Vector2Int gridPosition)
 		{
-			GridPosition = cell;
+			GridPosition = gridPosition;
 		}
 	}
 }

@@ -5,10 +5,8 @@ using UnityEngine;
 namespace Gameplay.Navigation.Editor
 {
 	[CustomEditor(typeof(NavGrid))]
-	public class NavGridEditor : UnityEditor.Editor
+	public sealed class NavGridEditor : UnityEditor.Editor
 	{
-		// === Constants ===
-
 		private static readonly Color GridColor                = new(1f, 1f, 1f, 0.35f);
 		private static readonly Color StaticPropFillColor      = new(0.72f, 0.24f, 0.18f, 0.45f);
 		private static readonly Color StaticPropOutlineColor   = new(0.85f, 0.34f, 0.28f, 0.95f);
@@ -18,12 +16,6 @@ namespace Gameplay.Navigation.Editor
 		private static readonly Color DecorativeOutlineColor   = new(0.98f, 0.92f, 0.35f, 0.9f);
 		private static readonly Color ActorFillColor           = new(0.22f, 0.5f, 0.95f, 0.32f);
 		private static readonly Color ActorOutlineColor        = new(0.42f, 0.68f, 1.0f, 0.92f);
-
-		// === State ===
-
-		private readonly Vector3[] m_CellCorners = new Vector3[4];
-
-		// === Inspector ===
 
 		public override void OnInspectorGUI()
 		{
@@ -36,11 +28,9 @@ namespace Gameplay.Navigation.Editor
 			}
 		}
 
-		// === Scene ===
-
-		private void OnSceneGUI()
+		[DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
+		private static void DrawNavGridGizmo(NavGrid navGrid, GizmoType gizmoType)
 		{
-			NavGrid navGrid = (NavGrid)target;
 			if (navGrid == null) {
 				return;
 			}
@@ -49,23 +39,26 @@ namespace Gameplay.Navigation.Editor
 			DrawOccupiedCells(navGrid);
 		}
 
-		private void DrawGrid(NavGrid navGrid)
+		private static void DrawGrid(NavGrid navGrid)
 		{
+			Vector3[] cellCorners = new Vector3[4];
 			Handles.color = GridColor;
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
-					GetCellCorners(navGrid, x, y, m_CellCorners);
-					Handles.DrawPolyLine(m_CellCorners[0], m_CellCorners[1], m_CellCorners[2], m_CellCorners[3], m_CellCorners[0]);
+					GetCellCorners(navGrid, x, y, cellCorners);
+					Handles.DrawPolyLine(cellCorners[0], cellCorners[1], cellCorners[2], cellCorners[3], cellCorners[0]);
 				}
 			}
 		}
 
-		private void DrawOccupiedCells(NavGrid navGrid)
+		private static void DrawOccupiedCells(NavGrid navGrid)
 		{
 			if (navGrid.Nodes.Data == null || navGrid.Nodes.Data.Length != navGrid.NodeCount) {
 				return;
 			}
+
+			Vector3[] cellCorners = new Vector3[4];
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
@@ -74,15 +67,13 @@ namespace Gameplay.Navigation.Editor
 						continue;
 					}
 
-					GetCellCorners(navGrid, x, y, m_CellCorners);
+					GetCellCorners(navGrid, x, y, cellCorners);
 					GetColors(occupancy.Type, out Color fillColor, out Color outlineColor);
-					Handles.DrawSolidRectangleWithOutline(m_CellCorners, fillColor, outlineColor);
+					Handles.DrawSolidRectangleWithOutline(cellCorners, fillColor, outlineColor);
 					Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(occupancy));
 				}
 			}
 		}
-
-		// === Helpers ===
 
 		private static void GetCellCorners(NavGrid navGrid, int x, int y, Vector3[] corners)
 		{
