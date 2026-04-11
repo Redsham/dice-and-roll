@@ -9,7 +9,7 @@ namespace Gameplay.Player.Presentation
 {
 	public class DiceRotator
 	{
-		private const float RollDuration = 0.18f;
+		private const float ROLL_DURATION = 0.3f;
 
 		private Transform m_Transform;
 
@@ -29,8 +29,8 @@ namespace Gameplay.Player.Presentation
 			Vector3 pivot     = GetPivot(fromState.Position, direction, gridBasis);
 			float   previousT = 0.0f;
 
-			await LMotion.Create(0.0f, 1.0f, RollDuration)
-			             .WithEase(Ease.InOutQuad)
+			await LMotion.Create(0.0f, 1.0f, ROLL_DURATION)
+			             .WithEase(Ease.InOutCubic)
 			             .Bind(t => {
 				              float delta = t - previousT;
 				              previousT = t;

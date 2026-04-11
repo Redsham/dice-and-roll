@@ -76,7 +76,7 @@ namespace Gameplay.Flow.Scenario
 				await m_EnemySpawner.SpawnAsync(cancellationToken);
 				await m_GameplayLoop.RunAsync(cancellationToken);
 
-				if (m_GameplayStateService.EndReason == GameplayEndReason.PlayerDefeated) {
+				if (m_GameplayStateService.HasEnded) {
 					break;
 				}
 

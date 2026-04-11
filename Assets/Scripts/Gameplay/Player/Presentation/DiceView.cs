@@ -42,7 +42,7 @@ namespace Gameplay.Player.Presentation
 
 		public async UniTask PlayShootAsync(DiceShotPresentationRequest request)
 		{
-			DiceShotFaceDescriptor descriptor        = FindDescriptor(request.Face);
+			DiceShotFaceDescriptor descriptor        = FindDescriptor(ResolveLocalShotFace(request));
 			ParticleSystem[]       shotVfx           = descriptor.ShotVfx ?? Array.Empty<ParticleSystem>();
 			int[]                  playOrder         = CreatePlayOrder(shotVfx.Length);
 			float                  elapsedSeconds    = 0.0f;
@@ -79,6 +79,19 @@ namespace Gameplay.Player.Presentation
 			}
 
 			return default;
+		}
+
+		private static DiceFace ResolveLocalShotFace(DiceShotPresentationRequest request)
+		{
+			int shotFaceValue = request.Orientation.GetFaceValue(request.Face);
+
+			foreach (DiceFace localFace in Enum.GetValues(typeof(DiceFace))) {
+				if (DiceOrientation.Default.GetFaceValue(localFace) == shotFaceValue) {
+					return localFace;
+				}
+			}
+
+			return request.Face;
 		}
 
 		private static int[] CreatePlayOrder(int count)

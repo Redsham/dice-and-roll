@@ -18,6 +18,7 @@ using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
 using Gameplay.World.Runtime.Tracing;
+using UI.Gameplay;
 using VContainer;
 using VContainer.Unity;
 
@@ -54,6 +55,7 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.Register<DefaultGameplayScenario>(Lifetime.Scoped).As<IGameplayScenario>();
 
 			builder.RegisterEntryPoint<GameplayCameraInput>();
+			builder.RegisterEntryPoint<GameplayHudEntryPoint>();
 			builder.RegisterEntryPoint<GameplayEntryPoint>();
 		}
 	}

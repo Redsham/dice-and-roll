@@ -31,6 +31,9 @@ namespace Gameplay.Flow.Loop
 				}
 
 				await m_EnemyTurnExecutor.ExecuteAsync(cancellationToken);
+				if (!m_GameplayStateService.HasEnded) {
+					m_GameplayStateService.AdvanceTurn();
+				}
 			}
 		}
 	}

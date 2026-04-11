@@ -187,6 +187,7 @@ namespace Gameplay.Player.Runtime
 				                                                             );
 
 				DiceShotPresentationRequest request = new(
+				                                          m_Controller.State.Orientation,
 				                                          face,
 				                                          direction,
 				                                          shotCount,

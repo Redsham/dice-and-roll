@@ -59,7 +59,7 @@ namespace Gameplay.Player.Domain
 		public static Quaternion GetRotation(this DiceOrientation orientation)
 		{
 			Vector3 up      = GetDirectionForFace(orientation, 1);
-			Vector3 right   = GetDirectionForFace(orientation, 3);
+			Vector3 right   = GetDirectionForFace(orientation, 4);
 			Vector3 forward = Vector3.Cross(right, up);
 			return Quaternion.LookRotation(forward, up);
 		}

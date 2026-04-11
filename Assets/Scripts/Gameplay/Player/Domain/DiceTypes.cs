@@ -24,10 +24,10 @@ namespace Gameplay.Player.Domain
 		public static DiceOrientation Default => new() {
 			Top      = 1,
 			Bottom   = 6,
-			Left     = 4,
-			Right    = 3,
-			Forward  = 2,
-			Backward = 5
+			Left     = 3,
+			Right    = 4,
+			Forward  = 5,
+			Backward = 2
 		};
 
 		public int Top;
