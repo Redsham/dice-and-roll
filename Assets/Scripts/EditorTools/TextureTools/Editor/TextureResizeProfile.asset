@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ece981c54034a34a5986ed6170c8f1d, type: 3}
+  m_Name: TextureResizeProfile
+  m_EditorClassIdentifier: TextureTools.Editor::EditorTools.TextureTools.Editor.TextureResizeProfile
+  OperationMode: 0
+  ScalingMode: 1
+  PowerOfTwoMode: 0
+  OutputDirectory: Assets/Art/UI/Resized
+  IncludeSubfolders: 1
+  OverwriteExisting: 0
+  PreserveTextureType: 1
+  Width: 1024
+  Height: 1024
+  LongSide: 1024
+  ShortSide: 512
+  Percent: 50
+  Sources:
+  - {fileID: 2800000, guid: 7a3e8a71e6fdb436d808ac09feec938a, type: 3}
+  - {fileID: 2800000, guid: a0ca3d8ddd607446d8e8f00ef46c817c, type: 3}
+  - {fileID: 2800000, guid: e359aa4549c894a559d915609815ad3c, type: 3}
+  - {fileID: 2800000, guid: fc6acd65f50f04a39bc90027b3dcd63f, type: 3}
+  - {fileID: 2800000, guid: e32a7f411bb894c86bd0860c7ebddbef, type: 3}
+  - {fileID: 2800000, guid: c14cfc80a74b04344889036769686731, type: 3}
+  - {fileID: 2800000, guid: fa5441bb4876b4b6d9b530dd165974d5, type: 3}
+  - {fileID: 2800000, guid: 8f27262dc8a31425ea26e917fed2deee, type: 3}
+  - {fileID: 2800000, guid: 880178488c4ec4895ba60202e9d103ef, type: 3}
+  - {fileID: 2800000, guid: 32e15e0f6e0f14bccaeecc0ede01efb7, type: 3}
+  - {fileID: 2800000, guid: 06068a6fa026b466c864319d3a6fece9, type: 3}
+  - {fileID: 2800000, guid: b958b931a38ad48de8c9733086cec019, type: 3}
+  - {fileID: 2800000, guid: 44fbe9b8c868d43119e1e38db75a4a82, type: 3}
+  - {fileID: 2800000, guid: 5562c6b4e3ad545a28ad18f3a5209d43, type: 3}

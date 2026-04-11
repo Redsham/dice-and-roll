@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1002}
   - component: {fileID: 1005}
   - component: {fileID: 1006}
+  - component: {fileID: 3474078485245266618}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -36,27 +37,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1002
-BoxCollider:
+--- !u!33 &1004
+MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Mesh: {fileID: -835688487210165693, guid: 3fb1451c6ebe8494dac5d1d6018e27ef, type: 3}
 --- !u!23 &1003
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -106,14 +94,27 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1004
-MeshFilter:
+--- !u!65 &1002
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000}
-  m_Mesh: {fileID: -835688487210165693, guid: 3fb1451c6ebe8494dac5d1d6018e27ef, type: 3}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Dice.DiceBehaviour
   <View>k__BackingField: {fileID: 1006}
+  <Config>k__BackingField: {fileID: 11400000, guid: 3a4cf0c5c5eaa4301ac0560d85af7648, type: 2}
 --- !u!114 &1006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,3 +141,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d1060c25e74246bbebdac9d040c0ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Dice.View.DiceView
+  m_ShotFaces: []
+  m_Audio: {fileID: 3474078485245266618}
+--- !u!114 &3474078485245266618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b030fb659cc8b4d5d829088146cec4be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Player.Presentation.DiceAudio
+  m_ShotAudioSource: {fileID: 0}
+  m_ShotClips: []

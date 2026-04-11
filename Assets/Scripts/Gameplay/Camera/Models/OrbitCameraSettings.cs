@@ -13,6 +13,12 @@ namespace Gameplay.Camera.Models
 		public float Yaw;
 		[Min(0.01f)] public float FollowSmoothTime;
 		[Min(0.01f)] public float RotationSmoothTime;
+		[Min(0.01f)] public float ZoomSmoothTime;
+		[Min(0.01f)] public float MinZoomDistance;
+		[Min(0.01f)] public float MaxZoomDistance;
+		public float FarPitch;
+		public float NearPitch;
+		[Min(0.01f)] public float ZoomInputStep;
 
 		public static OrbitCameraSettings Default => new() {
 			PlanarDistance = 7.0f,
@@ -20,7 +26,13 @@ namespace Gameplay.Camera.Models
 			LookHeight = 1.0f,
 			Yaw = 35.0f,
 			FollowSmoothTime = 0.18f,
-			RotationSmoothTime = 0.16f
+			RotationSmoothTime = 0.16f,
+			ZoomSmoothTime = 0.2f,
+			MinZoomDistance = 3.5f,
+			MaxZoomDistance = 9.0f,
+			FarPitch = 42.0f,
+			NearPitch = 20.0f,
+			ZoomInputStep = 1.0f
 		};
 	}
 }

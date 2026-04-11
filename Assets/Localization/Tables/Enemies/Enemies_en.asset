@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Enemies_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 7f43b7197428432ea6f1121d6ae617c1, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 100
+    m_Localized: Enemy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101
+    m_Localized: Pawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102
+    m_Localized: A line infantry enemy that marches toward the player, turns in place, and shoots when its lane is clear.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103
+    m_Localized: Mortar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 104
+    m_Localized: An artillery enemy that marks a strike zone near the player and detonates it after a short delay.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 105
+    m_Localized: A hostile unit that acts through the enemy turn system.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

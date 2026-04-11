@@ -90,6 +90,45 @@ namespace Gameplay.Navigation
 			return IsInBounds(coordinates) && TrySetWalkable(ToIndex(coordinates), isWalkable);
 		}
 
+		public void ClearOccupancy()
+		{
+			EnsureReady();
+
+			for (int i = 0; i < Nodes.Data.Length; i++) {
+				Nodes[i].Occupancy = NavCellOccupancy.Empty;
+			}
+		}
+
+		public bool TrySetOccupancy(int index, NavCellOccupancy occupancy)
+		{
+			EnsureReady();
+
+			if (!IsValidIndex(index)) {
+				return false;
+			}
+
+			Nodes[index].Occupancy = occupancy;
+			return true;
+		}
+
+		public bool TrySetOccupancy(Vector2Int coordinates, NavCellOccupancy occupancy)
+		{
+			EnsureReady();
+			return IsInBounds(coordinates) && TrySetOccupancy(ToIndex(coordinates), occupancy);
+		}
+
+		public bool TryGetOccupancy(Vector2Int coordinates, out NavCellOccupancy occupancy)
+		{
+			EnsureReady();
+			if (!IsInBounds(coordinates)) {
+				occupancy = NavCellOccupancy.Empty;
+				return false;
+			}
+
+			occupancy = Nodes[ToIndex(coordinates)].Occupancy;
+			return true;
+		}
+
 		public bool TryFindPath(Vector2Int start, Vector2Int goal, int[] pathBuffer, out NavPathResult result)
 		{
 			NavDefaultTraversalCostProvider weights = default;

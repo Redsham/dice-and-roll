@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Composition;
 using Gameplay.Player.Domain;
+using Gameplay.World.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,33 +13,47 @@ namespace Gameplay.Flow.Input
 	public sealed class KeyboardPlayerTurnSource : IPlayerTurnSource, System.IDisposable
 	{
 		private const string PlayerMoveActionName = "Player/Move";
+		private const string PlayerShootActionName = "Player/Attack";
 
-		private readonly InputAction             m_MoveAction;
-		private readonly ICameraGridOrientation m_CameraGridOrientation;
+		private readonly InputAction              m_MoveAction;
+		private readonly InputAction              m_ShootAction;
+		private readonly ICameraGridOrientation   m_CameraGridOrientation;
+		private readonly ICameraScreenProjector   m_CameraScreenProjector;
+		private readonly INavigationService       m_NavigationService;
 
-		private UniTaskCompletionSource<RollDirection> m_PendingTurn;
+		private UniTaskCompletionSource<PlayerTurnCommand> m_PendingTurn;
 
-		public KeyboardPlayerTurnSource(GameplaySceneConfiguration configuration, ICameraGridOrientation cameraGridOrientation)
+		public KeyboardPlayerTurnSource(
+			GameplaySceneConfiguration configuration,
+			ICameraGridOrientation cameraGridOrientation,
+			ICameraScreenProjector cameraScreenProjector,
+			INavigationService navigationService
+		)
 		{
 			if (configuration.InputActions == null) {
 				throw new System.InvalidOperationException("GameplaySceneConfiguration must reference an InputActionAsset.");
 			}
 
 			m_CameraGridOrientation = cameraGridOrientation;
+			m_CameraScreenProjector = cameraScreenProjector;
+			m_NavigationService = navigationService;
 			m_MoveAction = configuration.InputActions.FindAction(PlayerMoveActionName, throwIfNotFound: true);
+			m_ShootAction = configuration.InputActions.FindAction(PlayerShootActionName, throwIfNotFound: true);
 			m_MoveAction.performed += OnMovePerformed;
+			m_ShootAction.performed += OnShootPerformed;
 			m_MoveAction.Enable();
+			m_ShootAction.Enable();
 		}
 
-		public UniTask<RollDirection> WaitForTurnAsync(CancellationToken cancellationToken)
+		public UniTask<PlayerTurnCommand> WaitForTurnAsync(CancellationToken cancellationToken)
 		{
 			if (m_PendingTurn != null) {
 				throw new System.InvalidOperationException("Only one pending player turn is supported.");
 			}
 
-			m_PendingTurn = new UniTaskCompletionSource<RollDirection>();
+			m_PendingTurn = new UniTaskCompletionSource<PlayerTurnCommand>();
 			cancellationToken.Register(() => {
-				UniTaskCompletionSource<RollDirection> pendingTurn = m_PendingTurn;
+				UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 				if (pendingTurn == null) {
 					return;
 				}
@@ -53,7 +68,9 @@ namespace Gameplay.Flow.Input
 		public void Dispose()
 		{
 			m_MoveAction.performed -= OnMovePerformed;
+			m_ShootAction.performed -= OnShootPerformed;
 			m_MoveAction.Disable();
+			m_ShootAction.Disable();
 		}
 
 		private void OnMovePerformed(InputAction.CallbackContext context)
@@ -69,10 +86,27 @@ namespace Gameplay.Flow.Input
 					return;
 				}
 
-				UniTaskCompletionSource<RollDirection> pendingTurn = m_PendingTurn;
+				UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 				m_PendingTurn = null;
-				pendingTurn.TrySetResult(direction);
+				pendingTurn.TrySetResult(PlayerTurnCommand.Move(direction));
 			}
+		}
+
+		private void OnShootPerformed(InputAction.CallbackContext context)
+		{
+			if (m_PendingTurn == null || !m_NavigationService.HasLevel) {
+				return;
+			}
+
+			Vector2 screenPosition = Pointer.current?.position.ReadValue() ?? default;
+			GridBasis basis = m_NavigationService.Basis;
+			if (!m_CameraScreenProjector.TryProjectScreenPointToPlane(screenPosition, basis.Origin, basis.Up, out Vector3 worldPoint)) {
+				return;
+			}
+
+			UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
+			m_PendingTurn = null;
+			pendingTurn.TrySetResult(PlayerTurnCommand.Shoot(worldPoint));
 		}
 
 		private static bool TryMapLocalDirection(Vector2 input, out Vector2Int direction)

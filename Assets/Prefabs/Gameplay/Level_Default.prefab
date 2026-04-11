@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2001}
   - component: {fileID: 2002}
+  - component: {fileID: 8830193193936831262}
   m_Layer: 0
   m_Name: Level_Default
   m_TagString: Untagged
@@ -49,6 +50,22 @@ MonoBehaviour:
   <NavGrid>k__BackingField: {fileID: 2102}
   <PlayerStart>k__BackingField: {fileID: 2202}
   <PropsRoot>k__BackingField: {fileID: 0}
+--- !u!114 &8830193193936831262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f918944ea601491f8bcd8e87a0ac47c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Levels.Authoring.Enemies.RandomEnemySpawnerAuthoring
+  <EnemyPrefabs>k__BackingField:
+  - {fileID: 2875784608312422757, guid: 1eae5112190bf48d7944d74c63043d29, type: 3}
+  - {fileID: 6729876539980891950, guid: fa5fc1d86c0d54df59bbc2ab71578478, type: 3}
+  <SpawnCount>k__BackingField: 5
 --- !u!1 &2100
 GameObject:
   m_ObjectHideFlags: 0

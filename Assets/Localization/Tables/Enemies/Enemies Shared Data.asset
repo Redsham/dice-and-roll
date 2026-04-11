@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Enemies Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Enemies
+  m_TableCollectionNameGuidString: 7f43b7197428432ea6f1121d6ae617c1
+  m_Entries:
+  - m_Id: 100
+    m_Key: enemy_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101
+    m_Key: enemy_pawn_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102
+    m_Key: enemy_pawn_description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103
+    m_Key: enemy_mortar_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 104
+    m_Key: enemy_mortar_description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 105
+    m_Key: enemy_description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 371576763331641640
+  references:
+    version: 2
+    RefIds:
+    - rid: 371576763331641640
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1775339368591

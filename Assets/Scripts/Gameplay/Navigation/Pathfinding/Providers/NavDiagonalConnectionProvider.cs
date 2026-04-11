@@ -42,7 +42,7 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 			if (x > 0) {
 				int leftIndex = nodeIndex - 1;
-				canMoveLeft = grid.Nodes[leftIndex].IsWalkable;
+				canMoveLeft = grid.Nodes[leftIndex].CanOccupy;
 				if (canMoveLeft) {
 					buffer[count++] = new(leftIndex, STRAIGHT_COST);
 				}
@@ -50,7 +50,7 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 			if (x + 1 < width) {
 				int rightIndex = nodeIndex + 1;
-				canMoveRight = grid.Nodes[rightIndex].IsWalkable;
+				canMoveRight = grid.Nodes[rightIndex].CanOccupy;
 				if (canMoveRight) {
 					buffer[count++] = new(rightIndex, STRAIGHT_COST);
 				}
@@ -58,7 +58,7 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 			if (y > 0) {
 				int upIndex = nodeIndex - width;
-				canMoveUp = grid.Nodes[upIndex].IsWalkable;
+				canMoveUp = grid.Nodes[upIndex].CanOccupy;
 				if (canMoveUp) {
 					buffer[count++] = new(upIndex, STRAIGHT_COST);
 				}
@@ -66,25 +66,25 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 			if (y + 1 < grid.Height) {
 				int downIndex = nodeIndex + width;
-				canMoveDown = grid.Nodes[downIndex].IsWalkable;
+				canMoveDown = grid.Nodes[downIndex].CanOccupy;
 				if (canMoveDown) {
 					buffer[count++] = new(downIndex, STRAIGHT_COST);
 				}
 			}
 
-			if (x > 0 && y > 0 && grid.Nodes[nodeIndex - width - 1].IsWalkable && CanTraverseDiagonal(grid, canMoveLeft, canMoveUp)) {
+			if (x > 0 && y > 0 && grid.Nodes[nodeIndex - width - 1].CanOccupy && CanTraverseDiagonal(grid, canMoveLeft, canMoveUp)) {
 				buffer[count++] = new(nodeIndex - width - 1, DIAGONAL_COST);
 			}
 
-			if (x + 1 < width && y > 0 && grid.Nodes[nodeIndex - width + 1].IsWalkable && CanTraverseDiagonal(grid, canMoveRight, canMoveUp)) {
+			if (x + 1 < width && y > 0 && grid.Nodes[nodeIndex - width + 1].CanOccupy && CanTraverseDiagonal(grid, canMoveRight, canMoveUp)) {
 				buffer[count++] = new(nodeIndex - width + 1, DIAGONAL_COST);
 			}
 
-			if (x > 0 && y + 1 < grid.Height && grid.Nodes[nodeIndex + width - 1].IsWalkable && CanTraverseDiagonal(grid, canMoveLeft, canMoveDown)) {
+			if (x > 0 && y + 1 < grid.Height && grid.Nodes[nodeIndex + width - 1].CanOccupy && CanTraverseDiagonal(grid, canMoveLeft, canMoveDown)) {
 				buffer[count++] = new(nodeIndex + width - 1, DIAGONAL_COST);
 			}
 
-			if (x + 1 < width && y + 1 < grid.Height && grid.Nodes[nodeIndex + width + 1].IsWalkable && CanTraverseDiagonal(grid, canMoveRight, canMoveDown)) {
+			if (x + 1 < width && y + 1 < grid.Height && grid.Nodes[nodeIndex + width + 1].CanOccupy && CanTraverseDiagonal(grid, canMoveRight, canMoveDown)) {
 				buffer[count++] = new(nodeIndex + width + 1, DIAGONAL_COST);
 			}
 

@@ -7,7 +7,7 @@ using Gameplay.Camera.Modes;
 namespace Gameplay.Camera.Runtime
 {
 	[DisallowMultipleComponent]
-	public sealed class DynamicCameraRig : MonoBehaviour, IGameCameraController, ICameraGridOrientation
+	public sealed class DynamicCameraRig : MonoBehaviour, IGameCameraController, ICameraGridOrientation, ICameraScreenProjector
 	{
 		[SerializeField]            private UnityEngine.Camera  m_Camera;
 		[SerializeField]            private OrbitCameraSettings m_DefaultOrbit         = default;
@@ -46,6 +46,26 @@ namespace Gameplay.Camera.Runtime
 
 				if (m_DefaultOrbit.RotationSmoothTime <= 0.0f) {
 					m_DefaultOrbit.RotationSmoothTime = OrbitCameraSettings.Default.RotationSmoothTime;
+				}
+
+				if (m_DefaultOrbit.ZoomSmoothTime <= 0.0f) {
+					m_DefaultOrbit.ZoomSmoothTime = OrbitCameraSettings.Default.ZoomSmoothTime;
+				}
+
+				if (m_DefaultOrbit.MinZoomDistance <= 0.0f) {
+					m_DefaultOrbit.MinZoomDistance = OrbitCameraSettings.Default.MinZoomDistance;
+				}
+
+				if (m_DefaultOrbit.MaxZoomDistance <= 0.0f) {
+					m_DefaultOrbit.MaxZoomDistance = OrbitCameraSettings.Default.MaxZoomDistance;
+				}
+
+				if (m_DefaultOrbit.MaxZoomDistance < m_DefaultOrbit.MinZoomDistance) {
+					m_DefaultOrbit.MaxZoomDistance = m_DefaultOrbit.MinZoomDistance;
+				}
+
+				if (m_DefaultOrbit.ZoomInputStep <= 0.0f) {
+					m_DefaultOrbit.ZoomInputStep = OrbitCameraSettings.Default.ZoomInputStep;
 				}
 			}
 
@@ -106,6 +126,13 @@ namespace Gameplay.Camera.Runtime
 			}
 		}
 
+		public void AdjustOrbitZoom(float delta)
+		{
+			if (m_CurrentMode is IOrbitCameraZoomControl orbitCameraZoomControl) {
+				orbitCameraZoomControl.AddZoomInput(delta);
+			}
+		}
+
 		public int QuarterTurns
 		{
 			get
@@ -144,6 +171,19 @@ namespace Gameplay.Camera.Runtime
 			m_ShakeElapsed             = 0.0f;
 			m_ShakeFrequency           = Mathf.Max(0.01f,                      frequency);
 			m_ShakeRotationalAmplitude = Mathf.Max(m_ShakeRotationalAmplitude, rotationalAmplitude);
+		}
+
+		public bool TryProjectScreenPointToPlane(Vector2 screenPosition, Vector3 planeOrigin, Vector3 planeNormal, out Vector3 worldPoint)
+		{
+			Ray ray = m_Camera.ScreenPointToRay(screenPosition);
+			Plane plane = new(planeNormal, planeOrigin);
+			if (plane.Raycast(ray, out float distance)) {
+				worldPoint = ray.GetPoint(distance);
+				return true;
+			}
+
+			worldPoint = default;
+			return false;
 		}
 
 		private CameraPose EvaluatePose(float deltaTime)

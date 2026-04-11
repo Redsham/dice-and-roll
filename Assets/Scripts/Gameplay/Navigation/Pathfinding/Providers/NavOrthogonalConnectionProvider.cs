@@ -34,28 +34,28 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 			if (x > 0) {
 				int leftIndex = nodeIndex - 1;
-				if (grid.Nodes[leftIndex].IsWalkable) {
+				if (grid.Nodes[leftIndex].CanOccupy) {
 					buffer[count++] = new(leftIndex, STRAIGHT_COST);
 				}
 			}
 
 			if (x + 1 < width) {
 				int rightIndex = nodeIndex + 1;
-				if (grid.Nodes[rightIndex].IsWalkable) {
+				if (grid.Nodes[rightIndex].CanOccupy) {
 					buffer[count++] = new(rightIndex, STRAIGHT_COST);
 				}
 			}
 
 			if (y > 0) {
 				int upIndex = nodeIndex - width;
-				if (grid.Nodes[upIndex].IsWalkable) {
+				if (grid.Nodes[upIndex].CanOccupy) {
 					buffer[count++] = new(upIndex, STRAIGHT_COST);
 				}
 			}
 
 			if (y + 1 < grid.Height) {
 				int downIndex = nodeIndex + width;
-				if (grid.Nodes[downIndex].IsWalkable) {
+				if (grid.Nodes[downIndex].CanOccupy) {
 					buffer[count++] = new(downIndex, STRAIGHT_COST);
 				}
 			}

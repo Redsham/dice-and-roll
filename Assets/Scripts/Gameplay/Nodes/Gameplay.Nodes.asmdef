@@ -1,0 +1,16 @@
+{
+  "name": "Gameplay.Nodes",
+  "references": [
+    "Navigation",
+    "TriInspector"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -9,9 +9,15 @@ namespace Gameplay.Navigation.Editor
 	{
 		// === Constants ===
 
-		private static readonly Color GridColor = new(1f, 1f, 1f, 0.35f);
-		private static readonly Color BlockedFillColor = new(1f, 0.15f, 0.15f, 0.35f);
-		private static readonly Color BlockedOutlineColor = new(1f, 0.25f, 0.25f, 0.85f);
+		private static readonly Color GridColor                = new(1f, 1f, 1f, 0.35f);
+		private static readonly Color StaticPropFillColor      = new(0.72f, 0.24f, 0.18f, 0.45f);
+		private static readonly Color StaticPropOutlineColor   = new(0.85f, 0.34f, 0.28f, 0.95f);
+		private static readonly Color DestructibleFillColor    = new(0.95f, 0.56f, 0.16f, 0.38f);
+		private static readonly Color DestructibleOutlineColor = new(1.0f, 0.72f, 0.28f, 0.95f);
+		private static readonly Color DecorativeFillColor      = new(0.82f, 0.78f, 0.18f, 0.2f);
+		private static readonly Color DecorativeOutlineColor   = new(0.98f, 0.92f, 0.35f, 0.9f);
+		private static readonly Color ActorFillColor           = new(0.22f, 0.5f, 0.95f, 0.32f);
+		private static readonly Color ActorOutlineColor        = new(0.42f, 0.68f, 1.0f, 0.92f);
 
 		// === State ===
 
@@ -40,7 +46,7 @@ namespace Gameplay.Navigation.Editor
 			}
 
 			DrawGrid(navGrid);
-			DrawBlockedCells(navGrid);
+			DrawOccupiedCells(navGrid);
 		}
 
 		private void DrawGrid(NavGrid navGrid)
@@ -55,7 +61,7 @@ namespace Gameplay.Navigation.Editor
 			}
 		}
 
-		private void DrawBlockedCells(NavGrid navGrid)
+		private void DrawOccupiedCells(NavGrid navGrid)
 		{
 			if (navGrid.Nodes.Data == null || navGrid.Nodes.Data.Length != navGrid.NodeCount) {
 				return;
@@ -63,12 +69,15 @@ namespace Gameplay.Navigation.Editor
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
-					if (navGrid.Nodes[x, y].IsWalkable) {
+					NavCellOccupancy occupancy = navGrid.Nodes[x, y].Occupancy;
+					if (occupancy.Type == NavCellOccupancyType.Empty) {
 						continue;
 					}
 
 					GetCellCorners(navGrid, x, y, m_CellCorners);
-					Handles.DrawSolidRectangleWithOutline(m_CellCorners, BlockedFillColor, BlockedOutlineColor);
+					GetColors(occupancy.Type, out Color fillColor, out Color outlineColor);
+					Handles.DrawSolidRectangleWithOutline(m_CellCorners, fillColor, outlineColor);
+					Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(occupancy));
 				}
 			}
 		}
@@ -93,6 +102,45 @@ namespace Gameplay.Navigation.Editor
 			navGrid.RebuildGrid();
 			EditorUtility.SetDirty(navGrid);
 			SceneView.RepaintAll();
+		}
+
+		private static void GetColors(NavCellOccupancyType type, out Color fillColor, out Color outlineColor)
+		{
+			switch (type)
+			{
+				case NavCellOccupancyType.StaticProp:
+					fillColor = StaticPropFillColor;
+					outlineColor = StaticPropOutlineColor;
+					break;
+				case NavCellOccupancyType.DestructibleProp:
+					fillColor = DestructibleFillColor;
+					outlineColor = DestructibleOutlineColor;
+					break;
+				case NavCellOccupancyType.DecorativeDestructibleProp:
+					fillColor = DecorativeFillColor;
+					outlineColor = DecorativeOutlineColor;
+					break;
+				case NavCellOccupancyType.Actor:
+					fillColor = ActorFillColor;
+					outlineColor = ActorOutlineColor;
+					break;
+				default:
+					fillColor = Color.clear;
+					outlineColor = Color.clear;
+					break;
+			}
+		}
+
+		private static string GetLabel(NavCellOccupancy occupancy)
+		{
+			return occupancy.Type switch
+			{
+				NavCellOccupancyType.StaticProp => "S",
+				NavCellOccupancyType.DestructibleProp => "D",
+				NavCellOccupancyType.DecorativeDestructibleProp => "Dec",
+				NavCellOccupancyType.Actor => "A",
+				_ => string.Empty
+			};
 		}
 	}
 }

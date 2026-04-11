@@ -1,6 +1,7 @@
 using Gameplay.Levels.Authoring;
 using Gameplay.Navigation;
 using Gameplay.Navigation.Pathfinding;
+using Gameplay.Actors.Runtime;
 using UnityEngine;
 
 
@@ -10,7 +11,13 @@ namespace Gameplay.World.Runtime
 	{
 		private const float CellSize = 1.0f;
 
+		private readonly IGridActorRegistry m_ActorRegistry;
 		private LevelBehaviour m_CurrentLevel;
+
+		public NavigationService(IGridActorRegistry actorRegistry)
+		{
+			m_ActorRegistry = actorRegistry;
+		}
 
 		public bool HasLevel => m_CurrentLevel != null;
 
@@ -50,7 +57,13 @@ namespace Gameplay.World.Runtime
 			}
 
 			int index = navGrid.ToIndex(coordinates);
-			return navGrid.Nodes[index].IsWalkable;
+			return navGrid.Nodes[index].CanOccupy && !m_ActorRegistry.IsOccupied(coordinates);
+		}
+
+		public bool TryGetOccupancy(Vector2Int coordinates, out NavCellOccupancy occupancy)
+		{
+			EnsureGridReady();
+			return RequireGrid().TryGetOccupancy(coordinates, out occupancy);
 		}
 
 		public bool TryFindPath(Vector2Int start, Vector2Int goal, int[] pathBuffer, out NavPathResult result)

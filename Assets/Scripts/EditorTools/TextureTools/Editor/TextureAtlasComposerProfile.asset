@@ -1,0 +1,208 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f0d8347641466b991030d718e769b2, type: 3}
+  m_Name: TextureAtlasComposerProfile
+  m_EditorClassIdentifier: TextureTools.Editor::EditorTools.TextureTools.Editor.TextureAtlasComposerProfile
+  OutputDirectory: Assets/Art/UI/Atlases
+  OutputName: UIAtlas
+  AtlasWidth: 2048
+  AtlasHeight: 2048
+  AutoLayoutPadding: 0
+  AutoCreateSprites: 1
+  GenerateLayoutAsset: 1
+  OverwriteExisting: 1
+  FilterMode: 1
+  WrapMode: 1
+  ClearColor: {r: 0, g: 0, b: 0, a: 0}
+  Entries:
+  - Enabled: 1
+    Id: Muzzle1
+    Texture: {fileID: 2800000, guid: 7a3e8a71e6fdb436d808ac09feec938a, type: 3}
+    Destination:
+      x: 0
+      y: 0
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 0
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle10
+    Texture: {fileID: 2800000, guid: 06068a6fa026b466c864319d3a6fece9, type: 3}
+    Destination:
+      x: 512
+      y: 0
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 1
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle11
+    Texture: {fileID: 2800000, guid: b958b931a38ad48de8c9733086cec019, type: 3}
+    Destination:
+      x: 1024
+      y: 0
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 2
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle12
+    Texture: {fileID: 2800000, guid: 44fbe9b8c868d43119e1e38db75a4a82, type: 3}
+    Destination:
+      x: 1536
+      y: 0
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 3
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle13
+    Texture: {fileID: 2800000, guid: 5562c6b4e3ad545a28ad18f3a5209d43, type: 3}
+    Destination:
+      x: 0
+      y: 512
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 4
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle2
+    Texture: {fileID: 2800000, guid: a0ca3d8ddd607446d8e8f00ef46c817c, type: 3}
+    Destination:
+      x: 512
+      y: 512
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 5
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle3
+    Texture: {fileID: 2800000, guid: e359aa4549c894a559d915609815ad3c, type: 3}
+    Destination:
+      x: 1024
+      y: 512
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 6
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle4
+    Texture: {fileID: 2800000, guid: fc6acd65f50f04a39bc90027b3dcd63f, type: 3}
+    Destination:
+      x: 1536
+      y: 512
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 7
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle5
+    Texture: {fileID: 2800000, guid: e32a7f411bb894c86bd0860c7ebddbef, type: 3}
+    Destination:
+      x: 0
+      y: 1024
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 8
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle6
+    Texture: {fileID: 2800000, guid: c14cfc80a74b04344889036769686731, type: 3}
+    Destination:
+      x: 512
+      y: 1024
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 9
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle7
+    Texture: {fileID: 2800000, guid: fa5441bb4876b4b6d9b530dd165974d5, type: 3}
+    Destination:
+      x: 1024
+      y: 1024
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 10
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle8
+    Texture: {fileID: 2800000, guid: 8f27262dc8a31425ea26e917fed2deee, type: 3}
+    Destination:
+      x: 1536
+      y: 1024
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 11
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle9
+    Texture: {fileID: 2800000, guid: 880178488c4ec4895ba60202e9d103ef, type: 3}
+    Destination:
+      x: 0
+      y: 1536
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 12
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Enabled: 1
+    Id: Muzzle9 1
+    Texture: {fileID: 2800000, guid: 32e15e0f6e0f14bccaeecc0ede01efb7, type: 3}
+    Destination:
+      x: 512
+      y: 1536
+      width: 512
+      height: 512
+    Pivot: {x: 0.5, y: 0.5}
+    RotationDegrees: 0
+    SortOrder: 13
+    PreserveAspect: 1
+    Tint: {r: 1, g: 1, b: 1, a: 1}

@@ -1,8 +1,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Gameplay.Actors.Runtime;
 using Gameplay.Composition;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Data;
+using Gameplay.Nodes.Runtime;
 using Gameplay.World.Runtime;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -18,17 +20,23 @@ namespace Gameplay.Levels.Runtime
 		private readonly GameplaySceneConfiguration m_Configuration;
 		private readonly IObjectResolver            m_ObjectResolver;
 		private readonly INavigationService         m_NavigationService;
+		private readonly ILevelNodeService          m_LevelNodeService;
+		private readonly ICombatResolverService     m_CombatResolverService;
 		private AsyncOperationHandle<GameObject>?   m_CurrentLevelHandle;
 
 		public LevelService(
 			GameplaySceneConfiguration configuration,
 			IObjectResolver objectResolver,
-			INavigationService navigationService
+			INavigationService navigationService,
+			ILevelNodeService levelNodeService,
+			ICombatResolverService combatResolverService
 		)
 		{
 			m_Configuration = configuration;
 			m_ObjectResolver = objectResolver;
 			m_NavigationService = navigationService;
+			m_LevelNodeService = levelNodeService;
+			m_CombatResolverService = combatResolverService;
 		}
 
 		public LevelAsset CurrentAsset { get; private set; }
@@ -64,6 +72,7 @@ namespace Gameplay.Levels.Runtime
 
 			CurrentLevel.Initialize();
 			m_NavigationService.BindLevel(CurrentLevel);
+			m_LevelNodeService.BindLevel(CurrentLevel.NavGrid, CurrentLevel.GetNodes());
 
 			return CurrentLevel;
 		}
@@ -75,6 +84,8 @@ namespace Gameplay.Levels.Runtime
 				CurrentLevel = null;
 				CurrentAsset = null;
 				m_NavigationService.ClearLevel();
+				m_LevelNodeService.ClearLevel();
+				m_CombatResolverService.Clear();
 				if (m_CurrentLevelHandle.HasValue) {
 					Addressables.ReleaseInstance(levelObject);
 					m_CurrentLevelHandle = null;
