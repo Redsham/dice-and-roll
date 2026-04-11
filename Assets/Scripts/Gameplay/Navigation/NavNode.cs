@@ -7,7 +7,7 @@ namespace Gameplay.Navigation
 		public readonly int              Index;
 		public          bool             IsWalkable;
 		public          NavCellOccupancy Occupancy;
-		public bool CanOccupy => IsWalkable && !Occupancy.BlocksMovement;
+		public          bool             CanOccupy => IsWalkable && !Occupancy.BlocksMovement;
 
 		// === Lifecycle ===
 

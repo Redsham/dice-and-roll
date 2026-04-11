@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Actors.Runtime;
@@ -17,40 +18,40 @@ namespace Gameplay.Levels.Runtime
 {
 	public sealed class LevelService : ILevelService
 	{
-		private readonly GameplaySceneConfiguration m_Configuration;
-		private readonly IObjectResolver            m_ObjectResolver;
-		private readonly INavigationService         m_NavigationService;
-		private readonly ILevelNodeService          m_LevelNodeService;
-		private readonly ICombatResolverService     m_CombatResolverService;
-		private AsyncOperationHandle<GameObject>?   m_CurrentLevelHandle;
+		private readonly GameplaySceneConfiguration        m_Configuration;
+		private readonly IObjectResolver                   m_ObjectResolver;
+		private readonly INavigationService                m_NavigationService;
+		private readonly ILevelNodeService                 m_LevelNodeService;
+		private readonly ICombatResolverService            m_CombatResolverService;
+		private          AsyncOperationHandle<GameObject>? m_CurrentLevelHandle;
 
 		public LevelService(
 			GameplaySceneConfiguration configuration,
-			IObjectResolver objectResolver,
-			INavigationService navigationService,
-			ILevelNodeService levelNodeService,
-			ICombatResolverService combatResolverService
+			IObjectResolver            objectResolver,
+			INavigationService         navigationService,
+			ILevelNodeService          levelNodeService,
+			ICombatResolverService     combatResolverService
 		)
 		{
-			m_Configuration = configuration;
-			m_ObjectResolver = objectResolver;
-			m_NavigationService = navigationService;
-			m_LevelNodeService = levelNodeService;
+			m_Configuration         = configuration;
+			m_ObjectResolver        = objectResolver;
+			m_NavigationService     = navigationService;
+			m_LevelNodeService      = levelNodeService;
 			m_CombatResolverService = combatResolverService;
 		}
 
-		public LevelAsset CurrentAsset { get; private set; }
+		public LevelAsset     CurrentAsset { get; private set; }
 		public LevelBehaviour CurrentLevel { get; private set; }
-		public bool HasLevel => CurrentLevel != null;
+		public bool           HasLevel     => CurrentLevel != null;
 
 		public async UniTask<LevelBehaviour> LoadAsync(LevelAsset levelAsset, CancellationToken cancellationToken)
 		{
 			if (levelAsset == null) {
-				throw new System.ArgumentNullException(nameof(levelAsset));
+				throw new ArgumentNullException(nameof(levelAsset));
 			}
 
 			if (levelAsset.LevelPrefab == null || !levelAsset.LevelPrefab.RuntimeKeyIsValid()) {
-				throw new System.InvalidOperationException($"LevelAsset '{levelAsset.name}' does not reference a level prefab.");
+				throw new InvalidOperationException($"LevelAsset '{levelAsset.name}' does not reference a level prefab.");
 			}
 
 			CurrentAsset = levelAsset;
@@ -64,10 +65,10 @@ namespace Gameplay.Levels.Runtime
 			if (CurrentLevel == null) {
 				Addressables.ReleaseInstance(levelObject);
 				m_CurrentLevelHandle = null;
-				CurrentAsset = null;
-				throw new System.InvalidOperationException(
-					$"Addressable level '{levelAsset.name}' must contain a {nameof(LevelBehaviour)} component on the root object."
-				);
+				CurrentAsset         = null;
+				throw new InvalidOperationException(
+				                                    $"Addressable level '{levelAsset.name}' must contain a {nameof(LevelBehaviour)} component on the root object."
+				                                   );
 			}
 
 			CurrentLevel.Initialize();

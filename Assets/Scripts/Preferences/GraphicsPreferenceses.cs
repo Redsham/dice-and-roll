@@ -1,6 +1,7 @@
-using Cysharp.Threading.Tasks;
 using System;
+using System.Globalization;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using Preferences.Ini;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -10,134 +11,134 @@ using UnityEngine.Rendering.Universal;
 namespace Preferences
 {
 	/// <summary>
-	/// Stores and applies PC graphics preferences.
+	///     Stores and applies PC graphics preferences.
 	/// </summary>
 	public class GraphicsPreferenceses : PreferencesCategory
 	{
 		// Data
 
 		/// <summary>
-		/// Preferred screen width in pixels.
+		///     Preferred screen width in pixels.
 		/// </summary>
 		public int ResolutionWidth { get; set; }
 
 		/// <summary>
-		/// Preferred screen height in pixels.
+		///     Preferred screen height in pixels.
 		/// </summary>
 		public int ResolutionHeight { get; set; }
 
 		/// <summary>
-		/// Preferred refresh rate in hertz.
+		///     Preferred refresh rate in hertz.
 		/// </summary>
 		public int RefreshRate { get; set; }
 
 		/// <summary>
-		/// Preferred fullscreen mode.
+		///     Preferred fullscreen mode.
 		/// </summary>
 		public FullScreenMode FullScreenMode { get; set; }
 
 		/// <summary>
-		/// VSync count for Unity quality settings.
+		///     VSync count for Unity quality settings.
 		/// </summary>
 		public int VSyncCount { get; set; }
 
 		/// <summary>
-		/// Target frame rate. A non-positive value means uncapped.
+		///     Target frame rate. A non-positive value means uncapped.
 		/// </summary>
 		public int TargetFrameRate { get; set; }
 
 		/// <summary>
-		/// Global texture mipmap limit.
+		///     Global texture mipmap limit.
 		/// </summary>
 		public int GlobalTextureMipmapLimit { get; set; }
 
 		/// <summary>
-		/// Global anisotropic filtering mode.
+		///     Global anisotropic filtering mode.
 		/// </summary>
 		public AnisotropicFiltering AnisotropicFiltering { get; set; }
 
 		/// <summary>
-		/// Global LOD bias.
+		///     Global LOD bias.
 		/// </summary>
 		public float LodBias { get; set; }
 
 		/// <summary>
-		/// Global maximum LOD level.
+		///     Global maximum LOD level.
 		/// </summary>
 		public int MaximumLodLevel { get; set; }
 
 		/// <summary>
-		/// Enables or disables soft particles.
+		///     Enables or disables soft particles.
 		/// </summary>
 		public bool SoftParticles { get; set; }
 
 		/// <summary>
-		/// Enables or disables realtime reflection probes.
+		///     Enables or disables realtime reflection probes.
 		/// </summary>
 		public bool RealtimeReflectionProbes { get; set; }
 
 		/// <summary>
-		/// Enables HDR in the active URP asset.
+		///     Enables HDR in the active URP asset.
 		/// </summary>
 		public bool UseHdr { get; set; }
 
 		/// <summary>
-		/// MSAA sample count in the active URP asset.
+		///     MSAA sample count in the active URP asset.
 		/// </summary>
 		public int MsaaSamples { get; set; }
 
 		/// <summary>
-		/// URP render scale multiplier.
+		///     URP render scale multiplier.
 		/// </summary>
 		public float RenderScale { get; set; }
 
 		/// <summary>
-		/// Enables camera opaque texture in URP.
+		///     Enables camera opaque texture in URP.
 		/// </summary>
 		public bool RequireOpaqueTexture { get; set; }
 
 		/// <summary>
-		/// Enables camera depth texture in URP.
+		///     Enables camera depth texture in URP.
 		/// </summary>
 		public bool RequireDepthTexture { get; set; }
 
 		/// <summary>
-		/// Enables main light shadows in URP.
+		///     Enables main light shadows in URP.
 		/// </summary>
 		public bool MainLightShadows { get; set; }
 
 		/// <summary>
-		/// Enables additional light shadows in URP.
+		///     Enables additional light shadows in URP.
 		/// </summary>
 		public bool AdditionalLightShadows { get; set; }
 
 		/// <summary>
-		/// Enables soft shadows in URP.
+		///     Enables soft shadows in URP.
 		/// </summary>
 		public bool SoftShadows { get; set; }
 
 		/// <summary>
-		/// Shadow distance used by URP.
+		///     Shadow distance used by URP.
 		/// </summary>
 		public float ShadowDistance { get; set; }
 
 		/// <summary>
-		/// Number of shadow cascades used by URP.
+		///     Number of shadow cascades used by URP.
 		/// </summary>
 		public int ShadowCascadeCount { get; set; }
 
 		/// <summary>
-		/// Maximum number of additional lights affecting a single object.
+		///     Maximum number of additional lights affecting a single object.
 		/// </summary>
 		public int AdditionalLightsPerObjectLimit { get; set; }
 
 		/// <summary>
-		/// Enables the SRP batcher in URP.
+		///     Enables the SRP batcher in URP.
 		/// </summary>
 		public bool UseSrpBatcher { get; set; }
 
 		/// <summary>
-		/// Enables dynamic batching in URP.
+		///     Enables dynamic batching in URP.
 		/// </summary>
 		public bool UseDynamicBatching { get; set; }
 
@@ -445,7 +446,7 @@ namespace Preferences
 					return true;
 				}
 
-				converted = Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+				converted = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
 				return true;
 			} catch {
 				converted = null;
@@ -478,7 +479,7 @@ namespace Preferences
 				return default;
 			}
 
-			return new RefreshRate {
+			return new() {
 				numerator   = (uint)refreshRate,
 				denominator = 1u
 			};

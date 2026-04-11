@@ -5,7 +5,7 @@ using Preferences.Ini;
 namespace Preferences
 {
 	/// <summary>
-	/// Placeholder for future controls preferences.
+	///     Placeholder for future controls preferences.
 	/// </summary>
 	public class ControlsPreferenceses : PreferencesCategory
 	{

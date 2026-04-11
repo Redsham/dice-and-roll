@@ -1,7 +1,6 @@
 using Gameplay.Navigation;
 using Gameplay.Nodes.Contracts;
 using Gameplay.Nodes.Models;
-using UnityEngine;
 
 
 namespace Gameplay.Nodes.Authoring
@@ -21,7 +20,7 @@ namespace Gameplay.Nodes.Authoring
 
 		public void OnActorEnter(in NodeActorContext context)
 		{
-			ApplyDamage(new NodeDamageContext(context.Actor, context.Cell, int.MaxValue));
+			ApplyDamage(new(context.Actor, context.Cell, int.MaxValue));
 		}
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Gameplay.Player.Domain
 {
 	/// <summary>
-	/// Represents the directions in which the dice can be rolled
+	///     Represents the directions in which the dice can be rolled
 	/// </summary>
 	public enum RollDirection
 	{
@@ -16,17 +16,17 @@ namespace Gameplay.Player.Domain
 	}
 
 	/// <summary>
-	/// Represents the values on each face of the dice
+	///     Represents the values on each face of the dice
 	/// </summary>
 	[Serializable]
 	public struct DiceOrientation : IEquatable<DiceOrientation>
 	{
 		public static DiceOrientation Default => new() {
-			Top = 1,
-			Bottom = 6,
-			Left = 4,
-			Right = 3,
-			Forward = 2,
+			Top      = 1,
+			Bottom   = 6,
+			Left     = 4,
+			Right    = 3,
+			Forward  = 2,
 			Backward = 5
 		};
 
@@ -56,7 +56,7 @@ namespace Gameplay.Player.Domain
 	}
 
 	/// <summary>
-	/// Represents the state of the dice
+	///     Represents the state of the dice
 	/// </summary>
 	[Serializable]
 	public struct DiceState
@@ -66,8 +66,8 @@ namespace Gameplay.Player.Domain
 
 		public static DiceState Create(Vector2Int position)
 		{
-			return new DiceState {
-				Position = position,
+			return new() {
+				Position    = position,
 				Orientation = DiceOrientation.Default
 			};
 		}

@@ -1,3 +1,6 @@
+using UnityEngine;
+
+
 namespace Gameplay.Navigation.Pathfinding.Providers
 {
 	public struct NavOrthogonalConnectionProvider : INavConnectionProvider
@@ -20,8 +23,8 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 			int goalX = goalIndex % width;
 			int goalY = goalIndex / width;
 
-			int dx = UnityEngine.Mathf.Abs(fromX - goalX);
-			int dy = UnityEngine.Mathf.Abs(fromY - goalY);
+			int dx = Mathf.Abs(fromX - goalX);
+			int dy = Mathf.Abs(fromY - goalY);
 			return (dx + dy) * STRAIGHT_COST;
 		}
 

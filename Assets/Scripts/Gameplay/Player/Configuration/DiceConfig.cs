@@ -11,7 +11,7 @@ namespace Gameplay.Player.Configuration
 		[field: SerializeField, Min(1)] public int MaxHealth { get; private set; } = 12;
 
 		[Title("Shoot")]
-		[field: SerializeField, Min(1)] public int ShootRange { get; private set; } = 2;
+		[field: SerializeField, Min(1)] public int ShootRange { get;            private set; } = 2;
 		[field: SerializeField, Min(0.01f)] public float ShootBurstDelay { get; private set; } = 0.06f;
 
 		public static DiceConfig CreateRuntimeDefault()

@@ -24,17 +24,17 @@ namespace Infrastructure.Services.Scenes
 			m_Hooks.Remove(hook);
 			Debug.Log($"[{nameof(SceneService)}] Hook removed: {hook.GetType().Name}");
 		}
-		
+
 		/// Loads a scene asynchronously and reports progress through the provided observer.
 		public async UniTask LoadSceneAsync(string sceneName, IProgress<SceneTransitionProgress> progress = null)
 		{
 			Debug.Log($"[{nameof(SceneService)}] Started loading scene: {sceneName}");
-			
+
 			// Start loading the scene asynchronously
 			AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
 			if (loadOperation == null)
 				throw new InvalidOperationException($"Failed to start loading scene '{sceneName}'.");
-			
+
 			// Preparing
 			loadOperation.allowSceneActivation = false;
 			NotifyProgress(new(sceneName, 0.0f, SceneTransitionStage.Preparing), progress);
@@ -65,7 +65,7 @@ namespace Infrastructure.Services.Scenes
 				hook.OnSceneTransitionProgress(progress);
 			}
 		}
-		
+
 		/// Gets the name of the currently active scene.
 		public string GetActiveScene() => SceneManager.GetActiveScene().name;
 

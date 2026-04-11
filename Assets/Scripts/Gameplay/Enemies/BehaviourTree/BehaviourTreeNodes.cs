@@ -80,22 +80,24 @@ namespace Gameplay.Enemies.BehaviourTree
 
 	public sealed class BehaviourTreeRunner
 	{
-		private readonly BehaviourTreeNode      m_Root;
-		private readonly BehaviourTreeDebugView m_DebugView = new();
+		private readonly BehaviourTreeNode m_Root;
 
 		public BehaviourTreeRunner(BehaviourTreeNode root)
 		{
 			m_Root = root;
 		}
 
-		public BehaviourTreeDebugView DebugView => m_DebugView;
+		public BehaviourTreeDebugView DebugView
+		{
+			get;
+		} = new();
 
 		public EnemyTurnAction Evaluate(EnemyDecisionContext context)
 		{
 			context.ResetAction();
 			m_Root.Tick(context);
-			m_DebugView.Clear();
-			m_Root.CollectDebug(m_DebugView, 0);
+			DebugView.Clear();
+			m_Root.CollectDebug(DebugView, 0);
 			return context.SelectedAction;
 		}
 	}

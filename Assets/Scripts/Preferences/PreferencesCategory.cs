@@ -1,12 +1,12 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Preferences.Ini;
 
 
 namespace Preferences
 {
 	/// <summary>
-	/// Base class for a single preferences section.
+	///     Base class for a single preferences section.
 	/// </summary>
 	public abstract class PreferencesCategory
 	{
@@ -17,12 +17,12 @@ namespace Preferences
 		// Lifecycle
 
 		/// <summary>
-		/// Resets the category to its default values.
+		///     Resets the category to its default values.
 		/// </summary>
 		public abstract void New();
 
 		/// <summary>
-		/// Applies the current values to Unity runtime systems.
+		///     Applies the current values to Unity runtime systems.
 		/// </summary>
 		public abstract UniTask Apply();
 
@@ -32,21 +32,21 @@ namespace Preferences
 		protected abstract void Write(IniSectionWriter writer);
 
 		/// <summary>
-		/// Loads the category from its INI section.
+		///     Loads the category from its INI section.
 		/// </summary>
 		public virtual UniTask Load()
 		{
 			New();
 
 			if (IniPreferencesStorage.TryLoadSection(SectionName, out IReadOnlyDictionary<string, string> values)) {
-				Read(new IniSectionReader(values));
+				Read(new(values));
 			}
 
 			return UniTask.CompletedTask;
 		}
 
 		/// <summary>
-		/// Saves the category into its INI section.
+		///     Saves the category into its INI section.
 		/// </summary>
 		public virtual UniTask Save()
 		{

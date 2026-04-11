@@ -27,7 +27,7 @@ namespace Infrastructure.Scopes.Root
 			// Register services
 			builder.Register<SceneService>(Lifetime.Singleton);
 			builder.Register<PreferencesService>(Lifetime.Singleton);
-			
+
 			builder.Register<AudioMixerService>(Lifetime.Singleton);
 			builder.Register<UISounds>(Lifetime.Singleton);
 			builder.Register<UIFade>(Lifetime.Singleton);

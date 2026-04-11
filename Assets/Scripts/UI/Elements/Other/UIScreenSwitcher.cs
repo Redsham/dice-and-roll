@@ -20,12 +20,12 @@ namespace UI.Elements.Other
 
 		private void Start()
 		{
-			if(m_Screens.Length > 0 && m_ActiveScreenIndex == -1 && m_Screens[0].Object != null)
+			if (m_Screens.Length > 0 && m_ActiveScreenIndex == -1 && m_Screens[0].Object != null)
 				Switch(0);
 		}
 
 		// Switch
-		
+
 		public void Switch(int index)
 		{
 			if (m_ActiveScreenIndex == index) return;

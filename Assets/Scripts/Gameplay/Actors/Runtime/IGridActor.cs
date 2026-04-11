@@ -13,13 +13,13 @@ namespace Gameplay.Actors.Runtime
 
 		// === Spatial ===
 
-		Vector2Int Cell { get; }
+		Vector2Int       Cell      { get; }
 		NavCellOccupancy Occupancy { get; }
 
 		// === Combat ===
 
-		bool IsAlive { get; }
+		bool                     IsAlive { get; }
 		NodeProjectileImpactInfo PreviewProjectileImpact(int incomingDamage);
-		int ApplyDamage(int damage, GameObject source = null);
+		int                      ApplyDamage(int             damage, GameObject source = null);
 	}
 }

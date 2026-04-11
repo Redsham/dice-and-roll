@@ -1,3 +1,6 @@
+using UnityEngine;
+
+
 namespace Gameplay.Navigation.Pathfinding.Providers
 {
 	public struct NavDiagonalConnectionProvider : INavConnectionProvider
@@ -21,11 +24,11 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 			int goalX = goalIndex % width;
 			int goalY = goalIndex / width;
 
-			int dx       = UnityEngine.Mathf.Abs(fromX - goalX);
-			int dy       = UnityEngine.Mathf.Abs(fromY - goalY);
-			int diagonal = UnityEngine.Mathf.Min(dx, dy);
-			int straight = UnityEngine.Mathf.Abs(dx - dy);
-			return (diagonal * DIAGONAL_COST) + (straight * STRAIGHT_COST);
+			int dx       = Mathf.Abs(fromX - goalX);
+			int dy       = Mathf.Abs(fromY - goalY);
+			int diagonal = Mathf.Min(dx, dy);
+			int straight = Mathf.Abs(dx - dy);
+			return diagonal * DIAGONAL_COST + straight * STRAIGHT_COST;
 		}
 
 		public int Collect(in NavGrid grid, int nodeIndex, NavConnection[] buffer)
@@ -95,7 +98,7 @@ namespace Gameplay.Navigation.Pathfinding.Providers
 
 		private static bool CanTraverseDiagonal(in NavGrid grid, bool firstAxisOpen, bool secondAxisOpen)
 		{
-			return grid.AllowCornerCutting || (firstAxisOpen && secondAxisOpen);
+			return grid.AllowCornerCutting || firstAxisOpen && secondAxisOpen;
 		}
 	}
 }

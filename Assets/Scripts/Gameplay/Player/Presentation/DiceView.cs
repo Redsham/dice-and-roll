@@ -1,11 +1,12 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
 using Gameplay.Player.Presentation.Combat;
 using Gameplay.World.Runtime;
 using TriInspector;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random;
 
 
 namespace Gameplay.Player.Presentation
@@ -28,9 +29,9 @@ namespace Gameplay.Player.Presentation
 		public void Snap(DiceState state, GridBasis gridBasis)
 		{
 			transform.SetPositionAndRotation(
-				gridBasis.GetCellCenter(state.Position),
-				gridBasis.ToWorldRotation(state.Orientation.GetRotation())
-			);
+			                                 gridBasis.GetCellCenter(state.Position),
+			                                 gridBasis.ToWorldRotation(state.Orientation.GetRotation())
+			                                );
 		}
 
 		public async UniTask PlayRollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
@@ -41,11 +42,11 @@ namespace Gameplay.Player.Presentation
 
 		public async UniTask PlayShootAsync(DiceShotPresentationRequest request)
 		{
-			DiceShotFaceDescriptor descriptor = FindDescriptor(request.Face);
-			ParticleSystem[] shotVfx = descriptor.ShotVfx ?? Array.Empty<ParticleSystem>();
-			int[] playOrder = CreatePlayOrder(shotVfx.Length);
-			float elapsedSeconds = 0.0f;
-			float completionSeconds = 0.0f;
+			DiceShotFaceDescriptor descriptor        = FindDescriptor(request.Face);
+			ParticleSystem[]       shotVfx           = descriptor.ShotVfx ?? Array.Empty<ParticleSystem>();
+			int[]                  playOrder         = CreatePlayOrder(shotVfx.Length);
+			float                  elapsedSeconds    = 0.0f;
+			float                  completionSeconds = 0.0f;
 
 			for (int i = 0; i < request.ShotCount; i++) {
 				m_Audio?.PlayShot();
@@ -92,7 +93,7 @@ namespace Gameplay.Player.Presentation
 			}
 
 			for (int i = count - 1; i > 0; i--) {
-				int swapIndex = UnityEngine.Random.Range(0, i + 1);
+				int swapIndex = Random.Range(0, i + 1);
 				(order[i], order[swapIndex]) = (order[swapIndex], order[i]);
 			}
 
@@ -102,11 +103,10 @@ namespace Gameplay.Player.Presentation
 		private static float GetDurationSeconds(ParticleSystem particleSystem)
 		{
 			ParticleSystem.MainModule main = particleSystem.main;
-			float startLifetime = main.startLifetime.mode switch
-			{
+			float startLifetime = main.startLifetime.mode switch {
 				ParticleSystemCurveMode.TwoConstants => main.startLifetime.constantMax,
-				ParticleSystemCurveMode.TwoCurves => main.startLifetime.curveMultiplier,
-				_ => main.startLifetime.constant
+				ParticleSystemCurveMode.TwoCurves    => main.startLifetime.curveMultiplier,
+				_                                    => main.startLifetime.constant
 			};
 
 			return main.duration + startLifetime;

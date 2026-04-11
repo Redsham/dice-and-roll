@@ -13,7 +13,7 @@ namespace Gameplay.Flow.Turns
 
 		public PlayerCommandTurn(IPlayerTurnSource turnSource, IPlayerService playerService)
 		{
-			m_TurnSource = turnSource;
+			m_TurnSource    = turnSource;
 			m_PlayerService = playerService;
 		}
 
@@ -29,11 +29,10 @@ namespace Gameplay.Flow.Turns
 
 		private UniTask<bool> TryExecuteAsync(PlayerTurnCommand command)
 		{
-			return command.Type switch
-			{
-				PlayerTurnCommandType.Move => m_PlayerService.TryRollAsync(command.MoveDirection),
+			return command.Type switch {
+				PlayerTurnCommandType.Move  => m_PlayerService.TryRollAsync(command.MoveDirection),
 				PlayerTurnCommandType.Shoot => m_PlayerService.TryShootAsync(command.AimPoint),
-				_ => UniTask.FromResult(false)
+				_                           => UniTask.FromResult(false)
 			};
 		}
 	}

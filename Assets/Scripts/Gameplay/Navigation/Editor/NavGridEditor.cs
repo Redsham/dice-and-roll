@@ -86,8 +86,8 @@ namespace Gameplay.Navigation.Editor
 
 		private static void GetCellCorners(NavGrid navGrid, int x, int y, Vector3[] corners)
 		{
-			Vector3 origin = navGrid.GetCellWorldCorner(x, y);
-			Vector3 right = navGrid.transform.right;
+			Vector3 origin  = navGrid.GetCellWorldCorner(x, y);
+			Vector3 right   = navGrid.transform.right;
 			Vector3 forward = navGrid.transform.forward;
 
 			corners[0] = origin;
@@ -106,26 +106,25 @@ namespace Gameplay.Navigation.Editor
 
 		private static void GetColors(NavCellOccupancyType type, out Color fillColor, out Color outlineColor)
 		{
-			switch (type)
-			{
+			switch (type) {
 				case NavCellOccupancyType.StaticProp:
-					fillColor = StaticPropFillColor;
+					fillColor    = StaticPropFillColor;
 					outlineColor = StaticPropOutlineColor;
 					break;
 				case NavCellOccupancyType.DestructibleProp:
-					fillColor = DestructibleFillColor;
+					fillColor    = DestructibleFillColor;
 					outlineColor = DestructibleOutlineColor;
 					break;
 				case NavCellOccupancyType.DecorativeDestructibleProp:
-					fillColor = DecorativeFillColor;
+					fillColor    = DecorativeFillColor;
 					outlineColor = DecorativeOutlineColor;
 					break;
 				case NavCellOccupancyType.Actor:
-					fillColor = ActorFillColor;
+					fillColor    = ActorFillColor;
 					outlineColor = ActorOutlineColor;
 					break;
 				default:
-					fillColor = Color.clear;
+					fillColor    = Color.clear;
 					outlineColor = Color.clear;
 					break;
 			}
@@ -133,13 +132,12 @@ namespace Gameplay.Navigation.Editor
 
 		private static string GetLabel(NavCellOccupancy occupancy)
 		{
-			return occupancy.Type switch
-			{
-				NavCellOccupancyType.StaticProp => "S",
-				NavCellOccupancyType.DestructibleProp => "D",
+			return occupancy.Type switch {
+				NavCellOccupancyType.StaticProp                 => "S",
+				NavCellOccupancyType.DestructibleProp           => "D",
 				NavCellOccupancyType.DecorativeDestructibleProp => "Dec",
-				NavCellOccupancyType.Actor => "A",
-				_ => string.Empty
+				NavCellOccupancyType.Actor                      => "A",
+				_                                               => string.Empty
 			};
 		}
 	}

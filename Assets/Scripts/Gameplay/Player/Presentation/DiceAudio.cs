@@ -1,6 +1,7 @@
 using System;
 using TriInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 namespace Gameplay.Player.Presentation
@@ -17,7 +18,7 @@ namespace Gameplay.Player.Presentation
 				return;
 			}
 
-			AudioClip clip = m_ShotClips[UnityEngine.Random.Range(0, m_ShotClips.Length)];
+			AudioClip clip = m_ShotClips[Random.Range(0, m_ShotClips.Length)];
 			if (clip != null) {
 				m_ShotAudioSource.PlayOneShot(clip);
 			}

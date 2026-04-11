@@ -11,8 +11,8 @@ namespace Gameplay.Nodes.Authoring
 	public class DestructiblePropNodeBehaviour : NodeBehaviour, INodeDamageHandler, INodeProjectileImpactHandler
 	{
 		[Title("Destructible")]
-		[SerializeField, Min(1)] private int        m_HitPoints = 1;
-		[SerializeField]         private UnityEvent m_OnDestroyed;
+		[SerializeField, Min(1)] private int m_HitPoints = 1;
+		[SerializeField] private UnityEvent m_OnDestroyed;
 
 		private int  m_CurrentHitPoints;
 		private bool m_IsDestroyed;
@@ -33,7 +33,7 @@ namespace Gameplay.Nodes.Authoring
 				m_CurrentHitPoints = Mathf.Max(1, m_HitPoints);
 			}
 
-			return new NavCellOccupancy {
+			return new() {
 				Type = NavCellOccupancyType.DestructibleProp
 			};
 		}
@@ -45,7 +45,7 @@ namespace Gameplay.Nodes.Authoring
 			}
 
 			int consumedDamage = Mathf.Min(incomingDamage, m_CurrentHitPoints);
-			return new NodeProjectileImpactInfo(consumedDamage, false, consumedDamage > 0);
+			return new(consumedDamage, false, consumedDamage > 0);
 		}
 
 		public virtual NodeDamageResult ApplyDamage(in NodeDamageContext context)
@@ -58,10 +58,10 @@ namespace Gameplay.Nodes.Authoring
 			m_CurrentHitPoints -= consumedDamage;
 			if (m_CurrentHitPoints <= 0) {
 				DestroyNode();
-				return new NodeDamageResult(consumedDamage, true);
+				return new(consumedDamage, true);
 			}
 
-			return new NodeDamageResult(consumedDamage, false);
+			return new(consumedDamage, false);
 		}
 
 		protected void DestroyNode()
@@ -70,7 +70,7 @@ namespace Gameplay.Nodes.Authoring
 				return;
 			}
 
-			m_IsDestroyed = true;
+			m_IsDestroyed      = true;
 			m_CurrentHitPoints = 0;
 			m_OnDestroyed?.Invoke();
 		}

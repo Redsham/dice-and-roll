@@ -39,7 +39,7 @@ namespace Utilities
 		public bool TryGet(Vector2Int coordinates, out T value) => TryGet(coordinates.x, coordinates.y, out value);
 
 		// === Settings ===
-		
+
 		public void Fill(T value) => Array.Fill(Data, value);
 		public void ForEach(Action<T> action)
 		{
@@ -49,14 +49,14 @@ namespace Utilities
 		}
 		public void Resize(int width, int height)
 		{
-			Width = width;
+			Width  = width;
 			Height = height;
-			Data = new T[width * height];
+			Data   = new T[width * height];
 		}
-		
+
 		// === Utilities ===
 
-		public int        ToIndex(int       x, int y) => x + (y * Width);
+		public int        ToIndex(int       x, int y) => x + y * Width;
 		public Vector2Int ToCoordinates(int index) => new(index % Width, index / Width);
 
 		public bool IsInBounds(int        x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;

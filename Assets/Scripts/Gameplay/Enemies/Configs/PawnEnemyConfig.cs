@@ -8,7 +8,7 @@ namespace Gameplay.Enemies.Configs
 	public sealed class PawnEnemyConfig : EnemyConfig
 	{
 		[Title("Pawn")]
-		[field: SerializeField, Min(1)] public int ShootRange { get; private set; } = 2;
+		[field: SerializeField, Min(1)] public int ShootRange { get;  private set; } = 2;
 		[field: SerializeField, Min(1)] public int ShootDamage { get; private set; } = 1;
 	}
 }

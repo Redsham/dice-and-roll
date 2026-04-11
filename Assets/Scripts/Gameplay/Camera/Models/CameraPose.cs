@@ -16,10 +16,10 @@ namespace Gameplay.Camera.Models
 
 		public static CameraPose Lerp(in CameraPose from, in CameraPose to, float t)
 		{
-			return new CameraPose(
-				Vector3.Lerp(from.Position, to.Position, t),
-				Quaternion.Slerp(from.Rotation, to.Rotation, t)
-			);
+			return new(
+			           Vector3.Lerp(from.Position, to.Position, t),
+			           Quaternion.Slerp(from.Rotation, to.Rotation, t)
+			          );
 		}
 	}
 }

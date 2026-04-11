@@ -9,11 +9,11 @@ namespace Gameplay.Enemies.Runtime
 {
 	public interface IEnemyService
 	{
-		int AliveCount { get; }
-		IReadOnlyList<EnemyRuntimeHandle> Enemies { get; }
+		int                               AliveCount { get; }
+		IReadOnlyList<EnemyRuntimeHandle> Enemies    { get; }
 
-		void Clear();
-		UniTask<EnemyRuntimeHandle> SpawnAsync(EnemyBehaviour prefab, Vector2Int cell, CancellationToken cancellationToken);
-		UniTask ExecuteTurnAsync(CancellationToken cancellationToken);
+		void                        Clear();
+		UniTask<EnemyRuntimeHandle> SpawnAsync(EnemyBehaviour          prefab, Vector2Int cell, CancellationToken cancellationToken);
+		UniTask                     ExecuteTurnAsync(CancellationToken cancellationToken);
 	}
 }

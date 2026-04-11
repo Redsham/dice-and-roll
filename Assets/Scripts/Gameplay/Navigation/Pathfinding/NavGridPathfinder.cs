@@ -234,7 +234,7 @@ namespace Gameplay.Navigation.Pathfinding
 		private void SiftUp(int heapIndex)
 		{
 			while (heapIndex > 0) {
-				int parentIndex = (heapIndex - 1) >> 1;
+				int parentIndex = heapIndex - 1 >> 1;
 				if (!IsHigherPriority(m_OpenHeap[heapIndex], m_OpenHeap[parentIndex])) {
 					break;
 				}

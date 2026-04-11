@@ -11,7 +11,7 @@ namespace Infrastructure.Scopes.Settings
 		{
 			// Register views
 			builder.RegisterComponentInHierarchy<SettingsView>();
-			
+
 			// Register entry point
 			builder.RegisterEntryPoint<SettingsEntryPoint>();
 		}

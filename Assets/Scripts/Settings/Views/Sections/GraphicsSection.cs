@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Preferences;
 using R3;
@@ -11,7 +10,7 @@ using UnityEngine;
 namespace Settings.Views.Sections
 {
 	/// <summary>
-	/// UI section for common graphics settings.
+	///     UI section for common graphics settings.
 	/// </summary>
 	public class GraphicsSection : SettingsSection<GraphicsPreferenceses>
 	{
@@ -195,7 +194,7 @@ namespace Settings.Views.Sections
 
 			for (int index = 0; index < m_ResolutionOptions.Count; index++) {
 				ResolutionOption option = m_ResolutionOptions[index];
-				int score = Mathf.Abs(option.Width - Preferences.ResolutionWidth) * 10
+				int score = Mathf.Abs(option.Width    - Preferences.ResolutionWidth)  * 10
 				            + Mathf.Abs(option.Height - Preferences.ResolutionHeight) * 10;
 
 				if (score < bestScore) {
@@ -368,7 +367,7 @@ namespace Settings.Views.Sections
 			public readonly int Width;
 			public readonly int Height;
 
-			public string Key => $"{Width}x{Height}";
+			public string Key   => $"{Width}x{Height}";
 			public string Label => Key;
 
 			public ResolutionOption(int width, int height)
@@ -398,8 +397,8 @@ namespace Settings.Views.Sections
 			}
 
 			return resolvedRefreshRate > 0
-				? resolvedRefreshRate
-				: Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
+				       ? resolvedRefreshRate
+				       : Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
 		}
 	}
 }

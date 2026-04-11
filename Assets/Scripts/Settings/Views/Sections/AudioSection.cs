@@ -20,17 +20,17 @@ namespace Settings.Views.Sections
 				Preferences.MasterVolume = value;
 				NotifyPreferencesChanged();
 			}).AddTo(this);
-			
+
 			m_UIVolume.Value.Subscribe(value => {
 				Preferences.UIVolume = value;
 				NotifyPreferencesChanged();
 			}).AddTo(this);
-			
+
 			m_MusicVolume.Value.Subscribe(value => {
 				Preferences.MusicVolume = value;
 				NotifyPreferencesChanged();
 			}).AddTo(this);
-			
+
 			m_EffectVolume.Value.Subscribe(value => {
 				Preferences.EffectsVolume = value;
 				NotifyPreferencesChanged();

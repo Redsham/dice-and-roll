@@ -8,13 +8,13 @@ namespace Gameplay.World.Runtime
 {
 	public interface INavigationService
 	{
-		GridBasis Basis { get; }
-		bool HasLevel { get; }
+		GridBasis Basis    { get; }
+		bool      HasLevel { get; }
 
 		void BindLevel(LevelBehaviour level);
 		void ClearLevel();
-		bool CanOccupy(Vector2Int coordinates);
+		bool CanOccupy(Vector2Int       coordinates);
 		bool TryGetOccupancy(Vector2Int coordinates, out NavCellOccupancy occupancy);
-		bool TryFindPath(Vector2Int start, Vector2Int goal, int[] pathBuffer, out NavPathResult result);
+		bool TryFindPath(Vector2Int     start,       Vector2Int           goal, int[] pathBuffer, out NavPathResult result);
 	}
 }

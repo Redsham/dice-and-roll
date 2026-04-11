@@ -10,7 +10,7 @@ namespace Gameplay.Camera.Models
 
 		public CameraModeContext(Transform target, CameraPose currentPose)
 		{
-			Target = target;
+			Target      = target;
 			CurrentPose = currentPose;
 		}
 	}

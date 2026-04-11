@@ -15,14 +15,14 @@ namespace Infrastructure.Scopes.Root
 		public RootEntryPoint(SceneService sceneService, BootstrapService bootstrapService)
 		{
 			m_BootstrapService = bootstrapService;
-			m_SceneService = sceneService;
+			m_SceneService     = sceneService;
 		}
 
 		public async UniTask StartAsync(CancellationToken cancellation = new())
 		{
 			string startupScene = m_SceneService.GetActiveScene();
 			bool   isBootstrap  = startupScene == "Bootstrap";
-			
+
 			if (!isBootstrap) {
 				await m_SceneService.LoadSceneAsync("Bootstrap");
 			}

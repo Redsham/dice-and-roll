@@ -6,6 +6,7 @@ using Gameplay.Enemies.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Authoring.Enemies;
 using Gameplay.Levels.Runtime;
+using Gameplay.Navigation;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
 using UnityEngine;
@@ -22,28 +23,28 @@ namespace Gameplay.Flow.Spawning.Runtime
 
 		public RandomEnemySpawner(ILevelService levelService, INavigationService navigationService, IPlayerService playerService, IEnemyService enemyService)
 		{
-			m_LevelService = levelService;
+			m_LevelService      = levelService;
 			m_NavigationService = navigationService;
-			m_PlayerService = playerService;
-			m_EnemyService = enemyService;
+			m_PlayerService     = playerService;
+			m_EnemyService      = enemyService;
 		}
 
 		public async UniTask SpawnAsync(CancellationToken cancellationToken)
 		{
 			m_EnemyService.Clear();
 
-			LevelBehaviour level = m_LevelService.CurrentLevel;
+			LevelBehaviour              level   = m_LevelService.CurrentLevel;
 			RandomEnemySpawnerAuthoring spawner = level != null ? level.GetComponentInChildren<RandomEnemySpawnerAuthoring>(true) : null;
 			if (spawner == null || spawner.EnemyPrefabs == null || spawner.EnemyPrefabs.Length == 0 || spawner.SpawnCount <= 0) {
 				return;
 			}
 
 			List<Vector2Int> availableCells = CollectAvailableCells(level.NavGrid, m_PlayerService.Position);
-			int spawnCount = Mathf.Min(spawner.SpawnCount, availableCells.Count);
+			int              spawnCount     = Mathf.Min(spawner.SpawnCount, availableCells.Count);
 
 			for (int i = 0; i < spawnCount; i++) {
-				int cellIndex = Random.Range(0, availableCells.Count);
-				Vector2Int cell = availableCells[cellIndex];
+				int        cellIndex = Random.Range(0, availableCells.Count);
+				Vector2Int cell      = availableCells[cellIndex];
 				availableCells.RemoveAt(cellIndex);
 
 				EnemyBehaviour enemyPrefab = spawner.EnemyPrefabs[Random.Range(0, spawner.EnemyPrefabs.Length)];
@@ -56,7 +57,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 			}
 		}
 
-		private List<Vector2Int> CollectAvailableCells(Navigation.NavGrid grid, Vector2Int playerCell)
+		private List<Vector2Int> CollectAvailableCells(NavGrid grid, Vector2Int playerCell)
 		{
 			List<Vector2Int> result = new();
 

@@ -9,18 +9,18 @@ using VContainer;
 namespace Infrastructure.Services
 {
 	/// <summary>
-	/// Initializes bootstrap-time services before the main flow continues.
+	///     Initializes bootstrap-time services before the main flow continues.
 	/// </summary>
 	public class BootstrapService
 	{
 		// State
 
 		/// <summary>
-		/// Indicates that bootstrap initialization has finished.
+		///     Indicates that bootstrap initialization has finished.
 		/// </summary>
-		public bool Initialized { get; private set; } = false;
+		public bool Initialized { get; private set; }
 		/// <summary>
-		/// Human-readable bootstrap progress message.
+		///     Human-readable bootstrap progress message.
 		/// </summary>
 		public ReactiveProperty<string> Message { get; } = new();
 
@@ -35,7 +35,7 @@ namespace Infrastructure.Services
 		// Lifecycle
 
 		/// <summary>
-		/// Initializes bootstrap-time systems.
+		///     Initializes bootstrap-time systems.
 		/// </summary>
 		public async UniTask Initialize()
 		{
@@ -45,7 +45,7 @@ namespace Infrastructure.Services
 		}
 
 		/// <summary>
-		/// Loads a game scene.
+		///     Loads a game scene.
 		/// </summary>
 		public async UniTask LoadScene(string sceneName)
 		{
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
 		}
 
 		/// <summary>
-		/// Loads the main menu scene with a fade transition.
+		///     Loads the main menu scene with a fade transition.
 		/// </summary>
 		public async UniTask LoadMenu()
 		{

@@ -1,3 +1,4 @@
+using System;
 using LitMotion;
 using LitMotion.Extensions;
 using TriInspector;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Rect
 {
-	[System.Serializable]
+	[Serializable]
 	public class RotationTween : BaseTween
 	{
 		[SerializeField] private RectTransform m_TargetRect;

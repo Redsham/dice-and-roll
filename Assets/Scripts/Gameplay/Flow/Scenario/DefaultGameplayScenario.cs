@@ -2,6 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Composition;
+using Gameplay.Enemies.Runtime;
 using Gameplay.Flow.GameState;
 using Gameplay.Flow.Loop;
 using Gameplay.Flow.Sequences;
@@ -10,7 +11,6 @@ using Gameplay.Flow.Transitions;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Data;
 using Gameplay.Levels.Runtime;
-using Gameplay.Enemies.Runtime;
 using Gameplay.Player.Authoring;
 using Gameplay.Player.Runtime;
 using UnityEngine;
@@ -48,17 +48,17 @@ namespace Gameplay.Flow.Scenario
 			ILocationTransitionService locationTransition
 		)
 		{
-			m_Configuration      = configuration;
-			m_LevelSequence      = levelSequence;
-			m_LevelService       = levelService;
-			m_ObjectResolver     = objectResolver;
-			m_PlayerService      = playerService;
+			m_Configuration        = configuration;
+			m_LevelSequence        = levelSequence;
+			m_LevelService         = levelService;
+			m_ObjectResolver       = objectResolver;
+			m_PlayerService        = playerService;
 			m_GameCameraController = gameCameraController;
-			m_EnemySpawner       = enemySpawner;
-			m_EnemyService       = enemyService;
-			m_GameplayLoop       = gameplayLoop;
+			m_EnemySpawner         = enemySpawner;
+			m_EnemyService         = enemyService;
+			m_GameplayLoop         = gameplayLoop;
 			m_GameplayStateService = gameplayStateService;
-			m_LocationTransition = locationTransition;
+			m_LocationTransition   = locationTransition;
 		}
 
 		public async UniTask RunAsync(CancellationToken cancellationToken)
@@ -68,10 +68,14 @@ namespace Gameplay.Flow.Scenario
 			while (!cancellationToken.IsCancellationRequested) {
 				m_EnemyService.Clear();
 				m_PlayerService.ClearPlayer();
+
 				await m_LevelService.ReplaceAsync(levelAsset, cancellationToken);
+
 				SpawnAndBindPlayer();
+
 				await m_EnemySpawner.SpawnAsync(cancellationToken);
 				await m_GameplayLoop.RunAsync(cancellationToken);
+
 				if (m_GameplayStateService.EndReason == GameplayEndReason.PlayerDefeated) {
 					break;
 				}

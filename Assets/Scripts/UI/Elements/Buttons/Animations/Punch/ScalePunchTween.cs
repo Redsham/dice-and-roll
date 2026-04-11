@@ -1,3 +1,4 @@
+using System;
 using LitMotion;
 using LitMotion.Extensions;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Punch
 {
-	[System.Serializable]
+	[Serializable]
 	public class ScalePunchTween : PunchTween
 	{
 		[SerializeField] private Vector2 m_PunchScale;

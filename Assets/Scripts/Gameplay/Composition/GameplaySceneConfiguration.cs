@@ -9,11 +9,11 @@ namespace Gameplay.Composition
 {
 	public sealed class GameplaySceneConfiguration : MonoBehaviour
 	{
-		[field: SerializeField, Required] public LevelAsset    InitialLevel { get; private set; } = null;
-		[field: SerializeField, Required] public DiceBehaviour PlayerPrefab { get; private set; } = null;
-		[field: SerializeField, Required] public InputActionAsset InputActions { get; private set; } = null;
-		[SerializeField] private Transform m_LevelParent;
-		[SerializeField] private Transform m_ActorParent;
+		[field: SerializeField, Required] public  LevelAsset       InitialLevel { get; private set; }
+		[field: SerializeField, Required] public  DiceBehaviour    PlayerPrefab { get; private set; }
+		[field: SerializeField, Required] public  InputActionAsset InputActions { get; private set; }
+		[SerializeField]                  private Transform        m_LevelParent;
+		[SerializeField]                  private Transform        m_ActorParent;
 
 		public Transform LevelParent => m_LevelParent != null ? m_LevelParent : transform;
 		public Transform ActorParent => m_ActorParent != null ? m_ActorParent : transform;

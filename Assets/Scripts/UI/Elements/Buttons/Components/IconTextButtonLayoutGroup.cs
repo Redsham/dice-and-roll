@@ -35,7 +35,7 @@ namespace UI.Elements.Buttons.Components
 			base.CalculateLayoutInputHorizontal();
 
 			float iconSize = IconSize;
-			float gap = (HasIcon && HasContent) || (!m_HideSpacingWithoutIcon && HasContent)
+			float gap = HasIcon && HasContent || !m_HideSpacingWithoutIcon && HasContent
 				            ? m_Spacing
 				            : 0f;
 

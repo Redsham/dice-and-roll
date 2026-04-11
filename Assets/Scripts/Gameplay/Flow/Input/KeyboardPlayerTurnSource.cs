@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
@@ -10,36 +11,36 @@ using UnityEngine.InputSystem;
 
 namespace Gameplay.Flow.Input
 {
-	public sealed class KeyboardPlayerTurnSource : IPlayerTurnSource, System.IDisposable
+	public sealed class KeyboardPlayerTurnSource : IPlayerTurnSource, IDisposable
 	{
-		private const string PlayerMoveActionName = "Player/Move";
-		private const string PlayerShootActionName = "Player/Attack";
+		private const string PLAYER_MOVE_ACTION_NAME  = "Player/Move";
+		private const string PLAYER_SHOOT_ACTION_NAME = "Player/Attack";
 
-		private readonly InputAction              m_MoveAction;
-		private readonly InputAction              m_ShootAction;
-		private readonly ICameraGridOrientation   m_CameraGridOrientation;
-		private readonly ICameraScreenProjector   m_CameraScreenProjector;
-		private readonly INavigationService       m_NavigationService;
+		private readonly InputAction            m_MoveAction;
+		private readonly InputAction            m_ShootAction;
+		private readonly ICameraGridOrientation m_CameraGridOrientation;
+		private readonly ICameraScreenProjector m_CameraScreenProjector;
+		private readonly INavigationService     m_NavigationService;
 
 		private UniTaskCompletionSource<PlayerTurnCommand> m_PendingTurn;
 
 		public KeyboardPlayerTurnSource(
 			GameplaySceneConfiguration configuration,
-			ICameraGridOrientation cameraGridOrientation,
-			ICameraScreenProjector cameraScreenProjector,
-			INavigationService navigationService
+			ICameraGridOrientation     cameraGridOrientation,
+			ICameraScreenProjector     cameraScreenProjector,
+			INavigationService         navigationService
 		)
 		{
 			if (configuration.InputActions == null) {
-				throw new System.InvalidOperationException("GameplaySceneConfiguration must reference an InputActionAsset.");
+				throw new InvalidOperationException("GameplaySceneConfiguration must reference an InputActionAsset.");
 			}
 
-			m_CameraGridOrientation = cameraGridOrientation;
-			m_CameraScreenProjector = cameraScreenProjector;
-			m_NavigationService = navigationService;
-			m_MoveAction = configuration.InputActions.FindAction(PlayerMoveActionName, throwIfNotFound: true);
-			m_ShootAction = configuration.InputActions.FindAction(PlayerShootActionName, throwIfNotFound: true);
-			m_MoveAction.performed += OnMovePerformed;
+			m_CameraGridOrientation =  cameraGridOrientation;
+			m_CameraScreenProjector =  cameraScreenProjector;
+			m_NavigationService     =  navigationService;
+			m_MoveAction            =  configuration.InputActions.FindAction(PLAYER_MOVE_ACTION_NAME,  throwIfNotFound: true);
+			m_ShootAction           =  configuration.InputActions.FindAction(PLAYER_SHOOT_ACTION_NAME, throwIfNotFound: true);
+			m_MoveAction.performed  += OnMovePerformed;
 			m_ShootAction.performed += OnShootPerformed;
 			m_MoveAction.Enable();
 			m_ShootAction.Enable();
@@ -48,10 +49,10 @@ namespace Gameplay.Flow.Input
 		public UniTask<PlayerTurnCommand> WaitForTurnAsync(CancellationToken cancellationToken)
 		{
 			if (m_PendingTurn != null) {
-				throw new System.InvalidOperationException("Only one pending player turn is supported.");
+				throw new InvalidOperationException("Only one pending player turn is supported.");
 			}
 
-			m_PendingTurn = new UniTaskCompletionSource<PlayerTurnCommand>();
+			m_PendingTurn = new();
 			cancellationToken.Register(() => {
 				UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 				if (pendingTurn == null) {
@@ -67,7 +68,7 @@ namespace Gameplay.Flow.Input
 
 		public void Dispose()
 		{
-			m_MoveAction.performed -= OnMovePerformed;
+			m_MoveAction.performed  -= OnMovePerformed;
 			m_ShootAction.performed -= OnShootPerformed;
 			m_MoveAction.Disable();
 			m_ShootAction.Disable();
@@ -98,8 +99,8 @@ namespace Gameplay.Flow.Input
 				return;
 			}
 
-			Vector2 screenPosition = Pointer.current?.position.ReadValue() ?? default;
-			GridBasis basis = m_NavigationService.Basis;
+			Vector2   screenPosition = Pointer.current?.position.ReadValue() ?? default;
+			GridBasis basis          = m_NavigationService.Basis;
 			if (!m_CameraScreenProjector.TryProjectScreenPointToPlane(screenPosition, basis.Origin, basis.Up, out Vector3 worldPoint)) {
 				return;
 			}

@@ -15,8 +15,8 @@ namespace Gameplay.Flow.Loop
 
 		public DefaultGameplayLoop(IGameTurn playerTurn, IEnemyTurnExecutor enemyTurnExecutor, IGameplayStateService gameplayStateService)
 		{
-			m_PlayerTurn = playerTurn;
-			m_EnemyTurnExecutor = enemyTurnExecutor;
+			m_PlayerTurn           = playerTurn;
+			m_EnemyTurnExecutor    = enemyTurnExecutor;
 			m_GameplayStateService = gameplayStateService;
 		}
 

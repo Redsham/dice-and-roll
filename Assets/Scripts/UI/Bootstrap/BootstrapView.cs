@@ -16,7 +16,7 @@ namespace UI.Bootstrap
 
 		[Inject] private readonly BootstrapService m_Bootstrap;
 
-		
+
 		private void Start()
 		{
 			m_Bootstrap.Message.Subscribe(UpdateMessage).AddTo(this);

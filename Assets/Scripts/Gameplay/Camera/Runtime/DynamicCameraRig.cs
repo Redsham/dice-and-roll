@@ -1,7 +1,9 @@
-using UnityEngine;
+using System;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Camera.Models;
 using Gameplay.Camera.Modes;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 namespace Gameplay.Camera.Runtime
@@ -9,10 +11,10 @@ namespace Gameplay.Camera.Runtime
 	[DisallowMultipleComponent]
 	public sealed class DynamicCameraRig : MonoBehaviour, IGameCameraController, ICameraGridOrientation, ICameraScreenProjector
 	{
-		[SerializeField]            private UnityEngine.Camera  m_Camera;
-		[SerializeField]            private OrbitCameraSettings m_DefaultOrbit         = default;
-		[SerializeField, Min(0.0f)] private float               m_DefaultBlendDuration = 0.35f;
-		[SerializeField, Range(0, 3)] private int               m_ControlQuarterTurnOffset = 1;
+		[SerializeField]              private UnityEngine.Camera  m_Camera;
+		[SerializeField]              private OrbitCameraSettings m_DefaultOrbit;
+		[SerializeField, Min(0.0f)]   private float               m_DefaultBlendDuration     = 0.35f;
+		[SerializeField, Range(0, 3)] private int                 m_ControlQuarterTurnOffset = 1;
 
 		private ICameraMode m_CurrentMode;
 		private Transform   m_CurrentTarget;
@@ -69,8 +71,8 @@ namespace Gameplay.Camera.Runtime
 				}
 			}
 
-			m_CurrentPose = new CameraPose(transform.position, transform.rotation);
-			m_ShakeSeed   = new Vector2(Random.value * 100.0f, Random.value * 100.0f);
+			m_CurrentPose = new(transform.position, transform.rotation);
+			m_ShakeSeed   = new(Random.value * 100.0f, Random.value * 100.0f);
 		}
 
 		private void LateUpdate()
@@ -92,14 +94,14 @@ namespace Gameplay.Camera.Runtime
 		public void SetMode(ICameraMode mode, Transform target = null, float blendDuration = -1.0f)
 		{
 			if (mode == null) {
-				throw new System.ArgumentNullException(nameof(mode));
+				throw new ArgumentNullException(nameof(mode));
 			}
 
 			m_CurrentMode?.OnExit();
 
 			m_CurrentMode   = mode;
 			m_CurrentTarget = target;
-			m_CurrentMode.OnEnter(new CameraModeContext(m_CurrentTarget, m_CurrentPose));
+			m_CurrentMode.OnEnter(new(m_CurrentTarget, m_CurrentPose));
 
 			m_BlendStartPose = m_CurrentPose;
 			m_BlendElapsed   = 0.0f;
@@ -153,9 +155,9 @@ namespace Gameplay.Camera.Runtime
 			}
 
 			return quarterTurns switch {
-				1 => new Vector2Int(localDirection.y, -localDirection.x),
-				2 => new Vector2Int(-localDirection.x, -localDirection.y),
-				3 => new Vector2Int(-localDirection.y, localDirection.x),
+				1 => new(localDirection.y, -localDirection.x),
+				2 => new(-localDirection.x, -localDirection.y),
+				3 => new(-localDirection.y, localDirection.x),
 				_ => localDirection
 			};
 		}
@@ -175,7 +177,7 @@ namespace Gameplay.Camera.Runtime
 
 		public bool TryProjectScreenPointToPlane(Vector2 screenPosition, Vector3 planeOrigin, Vector3 planeNormal, out Vector3 worldPoint)
 		{
-			Ray ray = m_Camera.ScreenPointToRay(screenPosition);
+			Ray   ray   = m_Camera.ScreenPointToRay(screenPosition);
 			Plane plane = new(planeNormal, planeOrigin);
 			if (plane.Raycast(ray, out float distance)) {
 				worldPoint = ray.GetPoint(distance);
@@ -204,7 +206,7 @@ namespace Gameplay.Camera.Runtime
 
 			m_BlendElapsed += deltaTime;
 			float t      = Mathf.Clamp01(m_BlendElapsed / m_BlendDuration);
-			float easedT = t * t * (3.0f - (2.0f * t));
+			float easedT = t * t * (3.0f - 2.0f         * t);
 
 			CameraPose blendedPose = CameraPose.Lerp(m_BlendStartPose, desiredPose, easedT);
 			if (t >= 1.0f) {
@@ -239,7 +241,7 @@ namespace Gameplay.Camera.Runtime
 			                                      ) * (strength * m_ShakeRotationalAmplitude);
 
 			Quaternion shakeRotation = Quaternion.Euler(rotationalOffset);
-			return new CameraPose(pose.Position + positionalOffset, pose.Rotation * shakeRotation);
+			return new(pose.Position + positionalOffset, pose.Rotation * shakeRotation);
 		}
 
 		private static int NormalizeQuarterTurns(int quarterTurns)

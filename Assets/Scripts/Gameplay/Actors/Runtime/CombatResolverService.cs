@@ -15,7 +15,7 @@ namespace Gameplay.Actors.Runtime
 
 		public CombatResolverService(IGridActorRegistry actorRegistry, ILevelNodeService levelNodeService)
 		{
-			m_ActorRegistry = actorRegistry;
+			m_ActorRegistry    = actorRegistry;
 			m_LevelNodeService = levelNodeService;
 		}
 

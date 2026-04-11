@@ -1,3 +1,4 @@
+using Gameplay.Enemies.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
@@ -8,33 +9,33 @@ namespace Gameplay.Enemies.BehaviourTree
 {
 	public sealed class EnemyDecisionContext
 	{
-		public Runtime.EnemyRuntimeHandle Enemy { get; }
-		public IPlayerService PlayerService { get; }
+		public EnemyRuntimeHandle Enemy             { get; }
+		public IPlayerService     PlayerService     { get; }
 		public INavigationService NavigationService { get; }
 
-		public Runtime.EnemyTurnAction SelectedAction { get; private set; }
-		public bool HasSelectedAction => SelectedAction.Type != Runtime.EnemyTurnActionType.None;
+		public EnemyTurnAction SelectedAction    { get; private set; }
+		public bool            HasSelectedAction => SelectedAction.Type != EnemyTurnActionType.None;
 
 		public EnemyDecisionContext(
-			Runtime.EnemyRuntimeHandle enemy,
-			IPlayerService playerService,
+			EnemyRuntimeHandle enemy,
+			IPlayerService     playerService,
 			INavigationService navigationService
 		)
 		{
-			Enemy = enemy;
-			PlayerService = playerService;
+			Enemy             = enemy;
+			PlayerService     = playerService;
 			NavigationService = navigationService;
-			SelectedAction = Runtime.EnemyTurnAction.None();
+			SelectedAction    = EnemyTurnAction.None();
 		}
 
-		public void SelectAction(Runtime.EnemyTurnAction action)
+		public void SelectAction(EnemyTurnAction action)
 		{
 			SelectedAction = action;
 		}
 
 		public void ResetAction()
 		{
-			SelectedAction = Runtime.EnemyTurnAction.None();
+			SelectedAction = EnemyTurnAction.None();
 		}
 
 		public Vector2Int GetDeltaToPlayer()

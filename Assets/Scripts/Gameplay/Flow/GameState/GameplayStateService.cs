@@ -2,8 +2,8 @@ namespace Gameplay.Flow.GameState
 {
 	public sealed class GameplayStateService : IGameplayStateService
 	{
-		public bool IsRunning { get; private set; }
-		public bool HasEnded => EndReason != GameplayEndReason.None;
+		public bool              IsRunning { get; private set; }
+		public bool              HasEnded  => EndReason != GameplayEndReason.None;
 		public GameplayEndReason EndReason { get; private set; }
 
 		public void Begin()

@@ -12,13 +12,13 @@ namespace Gameplay.Actors.Runtime
 		// === Lifecycle ===
 
 		void Clear();
-		void Register(IGridActor actor);
+		void Register(IGridActor   actor);
 		void Unregister(IGridActor actor);
-		void Move(IGridActor actor, Vector2Int from, Vector2Int to);
+		void Move(IGridActor       actor, Vector2Int from, Vector2Int to);
 
 		// === Queries ===
 
 		bool IsOccupied(Vector2Int cell);
-		bool TryGet(Vector2Int cell, out IGridActor actor);
+		bool TryGet(Vector2Int     cell, out IGridActor actor);
 	}
 }

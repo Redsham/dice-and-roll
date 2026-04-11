@@ -14,7 +14,7 @@ namespace UI.Elements
 		[SerializeField, Required] private Slider          m_Slider;
 		[SerializeField]           private TextMeshProUGUI m_Text;
 
-		
+
 		private void Start()
 		{
 			if (m_Slider == null) {

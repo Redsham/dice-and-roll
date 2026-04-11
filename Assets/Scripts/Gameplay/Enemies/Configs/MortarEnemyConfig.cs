@@ -9,8 +9,8 @@ namespace Gameplay.Enemies.Configs
 	{
 		[Title("Mortar")]
 		[field: SerializeField, Min(1)] public int BombardmentIntervalTurns { get; private set; } = 3;
-		[field: SerializeField, Min(1)] public int BombardmentRadius { get; private set; } = 2;
-		[field: SerializeField, Min(1)] public int BombardmentDamage { get; private set; } = 3;
-		[field: SerializeField, Min(1)] public int PreferredDistance { get; private set; } = 4;
+		[field: SerializeField, Min(1)] public int BombardmentRadius { get;        private set; } = 2;
+		[field: SerializeField, Min(1)] public int BombardmentDamage { get;        private set; } = 3;
+		[field: SerializeField, Min(1)] public int PreferredDistance { get;        private set; } = 4;
 	}
 }

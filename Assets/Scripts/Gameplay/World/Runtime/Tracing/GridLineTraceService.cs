@@ -1,5 +1,5 @@
-using Gameplay.Navigation;
 using Gameplay.Actors.Runtime;
+using Gameplay.Navigation;
 using Gameplay.Nodes.Models;
 using Gameplay.Player.Domain;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace Gameplay.World.Runtime.Tracing
 
 		public GridLineTraceService(INavigationService navigationService, ICombatResolverService combatResolverService)
 		{
-			m_NavigationService = navigationService;
+			m_NavigationService     = navigationService;
 			m_CombatResolverService = combatResolverService;
 		}
 
@@ -33,7 +33,7 @@ namespace Gameplay.World.Runtime.Tracing
 					exitedBounds = true;
 					break;
 				}
-				
+
 				NodeProjectileImpactInfo impactInfo = m_CombatResolverService.PreviewProjectileImpact(currentCell, remainingPower, out NavCellOccupancy occupancy);
 
 				int powerBefore   = remainingPower;
@@ -42,15 +42,15 @@ namespace Gameplay.World.Runtime.Tracing
 				bool stopsTrace = impactInfo.StopsProjectile || remainingPower <= 0;
 
 				if (stepBuffer != null && stepCount < stepBuffer.Length) {
-					stepBuffer[stepCount] = new NavLineTraceStep(
-						currentCell,
-						occupancy,
-						distance,
-						powerBefore,
-						powerConsumed,
-						remainingPower,
-						stopsTrace
-					);
+					stepBuffer[stepCount] = new(
+					                            currentCell,
+					                            occupancy,
+					                            distance,
+					                            powerBefore,
+					                            powerConsumed,
+					                            remainingPower,
+					                            stopsTrace
+					                           );
 				}
 
 				stepCount++;
@@ -61,18 +61,17 @@ namespace Gameplay.World.Runtime.Tracing
 				}
 			}
 
-			return new NavLineTraceResult(stepCount, remainingPower, wasStopped, exitedBounds, currentCell);
+			return new(stepCount, remainingPower, wasStopped, exitedBounds, currentCell);
 		}
 
 		private static Vector2Int ToStepDirection(RollDirection direction)
 		{
-			return direction switch
-			{
+			return direction switch {
 				RollDirection.North => Vector2Int.up,
-				RollDirection.East => Vector2Int.right,
+				RollDirection.East  => Vector2Int.right,
 				RollDirection.South => Vector2Int.down,
-				RollDirection.West => Vector2Int.left,
-				_ => default
+				RollDirection.West  => Vector2Int.left,
+				_                   => default
 			};
 		}
 	}

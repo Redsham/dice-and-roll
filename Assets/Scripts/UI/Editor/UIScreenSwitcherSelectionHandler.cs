@@ -31,10 +31,8 @@ namespace UI.Editor
 			if (screens == null)
 				return;
 
-			for (int i = 0; i < screens.Length; i++)
-			{
-				if (screens[i].Object == selected)
-				{
+			for (int i = 0; i < screens.Length; i++) {
+				if (screens[i].Object == selected) {
 					switcher.Switch(i);
 
 					EditorUtility.SetDirty(switcher);

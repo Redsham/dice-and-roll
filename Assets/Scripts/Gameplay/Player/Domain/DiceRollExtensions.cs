@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,59 +9,57 @@ namespace Gameplay.Player.Domain
 	{
 		public static DiceOrientation Roll(this DiceOrientation orientation, RollDirection direction)
 		{
-			return direction switch
-			{
+			return direction switch {
 				RollDirection.North => new() {
-					Top = orientation.Backward,
-					Bottom = orientation.Forward,
-					Left = orientation.Left,
-					Right = orientation.Right,
-					Forward = orientation.Top,
+					Top      = orientation.Backward,
+					Bottom   = orientation.Forward,
+					Left     = orientation.Left,
+					Right    = orientation.Right,
+					Forward  = orientation.Top,
 					Backward = orientation.Bottom
 				},
 				RollDirection.East => new() {
-					Top = orientation.Left,
-					Bottom = orientation.Right,
-					Left = orientation.Bottom,
-					Right = orientation.Top,
-					Forward = orientation.Forward,
+					Top      = orientation.Left,
+					Bottom   = orientation.Right,
+					Left     = orientation.Bottom,
+					Right    = orientation.Top,
+					Forward  = orientation.Forward,
 					Backward = orientation.Backward
 				},
 				RollDirection.South => new() {
-					Top = orientation.Forward,
-					Bottom = orientation.Backward,
-					Left = orientation.Left,
-					Right = orientation.Right,
-					Forward = orientation.Bottom,
+					Top      = orientation.Forward,
+					Bottom   = orientation.Backward,
+					Left     = orientation.Left,
+					Right    = orientation.Right,
+					Forward  = orientation.Bottom,
 					Backward = orientation.Top
 				},
 				RollDirection.West => new() {
-					Top = orientation.Right,
-					Bottom = orientation.Left,
-					Left = orientation.Top,
-					Right = orientation.Bottom,
-					Forward = orientation.Forward,
+					Top      = orientation.Right,
+					Bottom   = orientation.Left,
+					Left     = orientation.Top,
+					Right    = orientation.Bottom,
+					Forward  = orientation.Forward,
 					Backward = orientation.Backward
 				},
-				_ => throw new System.ArgumentOutOfRangeException(nameof(direction), direction, null)
+				_ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 			};
 		}
 		public static Vector2Int Move(this Vector2Int position, RollDirection direction)
 		{
-			return direction switch
-			{
+			return direction switch {
 				RollDirection.North => position + Vector2Int.up,
-				RollDirection.East => position + Vector2Int.right,
+				RollDirection.East  => position + Vector2Int.right,
 				RollDirection.South => position + Vector2Int.down,
-				RollDirection.West => position + Vector2Int.left,
-				_ => throw new System.ArgumentOutOfRangeException(nameof(direction), direction, null)
+				RollDirection.West  => position + Vector2Int.left,
+				_                   => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 			};
 		}
 
 		public static Quaternion GetRotation(this DiceOrientation orientation)
 		{
-			Vector3 up = GetDirectionForFace(orientation, 1);
-			Vector3 right = GetDirectionForFace(orientation, 3);
+			Vector3 up      = GetDirectionForFace(orientation, 1);
+			Vector3 right   = GetDirectionForFace(orientation, 3);
 			Vector3 forward = Vector3.Cross(right, up);
 			return Quaternion.LookRotation(forward, up);
 		}

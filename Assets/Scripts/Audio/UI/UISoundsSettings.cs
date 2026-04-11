@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,7 +11,7 @@ namespace Audio.UI
 	{
 		// Sub-types
 
-		[System.Serializable]
+		[Serializable]
 		public class UISound
 		{
 			[field: SerializeField]                    public UISoundsCue                Cue    { get; private set; }
@@ -18,14 +19,14 @@ namespace Audio.UI
 			[field: SerializeField, Range(0.0f, 1.0f)] public float                      Volume { get; private set; } = 1.0f;
 		}
 
-		
+
 		// Accessors
 
 		public IReadOnlyList<UISound> Sounds => m_Sounds;
 		public int                    Size   => m_Sounds.Count;
 		public UIAudioSource          Source => m_Source;
 
-		
+
 		// Fields
 
 		[SerializeField] private List<UISound> m_Sounds = new();

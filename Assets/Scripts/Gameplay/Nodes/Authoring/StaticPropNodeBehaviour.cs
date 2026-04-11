@@ -12,7 +12,7 @@ namespace Gameplay.Nodes.Authoring
 
 		public override NavCellOccupancy CreateOccupancy()
 		{
-			return new NavCellOccupancy {
+			return new() {
 				Type = NavCellOccupancyType.StaticProp
 			};
 		}

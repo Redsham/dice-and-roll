@@ -1,31 +1,30 @@
 using Cysharp.Threading.Tasks;
 using Preferences.Ini;
-using UnityEngine;
 
 
 namespace Preferences
 {
 	/// <summary>
-	/// Stores audio preferences.
+	///     Stores audio preferences.
 	/// </summary>
 	public class AudioPreferenceses : PreferencesCategory
 	{
 		// Data
 
 		/// <summary>
-		/// Master volume multiplier.
+		///     Master volume multiplier.
 		/// </summary>
 		public float MasterVolume { get; set; }
 		/// <summary>
-		/// UI volume multiplier.
+		///     UI volume multiplier.
 		/// </summary>
 		public float UIVolume { get; set; }
 		/// <summary>
-		/// Music volume multiplier.
+		///     Music volume multiplier.
 		/// </summary>
 		public float MusicVolume { get; set; }
 		/// <summary>
-		/// Effects volume multiplier.
+		///     Effects volume multiplier.
 		/// </summary>
 		public float EffectsVolume { get; set; }
 

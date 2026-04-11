@@ -1,5 +1,6 @@
 using Gameplay.Enemies.Configs;
 using Gameplay.Enemies.Presentation;
+using Gameplay.Enemies.Runtime;
 using Gameplay.Navigation;
 using Gameplay.Player.Domain;
 using TriInspector;
@@ -12,19 +13,19 @@ namespace Gameplay.Enemies.Authoring
 	{
 		// === Identity ===
 
-		public abstract Runtime.EnemyKind Kind { get; }
+		public abstract EnemyKind Kind { get; }
 
 		// === Inspector ===
 
 		[Title("Grid")]
-		[field: SerializeField] public Vector2Int GridPosition { get; private set; }
+		[field: SerializeField] public Vector2Int GridPosition { get;     private set; }
 		[field: SerializeField] public RollDirection InitialFacing { get; private set; } = RollDirection.South;
 
 		[Title("References")]
-		[field: SerializeField, Required] public EnemyView View { get; private set; } = null;
+		[field: SerializeField, Required] public EnemyView View { get; private set; }
 
 		[Title("Config")]
-		[field: SerializeField, Required] public EnemyConfig Config { get; private set; } = null;
+		[field: SerializeField, Required] public EnemyConfig Config { get; private set; }
 
 		[Title("Debug"), ReadOnly]
 		[SerializeField] private bool m_RuntimeBound;
@@ -33,14 +34,16 @@ namespace Gameplay.Enemies.Authoring
 
 		public virtual NavCellOccupancy CreateOccupancy()
 		{
-			return new NavCellOccupancy { Type = NavCellOccupancyType.Actor };
+			return new() {
+				Type = NavCellOccupancyType.Actor
+			};
 		}
 
-		public Runtime.EnemyRuntimeHandle RuntimeHandle { get; private set; }
+		public EnemyRuntimeHandle RuntimeHandle { get; private set; }
 
-		public void BindRuntime(Runtime.EnemyRuntimeHandle runtimeHandle)
+		public void BindRuntime(EnemyRuntimeHandle runtimeHandle)
 		{
-			RuntimeHandle = runtimeHandle;
+			RuntimeHandle  = runtimeHandle;
 			m_RuntimeBound = runtimeHandle != null;
 		}
 

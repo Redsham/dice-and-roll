@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Infrastructure.Services.Scenes;
 using UI.Effects;
+using UnityEditor;
 using UnityEngine;
 using VContainer;
 
@@ -17,17 +18,16 @@ namespace UI.Menu
 			Debug.Log($"[{nameof(MainMenuView)}] Starting game...");
 			m_Fade.ActionAsync(() => m_SceneService.LoadSceneAsync("Gameplay")).Forget();
 		}
-		
-		
+
+
 
 		public void Quit()
 		{
 			Debug.Log($"[{nameof(MainMenuView)}] Quitting...");
-			
+
 			m_Fade.Action(() => {
 				#if UNITY_EDITOR
-				UnityEditor.EditorApplication.isPlaying = false;
-				return;
+				EditorApplication.isPlaying = false;
 				#else
 				Application.Quit();
 				#endif

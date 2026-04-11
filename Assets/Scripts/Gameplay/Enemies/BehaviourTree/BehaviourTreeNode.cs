@@ -14,9 +14,9 @@ namespace Gameplay.Enemies.BehaviourTree
 			Name = name;
 		}
 
-		public string Name { get; }
-		public IReadOnlyList<BehaviourTreeNode> Children => m_Children;
-		public BehaviourTreeNodeStatus LastStatus { get; private set; }
+		public string                           Name       { get; }
+		public IReadOnlyList<BehaviourTreeNode> Children   => m_Children;
+		public BehaviourTreeNodeStatus          LastStatus { get; private set; }
 
 		// === Setup ===
 

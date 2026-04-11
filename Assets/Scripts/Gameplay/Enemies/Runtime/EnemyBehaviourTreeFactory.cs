@@ -10,11 +10,10 @@ namespace Gameplay.Enemies.Runtime
 	{
 		public static BehaviourTreeRunner Create(EnemyRuntimeHandle enemy)
 		{
-			return enemy.Kind switch
-			{
-				EnemyKind.Pawn => new BehaviourTreeRunner(CreatePawnTree(enemy)),
-				EnemyKind.Mortar => new BehaviourTreeRunner(CreateMortarTree(enemy)),
-				_ => new BehaviourTreeRunner(new ActionNode("Idle", context => {
+			return enemy.Kind switch {
+				EnemyKind.Pawn   => new(CreatePawnTree(enemy)),
+				EnemyKind.Mortar => new(CreateMortarTree(enemy)),
+				_ => new(new ActionNode("Idle", context => {
 					context.SelectAction(EnemyTurnAction.Wait());
 					return true;
 				}))
@@ -24,65 +23,65 @@ namespace Gameplay.Enemies.Runtime
 		private static BehaviourTreeNode CreatePawnTree(EnemyRuntimeHandle enemy)
 		{
 			return new SelectorNode(
-				"Pawn Root",
-				new SequenceNode(
-					"Shoot When Ready",
-					new ConditionNode("In Range", context => IsPawnInRange(enemy, context)),
-					new ActionNode("Shoot Or Rotate", context => {
-						if (!context.TryGetPrimaryDirectionToPlayer(out RollDirection direction)) {
-							return false;
-						}
+			                        "Pawn Root",
+			                        new SequenceNode(
+			                                         "Shoot When Ready",
+			                                         new ConditionNode("In Range", context => IsPawnInRange(enemy, context)),
+			                                         new ActionNode("Shoot Or Rotate", context => {
+				                                         if (!context.TryGetPrimaryDirectionToPlayer(out RollDirection direction)) {
+					                                         return false;
+				                                         }
 
-						context.SelectAction(enemy.State.Facing == direction
-							? EnemyTurnAction.Shoot(context.PlayerService.Position)
-							: EnemyTurnAction.Rotate(direction));
-						return true;
-					})
-				),
-				new ActionNode("Move Towards Player", context => {
-					if (!context.TryGetPrimaryDirectionToPlayer(out RollDirection direction)) {
-						context.SelectAction(EnemyTurnAction.Wait());
-						return true;
-					}
+				                                         context.SelectAction(enemy.State.Facing == direction
+					                                                              ? EnemyTurnAction.Shoot(context.PlayerService.Position)
+					                                                              : EnemyTurnAction.Rotate(direction));
+				                                         return true;
+			                                         })
+			                                        ),
+			                        new ActionNode("Move Towards Player", context => {
+				                        if (!context.TryGetPrimaryDirectionToPlayer(out RollDirection direction)) {
+					                        context.SelectAction(EnemyTurnAction.Wait());
+					                        return true;
+				                        }
 
-					context.SelectAction(enemy.State.Facing == direction
-						? EnemyTurnAction.Move(direction)
-						: EnemyTurnAction.Rotate(direction));
-					return true;
-				})
-			);
+				                        context.SelectAction(enemy.State.Facing == direction
+					                                             ? EnemyTurnAction.Move(direction)
+					                                             : EnemyTurnAction.Rotate(direction));
+				                        return true;
+			                        })
+			                       );
 		}
 
 		private static BehaviourTreeNode CreateMortarTree(EnemyRuntimeHandle enemy)
 		{
 			return new SelectorNode(
-				"Mortar Root",
-				new SequenceNode(
-					"Fire Pending Strike",
-					new ConditionNode("Has Pending Strike", _ => enemy.PendingMortarCell.HasValue),
-					new ConditionNode("Countdown Complete", _ => enemy.MortarTurnsUntilImpact <= 0),
-					new ActionNode("Fire Strike", context => {
-						context.SelectAction(EnemyTurnAction.Shoot(enemy.PendingMortarCell.GetValueOrDefault()));
-						return true;
-					})
-				),
-				new SequenceNode(
-					"Acquire Strike Target",
-					new ConditionNode("No Pending Strike", _ => !enemy.PendingMortarCell.HasValue),
-					new ActionNode("Select Target", context => TrySelectMortarTarget(enemy, context))
-				),
-				new ActionNode("Retreat Or Wait", context => {
-					if (TryGetDirectionAwayFromPlayer(enemy, context, out RollDirection direction)) {
-						context.SelectAction(enemy.State.Facing == direction
-							? EnemyTurnAction.Move(direction)
-							: EnemyTurnAction.Rotate(direction));
-						return true;
-					}
+			                        "Mortar Root",
+			                        new SequenceNode(
+			                                         "Fire Pending Strike",
+			                                         new ConditionNode("Has Pending Strike", _ => enemy.PendingMortarCell.HasValue),
+			                                         new ConditionNode("Countdown Complete", _ => enemy.MortarTurnsUntilImpact <= 0),
+			                                         new ActionNode("Fire Strike", context => {
+				                                         context.SelectAction(EnemyTurnAction.Shoot(enemy.PendingMortarCell.GetValueOrDefault()));
+				                                         return true;
+			                                         })
+			                                        ),
+			                        new SequenceNode(
+			                                         "Acquire Strike Target",
+			                                         new ConditionNode("No Pending Strike", _ => !enemy.PendingMortarCell.HasValue),
+			                                         new ActionNode("Select Target", context => TrySelectMortarTarget(enemy, context))
+			                                        ),
+			                        new ActionNode("Retreat Or Wait", context => {
+				                        if (TryGetDirectionAwayFromPlayer(enemy, context, out RollDirection direction)) {
+					                        context.SelectAction(enemy.State.Facing == direction
+						                                             ? EnemyTurnAction.Move(direction)
+						                                             : EnemyTurnAction.Rotate(direction));
+					                        return true;
+				                        }
 
-					context.SelectAction(EnemyTurnAction.Wait());
-					return true;
-				})
-			);
+				                        context.SelectAction(EnemyTurnAction.Wait());
+				                        return true;
+			                        })
+			                       );
 		}
 
 		private static bool IsPawnInRange(EnemyRuntimeHandle enemy, EnemyDecisionContext context)
@@ -109,9 +108,9 @@ namespace Gameplay.Enemies.Runtime
 			int radius = Mathf.Max(1, mortar.Config.BombardmentRadius);
 			for (int attempt = 0; attempt < 12; attempt++) {
 				Vector2Int randomOffset = new(
-					Random.Range(-radius, radius + 1),
-					Random.Range(-radius, radius + 1)
-				);
+				                              Random.Range(-radius, radius + 1),
+				                              Random.Range(-radius, radius + 1)
+				                             );
 
 				if (randomOffset == Vector2Int.zero || randomOffset.magnitude > radius + 0.01f) {
 					continue;

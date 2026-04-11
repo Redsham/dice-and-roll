@@ -6,7 +6,7 @@ using System.Globalization;
 namespace Preferences.Ini
 {
 	/// <summary>
-	/// Typed reader for a single INI section.
+	///     Typed reader for a single INI section.
 	/// </summary>
 	public readonly struct IniSectionReader
 	{
@@ -17,14 +17,14 @@ namespace Preferences.Ini
 		// Construction
 
 		/// <summary>
-		/// Creates a reader over the provided key-value collection.
+		///     Creates a reader over the provided key-value collection.
 		/// </summary>
 		public IniSectionReader(IReadOnlyDictionary<string, string> values) => m_Values = values;
 
 		// Read
 
 		/// <summary>
-		/// Reads a string value from the section.
+		///     Reads a string value from the section.
 		/// </summary>
 		public string GetString(string key, string fallback = "")
 		{
@@ -32,7 +32,7 @@ namespace Preferences.Ini
 		}
 
 		/// <summary>
-		/// Reads an integer value from the section.
+		///     Reads an integer value from the section.
 		/// </summary>
 		public int GetInt(string key, int fallback = 0)
 		{
@@ -42,7 +42,7 @@ namespace Preferences.Ini
 		}
 
 		/// <summary>
-		/// Reads a floating-point value from the section.
+		///     Reads a floating-point value from the section.
 		/// </summary>
 		public float GetFloat(string key, float fallback = 0f)
 		{
@@ -52,7 +52,7 @@ namespace Preferences.Ini
 		}
 
 		/// <summary>
-		/// Reads a boolean value from the section.
+		///     Reads a boolean value from the section.
 		/// </summary>
 		public bool GetBool(string key, bool fallback = false)
 		{
@@ -70,7 +70,7 @@ namespace Preferences.Ini
 		}
 
 		/// <summary>
-		/// Reads an enum value from the section.
+		///     Reads an enum value from the section.
 		/// </summary>
 		public T GetEnum<T>(string key, T fallback) where T : struct, Enum
 		{

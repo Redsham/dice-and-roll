@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Preferences.Ini;
 using UnityEngine;
@@ -8,14 +9,14 @@ using UnityEngine.Localization.Settings;
 namespace Preferences
 {
 	/// <summary>
-	/// Stores game-wide preferences.
+	///     Stores game-wide preferences.
 	/// </summary>
 	public class GamePreferenceses : PreferencesCategory
 	{
 		// Data
 
 		/// <summary>
-		/// Locale code used by Unity Localization, for example <c>en</c> or <c>ru</c>.
+		///     Locale code used by Unity Localization, for example <c>en</c> or <c>ru</c>.
 		/// </summary>
 		public string LanguageCode { get; set; }
 
@@ -52,7 +53,7 @@ namespace Preferences
 			if (LocalizationSettings.SelectedLocale != locale) {
 				LocalizationSettings.SelectedLocale = locale;
 			}
-			
+
 			return UniTask.CompletedTask;
 		}
 
@@ -90,7 +91,7 @@ namespace Preferences
 					continue;
 				}
 
-				if (string.Equals(locale.Identifier.Code, code, System.StringComparison.OrdinalIgnoreCase)) {
+				if (string.Equals(locale.Identifier.Code, code, StringComparison.OrdinalIgnoreCase)) {
 					return locale;
 				}
 			}

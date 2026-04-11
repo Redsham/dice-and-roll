@@ -1,13 +1,14 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Preferences;
-using System;
+using Preferences.Ini;
 using UnityEngine;
 
 
 namespace Infrastructure.Services
 {
 	/// <summary>
-	/// Coordinates loading, applying and saving all preferences categories.
+	///     Coordinates loading, applying and saving all preferences categories.
 	/// </summary>
 	public class PreferencesService
 	{
@@ -23,14 +24,14 @@ namespace Infrastructure.Services
 		public event Action<PreferencesCategory> CategoryChanged;
 
 		// Access
-		
+
 		/// <summary>
-		/// Indicates whether preferences have been loaded and applied at least once, and are thus ready to be used.
+		///     Indicates whether preferences have been loaded and applied at least once, and are thus ready to be used.
 		/// </summary>
 		public bool IsReady { get; private set; }
 
 		/// <summary>
-		/// Returns a preference category by its concrete type.
+		///     Returns a preference category by its concrete type.
 		/// </summary>
 		public T Get<T>() where T : PreferencesCategory
 		{
@@ -39,43 +40,43 @@ namespace Infrastructure.Services
 					return t;
 				}
 			}
-			
+
 			throw new($"Preference category of type {typeof(T)} not found");
 		}
 
 		// Lifecycle
 
 		/// <summary>
-		/// Creates a new preferences file from defaults and applies it immediately.
+		///     Creates a new preferences file from defaults and applies it immediately.
 		/// </summary>
 		public async UniTask New()
 		{
 			ResetAllToDefaults();
 			await Apply();
-			
+
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences initialized");
-			
+
 			await Save();
-			
+
 			IsReady = true;
 		}
 
 		/// <summary>
-		/// Saves all categories to disk.
+		///     Saves all categories to disk.
 		/// </summary>
 		public async UniTask Save()
 		{
 			await ForEachCategory(category => category.Save());
-			
+
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences saved");
 		}
 
 		/// <summary>
-		/// Loads all categories from disk, or creates defaults when the file does not exist.
+		///     Loads all categories from disk, or creates defaults when the file does not exist.
 		/// </summary>
 		public async UniTask Load()
 		{
-			if (!Preferences.Ini.IniPreferencesStorage.Exists()) {
+			if (!IniPreferencesStorage.Exists()) {
 				await New();
 				return;
 			}
@@ -84,12 +85,12 @@ namespace Infrastructure.Services
 			await Apply();
 
 			IsReady = true;
-			
+
 			Debug.Log($"[{nameof(PreferencesService)}] Preferences loaded");
 		}
-		
+
 		/// <summary>
-		/// Applies all categories to Unity runtime systems.
+		///     Applies all categories to Unity runtime systems.
 		/// </summary>
 		public async UniTask Apply()
 		{
@@ -100,7 +101,7 @@ namespace Infrastructure.Services
 		}
 
 		/// <summary>
-		/// Notifies listeners that a category values were changed and may need to be re-applied externally.
+		///     Notifies listeners that a category values were changed and may need to be re-applied externally.
 		/// </summary>
 		public void NotifyCategoryChanged(PreferencesCategory category)
 		{

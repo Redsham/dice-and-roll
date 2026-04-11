@@ -1,3 +1,4 @@
+using System;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Composition;
 using UnityEngine;
@@ -7,7 +8,7 @@ using VContainer.Unity;
 
 namespace Gameplay.Flow.Input
 {
-	public sealed class GameplayCameraInput : IInitializable, ITickable, System.IDisposable
+	public sealed class GameplayCameraInput : IInitializable, ITickable, IDisposable
 	{
 		private const string PREVIOUS_ACTION_NAME = "Player/Previous";
 		private const string NEXT_ACTION_NAME     = "Player/Next";
@@ -21,13 +22,13 @@ namespace Gameplay.Flow.Input
 		public GameplayCameraInput(GameplaySceneConfiguration configuration, IGameCameraController gameCameraController)
 		{
 			if (configuration.InputActions == null) {
-				throw new System.InvalidOperationException("GameplaySceneConfiguration must reference an InputActionAsset.");
+				throw new InvalidOperationException("GameplaySceneConfiguration must reference an InputActionAsset.");
 			}
 
 			m_GameCameraController = gameCameraController;
-			m_PreviousAction = configuration.InputActions.FindAction(PREVIOUS_ACTION_NAME, throwIfNotFound: true);
-			m_NextAction     = configuration.InputActions.FindAction(NEXT_ACTION_NAME, throwIfNotFound: true);
-			m_ScrollAction   = configuration.InputActions.FindAction(SCROLL_ACTION_NAME, throwIfNotFound: true);
+			m_PreviousAction       = configuration.InputActions.FindAction(PREVIOUS_ACTION_NAME, throwIfNotFound: true);
+			m_NextAction           = configuration.InputActions.FindAction(NEXT_ACTION_NAME,     throwIfNotFound: true);
+			m_ScrollAction         = configuration.InputActions.FindAction(SCROLL_ACTION_NAME,   throwIfNotFound: true);
 		}
 
 		public void Initialize()
@@ -75,8 +76,8 @@ namespace Gameplay.Flow.Input
 				return;
 			}
 
-			Vector2 look = gamepad.rightStick.ReadValue();
-			float vertical = look.y;
+			Vector2 look     = gamepad.rightStick.ReadValue();
+			float   vertical = look.y;
 			if (Mathf.Abs(vertical) < 0.35f) {
 				return;
 			}

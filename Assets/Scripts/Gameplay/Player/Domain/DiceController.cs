@@ -11,8 +11,8 @@ namespace Gameplay.Player.Domain
 
 		public DiceState PreviewRoll(RollDirection direction)
 		{
-			return new DiceState {
-				Position = State.Position.Move(direction),
+			return new() {
+				Position    = State.Position.Move(direction),
 				Orientation = State.Orientation.Roll(direction)
 			};
 		}

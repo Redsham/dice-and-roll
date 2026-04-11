@@ -25,12 +25,12 @@ namespace Gameplay.Flow.Input
 
 		public static PlayerTurnCommand Move(RollDirection direction)
 		{
-			return new PlayerTurnCommand(PlayerTurnCommandType.Move, direction, default);
+			return new(PlayerTurnCommandType.Move, direction, default);
 		}
 
 		public static PlayerTurnCommand Shoot(Vector3 aimPoint)
 		{
-			return new PlayerTurnCommand(PlayerTurnCommandType.Shoot, default, aimPoint);
+			return new(PlayerTurnCommandType.Shoot, default, aimPoint);
 		}
 	}
 }

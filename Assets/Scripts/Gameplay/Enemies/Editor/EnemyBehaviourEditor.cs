@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Gameplay.Enemies.Authoring;
 using Gameplay.Enemies.BehaviourTree;
-using UnityEditor.SceneManagement;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 
@@ -35,20 +35,20 @@ namespace Gameplay.Enemies.Editor
 			if (enemy.RuntimeHandle == null) {
 				EditorGUILayout.Space();
 				EditorGUILayout.HelpBox(
-					GetMissingRuntimeMessage(enemy),
-					MessageType.Info
-				);
+				                        GetMissingRuntimeMessage(enemy),
+				                        MessageType.Info
+				                       );
 				return;
 			}
 
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Runtime", EditorStyles.boldLabel);
-			EditorGUILayout.LabelField("Health", $"{enemy.RuntimeHandle.State.CurrentHealth}/{enemy.Config.MaxHealth}");
-			EditorGUILayout.LabelField("Cell", enemy.RuntimeHandle.State.Position.ToString());
-			EditorGUILayout.LabelField("Facing", enemy.RuntimeHandle.State.Facing.ToString());
+			EditorGUILayout.LabelField("Health",  $"{enemy.RuntimeHandle.State.CurrentHealth}/{enemy.Config.MaxHealth}");
+			EditorGUILayout.LabelField("Cell",    enemy.RuntimeHandle.State.Position.ToString());
+			EditorGUILayout.LabelField("Facing",  enemy.RuntimeHandle.State.Facing.ToString());
 
 			if (enemy.RuntimeHandle.PendingMortarCell.HasValue) {
-				EditorGUILayout.LabelField("Pending Strike", enemy.RuntimeHandle.PendingMortarCell.Value.ToString());
+				EditorGUILayout.LabelField("Pending Strike",     enemy.RuntimeHandle.PendingMortarCell.Value.ToString());
 				EditorGUILayout.LabelField("Turns Until Impact", enemy.RuntimeHandle.MortarTurnsUntilImpact.ToString());
 			}
 
@@ -67,7 +67,7 @@ namespace Gameplay.Enemies.Editor
 
 			for (int i = 0; i < lines.Count; i++) {
 				BehaviourTreeDebugLine line = lines[i];
-				Rect row = EditorGUILayout.GetControlRect();
+				Rect                   row  = EditorGUILayout.GetControlRect();
 				row.xMin += line.Depth * 14.0f;
 
 				Color previousColor = GUI.color;
@@ -79,12 +79,11 @@ namespace Gameplay.Enemies.Editor
 
 		private static Color GetColor(BehaviourTreeNodeStatus status)
 		{
-			return status switch
-			{
-				BehaviourTreeNodeStatus.Success => new Color(0.45f, 0.8f, 0.45f),
-				BehaviourTreeNodeStatus.Failure => new Color(0.95f, 0.45f, 0.45f),
-				BehaviourTreeNodeStatus.Running => new Color(0.95f, 0.8f, 0.35f),
-				_ => GUI.color
+			return status switch {
+				BehaviourTreeNodeStatus.Success => new(0.45f, 0.8f, 0.45f),
+				BehaviourTreeNodeStatus.Failure => new(0.95f, 0.45f, 0.45f),
+				BehaviourTreeNodeStatus.Running => new(0.95f, 0.8f, 0.35f),
+				_                               => GUI.color
 			};
 		}
 

@@ -1,3 +1,4 @@
+using System;
 using LitMotion;
 using LitMotion.Extensions;
 using TriInspector;
@@ -6,14 +7,14 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Rect
 {
-	[System.Serializable]
+	[Serializable]
 	public class AnchorTween : BaseTween
 	{
 		[SerializeField] private RectTransform m_TargetRect;
 		[SerializeField] private Vector2       m_AnchorMin = Vector2.zero;
 		[SerializeField] private Vector2       m_AnchorMax = Vector2.one;
 
-		[SerializeField]                                  private bool    m_ResetOnPlay    = false;
+		[SerializeField]                                  private bool    m_ResetOnPlay;
 		[SerializeField, EnableIf(nameof(m_ResetOnPlay))] private Vector2 m_ResetAnchorMin = Vector2.zero;
 		[SerializeField, EnableIf(nameof(m_ResetOnPlay))] private Vector2 m_ResetAnchorMax = Vector2.one;
 

@@ -7,7 +7,7 @@ using VContainer;
 namespace Settings.Views
 {
 	/// <summary>
-	/// Base class for a settings UI section.
+	///     Base class for a settings UI section.
 	/// </summary>
 	public abstract class SettingsSection : MonoBehaviour
 	{
@@ -22,24 +22,24 @@ namespace Settings.Views
 		// Lifecycle
 
 		/// <summary>
-		/// Resolves preferences dependencies for the section.
+		///     Resolves preferences dependencies for the section.
 		/// </summary>
 		public abstract void InitPreferences();
 
 		/// <summary>
-		/// Builds static UI state before values are loaded.
+		///     Builds static UI state before values are loaded.
 		/// </summary>
 		public virtual void Build()
 		{
 		}
 
 		/// <summary>
-		/// Loads current preferences values into the UI without creating user-driven side effects.
+		///     Loads current preferences values into the UI without creating user-driven side effects.
 		/// </summary>
 		public abstract void Load();
 
 		/// <summary>
-		/// Binds UI events after the view has been synchronized with preferences.
+		///     Binds UI events after the view has been synchronized with preferences.
 		/// </summary>
 		public virtual void Bind()
 		{
@@ -47,7 +47,7 @@ namespace Settings.Views
 	}
 
 	/// <summary>
-	/// Typed base class for a settings UI section.
+	///     Typed base class for a settings UI section.
 	/// </summary>
 	public abstract class SettingsSection<T> : SettingsSection where T : PreferencesCategory
 	{

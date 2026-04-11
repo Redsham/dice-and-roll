@@ -10,7 +10,7 @@ namespace Gameplay.Navigation
 	{
 		// === Inspector ===
 
-		[SerializeField] private int  m_Width = 15;
+		[SerializeField] private int  m_Width  = 15;
 		[SerializeField] private int  m_Height = 15;
 		[SerializeField] private bool m_AllowCornerCutting;
 
@@ -18,9 +18,9 @@ namespace Gameplay.Navigation
 
 		public FlatArray2D<NavNode> Nodes;
 
-		public int  Width => m_Width;
-		public int  Height => m_Height;
-		public int  NodeCount => m_Width * m_Height;
+		public int  Width              => m_Width;
+		public int  Height             => m_Height;
+		public int  NodeCount          => m_Width * m_Height;
 		public bool AllowCornerCutting => m_AllowCornerCutting;
 
 		// === Runtime ===
@@ -36,7 +36,7 @@ namespace Gameplay.Navigation
 
 		private void OnValidate()
 		{
-			m_Width = Mathf.Max(1, m_Width);
+			m_Width  = Mathf.Max(1, m_Width);
 			m_Height = Mathf.Max(1, m_Height);
 		}
 
@@ -55,22 +55,22 @@ namespace Gameplay.Navigation
 
 		public Vector3 GetCellWorldCorner(int x, int y)
 		{
-			return transform.position + (transform.right * x) + (transform.forward * y);
+			return transform.position + transform.right * x + transform.forward * y;
 		}
 
 		public Vector3 GetCellWorldCenter(int x, int y)
 		{
-			return GetCellWorldCorner(x, y) + ((transform.right + transform.forward) * 0.5f);
+			return GetCellWorldCorner(x, y) + (transform.right + transform.forward) * 0.5f;
 		}
 
 		// === Queries ===
 
-		public bool IsInBounds(int x, int y) => x >= 0 && x < m_Width && y >= 0 && y < m_Height;
+		public bool IsInBounds(int        x, int y) => x >= 0 && x < m_Width && y >= 0 && y < m_Height;
 		public bool IsInBounds(Vector2Int coordinates) => IsInBounds(coordinates.x, coordinates.y);
 
-		public int ToIndex(int x, int y) => x + (y * m_Width);
-		public int ToIndex(Vector2Int coordinates) => ToIndex(coordinates.x, coordinates.y);
-		public Vector2Int ToCoordinates(int index) => new(index % m_Width, index / m_Width);
+		public int        ToIndex(int        x, int y) => x + y * m_Width;
+		public int        ToIndex(Vector2Int coordinates) => ToIndex(coordinates.x, coordinates.y);
+		public Vector2Int ToCoordinates(int  index)       => new(index % m_Width, index / m_Width);
 
 		public bool TrySetWalkable(int index, bool isWalkable)
 		{
@@ -142,11 +142,11 @@ namespace Gameplay.Navigation
 		}
 
 		public bool TryFindPath<TWeightProvider>(
-			Vector2Int start,
-			Vector2Int goal,
+			Vector2Int          start,
+			Vector2Int          goal,
 			ref TWeightProvider weightProvider,
-			int[] pathBuffer,
-			out NavPathResult result
+			int[]               pathBuffer,
+			out NavPathResult   result
 		)
 			where TWeightProvider : struct, INavTraversalCostProvider
 		{
@@ -166,11 +166,11 @@ namespace Gameplay.Navigation
 		}
 
 		public bool TryFindPath<TWeightProvider>(
-			int startIndex,
-			int goalIndex,
+			int                 startIndex,
+			int                 goalIndex,
 			ref TWeightProvider weightProvider,
-			int[] pathBuffer,
-			out NavPathResult result
+			int[]               pathBuffer,
+			out NavPathResult   result
 		)
 			where TWeightProvider : struct, INavTraversalCostProvider
 		{
@@ -180,12 +180,12 @@ namespace Gameplay.Navigation
 		}
 
 		public bool TryFindPath<TConnectionProvider, TWeightProvider>(
-			Vector2Int start,
-			Vector2Int goal,
+			Vector2Int              start,
+			Vector2Int              goal,
 			ref TConnectionProvider connectionProvider,
-			ref TWeightProvider weightProvider,
-			int[] pathBuffer,
-			out NavPathResult result
+			ref TWeightProvider     weightProvider,
+			int[]                   pathBuffer,
+			out NavPathResult       result
 		)
 			where TConnectionProvider : struct, INavConnectionProvider
 			where TWeightProvider : struct, INavTraversalCostProvider
@@ -206,12 +206,12 @@ namespace Gameplay.Navigation
 		}
 
 		public bool TryFindPath<TConnectionProvider, TWeightProvider>(
-			int startIndex,
-			int goalIndex,
+			int                     startIndex,
+			int                     goalIndex,
 			ref TConnectionProvider connectionProvider,
-			ref TWeightProvider weightProvider,
-			int[] pathBuffer,
-			out NavPathResult result
+			ref TWeightProvider     weightProvider,
+			int[]                   pathBuffer,
+			out NavPathResult       result
 		)
 			where TConnectionProvider : struct, INavConnectionProvider
 			where TWeightProvider : struct, INavTraversalCostProvider

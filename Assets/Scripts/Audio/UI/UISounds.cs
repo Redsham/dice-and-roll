@@ -18,7 +18,7 @@ namespace Audio.UI
 		public static  bool     IsReady { get; private set; }
 		private static UISounds s_Instance;
 
-		private          AudioSource                        m_Source;
+		private          AudioSource                                       m_Source;
 		private readonly Dictionary<UISoundsCue, UISoundsSettings.UISound> m_SoundMap = new();
 
 		// Constructor
@@ -28,7 +28,7 @@ namespace Audio.UI
 			if (s_Instance != null) {
 				throw new($"[{nameof(UISounds)}] Multiple instances detected. There should only be one instance of {nameof(UISounds)} in the game.");
 			}
-			
+
 			s_Instance = this;
 		}
 
@@ -44,18 +44,18 @@ namespace Audio.UI
 			BuildSource();
 
 			IsReady = true;
-			
+
 			Debug.Log($"[{nameof(UISounds)}] UISounds initialized.");
 		}
 
 		public static void Play(UISoundsCue cue)
 		{
 			if (!IsReady) return;
-			if(!s_Instance.m_SoundMap.TryGetValue(cue, out UISoundsSettings.UISound sound)) {
+			if (!s_Instance.m_SoundMap.TryGetValue(cue, out UISoundsSettings.UISound sound)) {
 				Debug.LogWarning($"[{nameof(UISounds)}] No sound found for cue: {cue}");
 				return;
 			}
-			
+
 			s_Instance.m_Source.PlayOneShot(sound.Sound.Asset as AudioClip, sound.Volume);
 		}
 
@@ -67,7 +67,7 @@ namespace Audio.UI
 			UniTask<AudioClip>[] tasks = new UniTask<AudioClip>[m_Settings.Size];
 
 			for (int i = 0; i < m_Settings.Size; i++) {
-				var sound = m_Settings.Sounds[i];
+				UISoundsSettings.UISound sound = m_Settings.Sounds[i];
 				tasks[i] = sound.Sound.LoadAssetAsync().ToUniTask();
 			}
 

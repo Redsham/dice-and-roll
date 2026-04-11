@@ -1,5 +1,4 @@
 using System;
-using R3;
 using UI.Elements.Buttons;
 using UnityEngine;
 
@@ -13,11 +12,11 @@ namespace UI.Elements
 		public int               SelectedIndex { get; private set; } = -1;
 		public event Action<int> OnSelected = delegate { };
 
-		[SerializeField] private int m_DefaultIndex = 0;
+		[SerializeField] private int  m_DefaultIndex;
 		[SerializeField] private bool m_Loop;
-		
-		private UIRatioButton[] m_Buttons     = Array.Empty<UIRatioButton>();
-		private bool            m_Initialized = false;
+
+		private UIRatioButton[] m_Buttons = Array.Empty<UIRatioButton>();
+		private bool            m_Initialized;
 
 		// Lifecycle
 
@@ -29,7 +28,7 @@ namespace UI.Elements
 		// Selection
 
 		/// <summary>
-		/// Select the button at the specified index
+		///     Select the button at the specified index
 		/// </summary>
 		/// <param name="index">Index of the button to select</param>
 		public void Select(int index, bool notify = true)
@@ -49,14 +48,14 @@ namespace UI.Elements
 
 			SelectedIndex = index;
 			m_Buttons[index].OnSelect();
-			
-			if(notify)
+
+			if (notify)
 				OnSelected.Invoke(index);
 		}
 
 		/// <summary>
-		/// Select the next button in the group.
-		/// If loop is enabled, it will wrap around to the first button when reaching the end of the list.
+		///     Select the next button in the group.
+		///     If loop is enabled, it will wrap around to the first button when reaching the end of the list.
 		/// </summary>
 		public void Next()
 		{
@@ -68,12 +67,12 @@ namespace UI.Elements
 				if (m_Loop) Select(0);
 				else return;
 			}
-			
+
 			Select(SelectedIndex + 1);
 		}
 		/// <summary>
-		/// Select the previous button in the group.
-		/// If loop is enabled, it will wrap around to the last button when reaching the beginning of the list.
+		///     Select the previous button in the group.
+		///     If loop is enabled, it will wrap around to the last button when reaching the beginning of the list.
 		/// </summary>
 		public void Previous()
 		{
@@ -85,7 +84,7 @@ namespace UI.Elements
 				if (m_Loop) Select(m_Buttons.Length - 1);
 				else return;
 			}
-			
+
 			Select(SelectedIndex - 1);
 		}
 

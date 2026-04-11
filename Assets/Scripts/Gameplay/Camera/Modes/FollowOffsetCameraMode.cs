@@ -1,6 +1,6 @@
-using UnityEngine;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Camera.Models;
+using UnityEngine;
 
 
 namespace Gameplay.Camera.Modes
@@ -16,8 +16,8 @@ namespace Gameplay.Camera.Modes
 
 		public FollowOffsetCameraMode(Vector3 worldOffset, Vector3 lookOffset, float positionLerpSpeed = 8.0f)
 		{
-			m_WorldOffset = worldOffset;
-			m_LookOffset = lookOffset;
+			m_WorldOffset       = worldOffset;
+			m_LookOffset        = lookOffset;
 			m_PositionLerpSpeed = Mathf.Max(0.01f, positionLerpSpeed);
 		}
 
@@ -29,7 +29,7 @@ namespace Gameplay.Camera.Modes
 			}
 
 			m_SmoothedTarget = context.Target.position;
-			m_HasTarget = true;
+			m_HasTarget      = true;
 		}
 
 		public void OnExit()
@@ -44,17 +44,17 @@ namespace Gameplay.Camera.Modes
 
 			if (!m_HasTarget) {
 				m_SmoothedTarget = context.Target.position;
-				m_HasTarget = true;
+				m_HasTarget      = true;
 			}
 
 			float blend = 1.0f - Mathf.Exp(-m_PositionLerpSpeed * deltaTime);
 			m_SmoothedTarget = Vector3.Lerp(m_SmoothedTarget, context.Target.position, blend);
 
-			Vector3 desiredPosition = m_SmoothedTarget + m_WorldOffset;
-			Vector3 lookPoint = context.Target.position + m_LookOffset;
+			Vector3    desiredPosition = m_SmoothedTarget        + m_WorldOffset;
+			Vector3    lookPoint       = context.Target.position + m_LookOffset;
 			Quaternion desiredRotation = Quaternion.LookRotation(lookPoint - desiredPosition, Vector3.up);
 
-			return new CameraPose(desiredPosition, desiredRotation);
+			return new(desiredPosition, desiredRotation);
 		}
 	}
 }

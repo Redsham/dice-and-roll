@@ -12,8 +12,8 @@ namespace UI.Effects
 {
 	public class UIFade
 	{
-		private readonly GameObject m_Root  = null;
-		private readonly Image      m_Image = null;
+		private readonly GameObject m_Root;
+		private readonly Image      m_Image;
 		private readonly Color      m_Color = ColorUtilities.FromHex("#260101");
 
 		public UIFade()
@@ -58,7 +58,7 @@ namespace UI.Effects
 		public async UniTask Hide(float duration = 0.5f)
 		{
 			Color clearColor = m_Image.color;
-			clearColor.a  = 0.0f;
+			clearColor.a = 0.0f;
 
 			await LMotion.Create(m_Image.color, clearColor, duration)
 			             .WithEase(Ease.InBack)

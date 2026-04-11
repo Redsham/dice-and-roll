@@ -6,7 +6,7 @@ using System.Text;
 namespace Preferences.Ini
 {
 	/// <summary>
-	/// Represents an INI document grouped by named sections.
+	///     Represents an INI document grouped by named sections.
 	/// </summary>
 	public sealed class IniDocument
 	{
@@ -17,7 +17,7 @@ namespace Preferences.Ini
 		// Factory
 
 		/// <summary>
-		/// Parses raw INI text into an <see cref="IniDocument"/>.
+		///     Parses raw INI text into an <see cref="IniDocument" />.
 		/// </summary>
 		public static IniDocument Parse(string content)
 		{
@@ -57,7 +57,7 @@ namespace Preferences.Ini
 		// Queries
 
 		/// <summary>
-		/// Tries to get a section by name.
+		///     Tries to get a section by name.
 		/// </summary>
 		public bool TryGetSection(string section, out IReadOnlyDictionary<string, string> values)
 		{
@@ -73,7 +73,7 @@ namespace Preferences.Ini
 		// Mutations
 
 		/// <summary>
-		/// Replaces the values of a section.
+		///     Replaces the values of a section.
 		/// </summary>
 		public void SetSection(string section, IReadOnlyDictionary<string, string> values)
 		{
@@ -86,7 +86,7 @@ namespace Preferences.Ini
 		}
 
 		/// <summary>
-		/// Serializes the document back into INI text.
+		///     Serializes the document back into INI text.
 		/// </summary>
 		public string Serialize()
 		{
@@ -116,7 +116,7 @@ namespace Preferences.Ini
 		private Dictionary<string, string> GetOrCreateSection(string section)
 		{
 			if (!m_Sections.TryGetValue(section, out Dictionary<string, string> values)) {
-				values              = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+				values              = new(StringComparer.OrdinalIgnoreCase);
 				m_Sections[section] = values;
 			}
 

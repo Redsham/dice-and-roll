@@ -10,7 +10,7 @@ namespace Infrastructure.Scopes.Bootstrap
 		private readonly BootstrapService m_Bootstrap;
 
 		public BootstrapEntryPoint(BootstrapService bootstrap) => m_Bootstrap = bootstrap;
-		
+
 		public void Start() => m_Bootstrap.Initialize().Forget();
 	}
 }

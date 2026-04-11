@@ -1,7 +1,8 @@
+using System;
+using Gameplay.Actors.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Navigation;
 using Gameplay.Navigation.Pathfinding;
-using Gameplay.Actors.Runtime;
 using UnityEngine;
 
 
@@ -12,7 +13,7 @@ namespace Gameplay.World.Runtime
 		private const float CellSize = 1.0f;
 
 		private readonly IGridActorRegistry m_ActorRegistry;
-		private LevelBehaviour m_CurrentLevel;
+		private          LevelBehaviour     m_CurrentLevel;
 
 		public NavigationService(IGridActorRegistry actorRegistry)
 		{
@@ -26,13 +27,13 @@ namespace Gameplay.World.Runtime
 			get
 			{
 				NavGrid navGrid = RequireGrid();
-				return new GridBasis(
-					navGrid.transform.position,
-					navGrid.transform.right.normalized,
-					navGrid.transform.forward.normalized,
-					navGrid.transform.up.normalized,
-					CellSize
-				);
+				return new(
+				           navGrid.transform.position,
+				           navGrid.transform.right.normalized,
+				           navGrid.transform.forward.normalized,
+				           navGrid.transform.up.normalized,
+				           CellSize
+				          );
 			}
 		}
 
@@ -85,7 +86,7 @@ namespace Gameplay.World.Runtime
 		private NavGrid RequireGrid()
 		{
 			if (m_CurrentLevel == null) {
-				throw new System.InvalidOperationException("NavigationService requires an active level before use.");
+				throw new InvalidOperationException("NavigationService requires an active level before use.");
 			}
 
 			return m_CurrentLevel.NavGrid;

@@ -1,3 +1,4 @@
+using System;
 using LitMotion;
 using LitMotion.Extensions;
 using UnityEngine;
@@ -5,10 +6,10 @@ using UnityEngine;
 
 namespace UI.Elements.Buttons.Animations.Punch
 {
-	[System.Serializable]
+	[Serializable]
 	public class RotationPunchTween : PunchTween
 	{
-		[SerializeField] private float m_StartAngle = 0.0f;
+		[SerializeField] private float m_StartAngle;
 		[SerializeField] private float m_PunchScale = 30.0f;
 
 		public override MotionHandle GetTween()

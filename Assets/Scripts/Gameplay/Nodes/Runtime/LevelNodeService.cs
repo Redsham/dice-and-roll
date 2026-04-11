@@ -45,19 +45,19 @@ namespace Gameplay.Nodes.Runtime
 			}
 
 			if (!m_Nodes.TryGetValue(cell, out NodeBehaviour node) || node is not INodeProjectileImpactHandler projectileImpactHandler) {
-				return new NodeProjectileImpactInfo(
-					consumedDamage: occupancy.StopsProjectileImmediately ? incomingDamage : 0,
-					stopsProjectile: occupancy.StopsProjectileImmediately,
-					canApplyDamage: false
-				);
+				return new(
+				           consumedDamage: occupancy.StopsProjectileImmediately ? incomingDamage : 0,
+				           stopsProjectile: occupancy.StopsProjectileImmediately,
+				           canApplyDamage: false
+				          );
 			}
 
 			NodeProjectileImpactInfo impactInfo = projectileImpactHandler.PreviewProjectileImpact(incomingDamage);
-			return new NodeProjectileImpactInfo(
-				impactInfo.ConsumedDamage,
-				impactInfo.StopsProjectile || occupancy.StopsProjectileImmediately,
-				impactInfo.CanApplyDamage
-			);
+			return new(
+			           impactInfo.ConsumedDamage,
+			           impactInfo.StopsProjectile || occupancy.StopsProjectileImmediately,
+			           impactInfo.CanApplyDamage
+			          );
 		}
 
 		public void NotifyActorEntered(Vector2Int cell, GameObject actor)
@@ -67,7 +67,7 @@ namespace Gameplay.Nodes.Runtime
 			}
 
 			if (node is INodeActorEnterHandler handler) {
-				handler.OnActorEnter(new NodeActorContext(actor, cell));
+				handler.OnActorEnter(new(actor, cell));
 				SyncNode(cell, node);
 			}
 		}
@@ -79,7 +79,7 @@ namespace Gameplay.Nodes.Runtime
 			}
 
 			if (node is INodeActorLeaveHandler handler) {
-				handler.OnActorLeave(new NodeActorContext(actor, cell));
+				handler.OnActorLeave(new(actor, cell));
 				SyncNode(cell, node);
 			}
 		}
@@ -90,7 +90,7 @@ namespace Gameplay.Nodes.Runtime
 				return 0;
 			}
 
-			NodeDamageResult result = damageHandler.ApplyDamage(new NodeDamageContext(source, cell, damage));
+			NodeDamageResult result = damageHandler.ApplyDamage(new(source, cell, damage));
 			SyncNode(cell, node);
 			return result.ConsumedDamage;
 		}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -12,6 +13,7 @@ using Gameplay.World.Runtime.Tracing;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using Object = UnityEngine.Object;
 
 
 namespace Gameplay.Enemies.Runtime
@@ -35,23 +37,23 @@ namespace Gameplay.Enemies.Runtime
 
 		public EnemyService(
 			GameplaySceneConfiguration configuration,
-			IObjectResolver objectResolver,
-			INavigationService navigationService,
-			IPlayerService playerService,
-			ICombatResolverService combatResolverService,
-			IGridLineTraceService gridLineTraceService,
-			IGameplayStateService gameplayStateService,
-			ILevelNodeService levelNodeService
+			IObjectResolver            objectResolver,
+			INavigationService         navigationService,
+			IPlayerService             playerService,
+			ICombatResolverService     combatResolverService,
+			IGridLineTraceService      gridLineTraceService,
+			IGameplayStateService      gameplayStateService,
+			ILevelNodeService          levelNodeService
 		)
 		{
-			m_Configuration = configuration;
-			m_ObjectResolver = objectResolver;
-			m_NavigationService = navigationService;
-			m_PlayerService = playerService;
+			m_Configuration         = configuration;
+			m_ObjectResolver        = objectResolver;
+			m_NavigationService     = navigationService;
+			m_PlayerService         = playerService;
 			m_CombatResolverService = combatResolverService;
-			m_GridLineTraceService = gridLineTraceService;
-			m_GameplayStateService = gameplayStateService;
-			m_LevelNodeService = levelNodeService;
+			m_GridLineTraceService  = gridLineTraceService;
+			m_GameplayStateService  = gameplayStateService;
+			m_LevelNodeService      = levelNodeService;
 		}
 
 		public int AliveCount
@@ -89,14 +91,14 @@ namespace Gameplay.Enemies.Runtime
 			// === Validation ===
 
 			if (prefab == null) {
-				throw new System.InvalidOperationException("EnemyService cannot spawn a null enemy prefab.");
+				throw new InvalidOperationException("EnemyService cannot spawn a null enemy prefab.");
 			}
 
 			EnemyBehaviour enemyBehaviour = m_ObjectResolver.Instantiate(prefab, m_Configuration.ActorParent);
 			enemyBehaviour.transform.SetPositionAndRotation(
-				m_NavigationService.Basis.GetCellCenter(cell),
-				Quaternion.identity
-			);
+			                                                m_NavigationService.Basis.GetCellCenter(cell),
+			                                                Quaternion.identity
+			                                               );
 
 			OverrideSpawnCell(enemyBehaviour, cell);
 
@@ -127,7 +129,7 @@ namespace Gameplay.Enemies.Runtime
 			}
 
 			if (AliveCount == 0) {
-				m_GameplayStateService.End(GameplayEndReason.LocationCleared);
+				m_GameplayStateService.End(GameplayEndReason.LevelCleared);
 			}
 		}
 
