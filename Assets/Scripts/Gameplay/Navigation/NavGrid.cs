@@ -135,6 +135,12 @@ namespace Gameplay.Navigation
 			return TryFindPath(start, goal, ref weights, pathBuffer, out result);
 		}
 
+		public bool TryFindPath(Vector2Int start, Vector2Int goal, Vector2Int[] pathBuffer, out NavPathResult result)
+		{
+			NavDefaultTraversalCostProvider weights = default;
+			return TryFindPath(start, goal, ref weights, pathBuffer, out result);
+		}
+
 		public bool TryFindPath(int startIndex, int goalIndex, int[] pathBuffer, out NavPathResult result)
 		{
 			NavDefaultTraversalCostProvider weights = default;
@@ -163,6 +169,28 @@ namespace Gameplay.Navigation
 			}
 
 			return TryFindPath(ToIndex(start), ToIndex(goal), ref weightProvider, pathBuffer, out result);
+		}
+
+		public bool TryFindPath<TWeightProvider>(
+			Vector2Int          start,
+			Vector2Int          goal,
+			ref TWeightProvider weightProvider,
+			Vector2Int[]        pathBuffer,
+			out NavPathResult   result
+		)
+			where TWeightProvider : struct, INavTraversalCostProvider
+		{
+			int[] indexPathBuffer = pathBuffer == null ? null : new int[pathBuffer.Length];
+			bool  hasPath         = TryFindPath(start, goal, ref weightProvider, indexPathBuffer, out result);
+			if (!hasPath) {
+				return false;
+			}
+
+			for (int i = 0; i < result.PathLength; i++) {
+				pathBuffer[i] = ToCoordinates(indexPathBuffer[i]);
+			}
+
+			return true;
 		}
 
 		public bool TryFindPath<TWeightProvider>(

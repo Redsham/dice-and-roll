@@ -135,7 +135,8 @@ namespace Gameplay.Navigation.Pathfinding
 				return;
 			}
 
-			if (!weightProvider.TryGetTraversalCost(grid, fromIndex, toIndex, baseCost, out int traversalCost)) {
+			int previousIndex = m_Parents[fromIndex];
+			if (!weightProvider.TryGetTraversalCost(grid, previousIndex, fromIndex, toIndex, baseCost, out int traversalCost)) {
 				return;
 			}
 

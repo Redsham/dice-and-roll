@@ -1,11 +1,14 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Gameplay.Camera.Abstractions;
+using Gameplay.Camera.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
 using Gameplay.Player.Presentation.Combat;
 using Gameplay.World.Runtime;
 using TriInspector;
 using UnityEngine;
+using VContainer;
 using Random = UnityEngine.Random;
 
 
@@ -17,9 +20,15 @@ namespace Gameplay.Player.Presentation
 
 		[Title("Shoot")]
 		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces = Array.Empty<DiceShotFaceDescriptor>();
+		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeAmplitude           = 0.2f;
+		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeDuration            = 0.18f;
+		[SerializeField, Min(0.01f)] private float        m_ShootCameraShakeFrequency           = 28.0f;
+		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeRotationalAmplitude = 1.2f;
 
 		[Title("References")]
 		[SerializeField] private DiceAudio m_Audio;
+
+		[Inject] private readonly IGameCameraController m_GameCameraController;
 
 		public void Initialize()
 		{
@@ -28,10 +37,7 @@ namespace Gameplay.Player.Presentation
 
 		public void Snap(DiceState state, GridBasis gridBasis)
 		{
-			transform.SetPositionAndRotation(
-			                                 gridBasis.GetCellCenter(state.Position),
-			                                 gridBasis.ToWorldRotation(state.Orientation.GetRotation())
-			                                );
+			transform.SetPositionAndRotation(gridBasis.GetCellCenter(state.Position), gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
 		}
 
 		public async UniTask PlayRollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
@@ -49,7 +55,18 @@ namespace Gameplay.Player.Presentation
 			float                  completionSeconds = 0.0f;
 
 			for (int i = 0; i < request.ShotCount; i++) {
+				// Audio
 				m_Audio?.PlayShot();
+				
+				// Camera shake
+				m_GameCameraController?.Shake(
+				                              m_ShootCameraShakeAmplitude,
+				                              m_ShootCameraShakeDuration,
+				                              m_ShootCameraShakeFrequency,
+				                              m_ShootCameraShakeRotationalAmplitude
+				                             );
+				
+				// Play VFX
 				if (shotVfx.Length > 0) {
 					ParticleSystem vfx = shotVfx[playOrder[i % playOrder.Length]];
 					if (vfx != null) {

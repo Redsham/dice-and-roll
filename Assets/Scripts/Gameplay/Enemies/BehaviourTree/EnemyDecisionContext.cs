@@ -1,4 +1,5 @@
 using Gameplay.Enemies.Runtime;
+using Gameplay.Navigation.Pathfinding;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
@@ -58,6 +59,51 @@ namespace Gameplay.Enemies.BehaviourTree
 
 			direction = delta.y >= 0 ? RollDirection.North : RollDirection.South;
 			return true;
+		}
+
+		public bool TryGetPawnPathDirectionToPlayer(out RollDirection direction)
+		{
+			PawnTurnPriorityTraversalCostProvider weights    = default;
+			Vector2Int[]                         pathBuffer = new Vector2Int[8];
+			NavPathResult                        result;
+
+			while (!NavigationService.TryFindPath(Enemy.State.Position, PlayerService.Position, ref weights, pathBuffer, out result)) {
+				if (result.Status != NavPathStatus.BufferTooSmall || result.RequiredSize <= pathBuffer.Length) {
+					direction = default;
+					return false;
+				}
+
+				pathBuffer = new Vector2Int[result.RequiredSize];
+			}
+
+			if (result.PathLength < 2) {
+				direction = default;
+				return false;
+			}
+
+			Vector2Int step = pathBuffer[1] - pathBuffer[0];
+			if (step == Vector2Int.up) {
+				direction = RollDirection.North;
+				return true;
+			}
+
+			if (step == Vector2Int.right) {
+				direction = RollDirection.East;
+				return true;
+			}
+
+			if (step == Vector2Int.down) {
+				direction = RollDirection.South;
+				return true;
+			}
+
+			if (step == Vector2Int.left) {
+				direction = RollDirection.West;
+				return true;
+			}
+
+			direction = default;
+			return false;
 		}
 	}
 }

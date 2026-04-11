@@ -3,6 +3,7 @@ using Gameplay.Actors.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Navigation;
 using Gameplay.Navigation.Pathfinding;
+using Gameplay.Navigation.Pathfinding.Providers;
 using UnityEngine;
 
 
@@ -71,6 +72,25 @@ namespace Gameplay.World.Runtime
 		{
 			EnsureGridReady();
 			return RequireGrid().TryFindPath(start, goal, pathBuffer, out result);
+		}
+
+		public bool TryFindPath(Vector2Int start, Vector2Int goal, Vector2Int[] pathBuffer, out NavPathResult result)
+		{
+			EnsureGridReady();
+			return RequireGrid().TryFindPath(start, goal, pathBuffer, out result);
+		}
+
+		public bool TryFindPath<TWeightProvider>(
+			Vector2Int          start,
+			Vector2Int          goal,
+			ref TWeightProvider weightProvider,
+			Vector2Int[]        pathBuffer,
+			out NavPathResult   result
+		)
+			where TWeightProvider : struct, INavTraversalCostProvider
+		{
+			EnsureGridReady();
+			return RequireGrid().TryFindPath(start, goal, ref weightProvider, pathBuffer, out result);
 		}
 
 		private void EnsureGridReady()

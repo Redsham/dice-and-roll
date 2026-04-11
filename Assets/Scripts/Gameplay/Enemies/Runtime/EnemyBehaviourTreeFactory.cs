@@ -39,7 +39,8 @@ namespace Gameplay.Enemies.Runtime
 			                                         })
 			                                        ),
 			                        new ActionNode("Move Towards Player", context => {
-				                        if (!context.TryGetPrimaryDirectionToPlayer(out RollDirection direction)) {
+				                        if (!context.TryGetPawnPathDirectionToPlayer(out RollDirection direction)
+				                            && !context.TryGetPrimaryDirectionToPlayer(out direction)) {
 					                        context.SelectAction(EnemyTurnAction.Wait());
 					                        return true;
 				                        }
