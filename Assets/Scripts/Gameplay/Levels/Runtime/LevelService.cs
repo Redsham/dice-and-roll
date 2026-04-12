@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Gameplay.Actors.Runtime;
 using Gameplay.Composition;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Data;
@@ -22,22 +21,19 @@ namespace Gameplay.Levels.Runtime
 		private readonly IObjectResolver                   m_ObjectResolver;
 		private readonly INavigationService                m_NavigationService;
 		private readonly ILevelNodeService                 m_LevelNodeService;
-		private readonly ICombatResolverService            m_CombatResolverService;
 		private          AsyncOperationHandle<GameObject>? m_CurrentLevelHandle;
 
 		public LevelService(
 			GameplaySceneConfiguration configuration,
 			IObjectResolver            objectResolver,
 			INavigationService         navigationService,
-			ILevelNodeService          levelNodeService,
-			ICombatResolverService     combatResolverService
+			ILevelNodeService          levelNodeService
 		)
 		{
 			m_Configuration         = configuration;
 			m_ObjectResolver        = objectResolver;
 			m_NavigationService     = navigationService;
 			m_LevelNodeService      = levelNodeService;
-			m_CombatResolverService = combatResolverService;
 		}
 
 		public LevelAsset     CurrentAsset { get; private set; }
@@ -86,7 +82,6 @@ namespace Gameplay.Levels.Runtime
 				CurrentAsset = null;
 				m_NavigationService.ClearLevel();
 				m_LevelNodeService.ClearLevel();
-				m_CombatResolverService.Clear();
 				if (m_CurrentLevelHandle.HasValue) {
 					Addressables.ReleaseInstance(levelObject);
 					m_CurrentLevelHandle = null;

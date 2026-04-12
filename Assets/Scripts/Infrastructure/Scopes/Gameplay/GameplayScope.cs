@@ -1,4 +1,3 @@
-using Gameplay.Actors.Runtime;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Camera.Runtime;
 using Gameplay.Composition;
@@ -35,7 +34,6 @@ namespace Infrastructure.Scopes.Gameplay
 			       .As<ICameraGridOrientation>()
 			       .As<ICameraScreenProjector>();
 
-			builder.Register<CombatResolverService>(Lifetime.Scoped).As<ICombatResolverService>();
 			builder.Register<GameplayStateService>(Lifetime.Scoped).As<IGameplayStateService>();
 			builder.Register<NavigationService>(Lifetime.Scoped).As<INavigationService>().As<INavEntityService>();
 			builder.Register<LevelNodeService>(Lifetime.Scoped).As<ILevelNodeService>();

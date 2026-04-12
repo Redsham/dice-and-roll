@@ -55,6 +55,7 @@ namespace Gameplay.Nodes.Authoring
 
 			m_IsDestroyed      = true;
 			m_CurrentHitPoints = 0;
+			RemoveFromGrid();
 			m_OnDestroyed?.Invoke();
 		}
 	}

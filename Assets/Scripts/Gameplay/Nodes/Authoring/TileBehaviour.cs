@@ -26,6 +26,16 @@ namespace Gameplay.Nodes.Authoring
 			return 0;
 		}
 
+		public void BindToGrid(NavGrid navGrid)
+		{
+			m_NavGrid = navGrid;
+		}
+
+		public void ClearBoundGrid()
+		{
+			m_NavGrid = null;
+		}
+
 		public bool SyncToGrid(NavGrid navGrid)
 		{
 			if (navGrid == null) {
@@ -62,6 +72,11 @@ namespace Gameplay.Nodes.Authoring
 			return navGrid.GetCellWorldPosition(gridPosition, Alignment);
 		}
 
+		protected void RemoveFromGrid()
+		{
+			m_NavGrid?.TryClearEntity(Cell, this);
+		}
+
 		private void SetGridValidation(bool isInNavGrid, string warning)
 		{
 			m_IsInNavGrid = isInNavGrid;
@@ -70,5 +85,6 @@ namespace Gameplay.Nodes.Authoring
 
 		[SerializeField, HideInInspector] private bool   m_IsInNavGrid = true;
 		[SerializeField, HideInInspector] private string m_GridWarning;
+		private NavGrid m_NavGrid;
 	}
 }

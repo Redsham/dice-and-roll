@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Gameplay.Actors.Runtime;
 using Gameplay.Enemies.Authoring;
 using Gameplay.Enemies.BehaviourTree;
 using Gameplay.Enemies.Configs;
@@ -18,13 +17,12 @@ using Object = UnityEngine.Object;
 
 namespace Gameplay.Enemies.Runtime
 {
-	public sealed class EnemyRuntimeHandle : IGridActor
+	public sealed class EnemyRuntimeHandle : INavCellEntity
 	{
 		// === Dependencies ===
 
 		private readonly IPlayerService         m_PlayerService;
 		private readonly INavigationService     m_NavigationService;
-		private readonly ICombatResolverService m_CombatResolverService;
 		private readonly ILevelNodeService      m_LevelNodeService;
 
 		// === Authoring ===
@@ -41,7 +39,6 @@ namespace Gameplay.Enemies.Runtime
 			EnemyBehaviour         enemyBehaviour,
 			IPlayerService         playerService,
 			INavigationService     navigationService,
-			ICombatResolverService combatResolverService,
 			ILevelNodeService      levelNodeService
 		)
 		{
@@ -68,7 +65,6 @@ namespace Gameplay.Enemies.Runtime
 			Config                  = enemyBehaviour.Config;
 			m_PlayerService         = playerService;
 			m_NavigationService     = navigationService;
-			m_CombatResolverService = combatResolverService;
 			m_LevelNodeService      = levelNodeService;
 			m_State                 = EnemyState.Create(enemyBehaviour.GridPosition, Config.MaxHealth);
 			m_State.Facing          = enemyBehaviour.InitialFacing;
@@ -142,6 +138,7 @@ namespace Gameplay.Enemies.Runtime
 			m_State.CurrentHealth -= consumedDamage;
 
 			if (!IsAlive) {
+				m_NavigationService.TryClearEntity(m_State.Position, this);
 				m_LevelNodeService.NotifyActorLeft(m_State.Position, Behaviour.gameObject);
 				if (Behaviour is MortarEnemyBehaviour mortar && mortar.AimMarker != null) {
 					mortar.AimMarker.Hide();
@@ -201,7 +198,7 @@ namespace Gameplay.Enemies.Runtime
 
 			await m_View.PlayMoveAsync(previousCell, nextCell, m_NavigationService.Basis, Config.MoveDuration, cancellationToken);
 			m_LevelNodeService.NotifyActorLeft(previousCell, Behaviour.gameObject);
-			m_CombatResolverService.MoveActor(this, previousCell, nextCell);
+			m_NavigationService.TryMoveEntity(this, previousCell, nextCell);
 			m_LevelNodeService.NotifyActorEntered(nextCell, Behaviour.gameObject);
 		}
 
@@ -240,7 +237,7 @@ namespace Gameplay.Enemies.Runtime
 			                                                   );
 
 			if (traceResult.Entity != null) {
-				m_CombatResolverService.ApplyDamage(traceResult.Entity, pawn.Config.ShootDamage, Behaviour.gameObject);
+				traceResult.Entity.ApplyDamage(pawn.Config.ShootDamage, Behaviour.gameObject);
 			}
 
 			await UniTask.CompletedTask;
@@ -253,7 +250,9 @@ namespace Gameplay.Enemies.Runtime
 			}
 
 			if (m_PendingMortarCell.HasValue && m_PendingMortarCell.Value == targetCell) {
-				m_CombatResolverService.ApplyDamage(targetCell, mortar.Config.BombardmentDamage, Behaviour.gameObject);
+				if (m_NavigationService.TryGetEntity(targetCell, out INavCellEntity entity) && entity != null) {
+					entity.ApplyDamage(mortar.Config.BombardmentDamage, Behaviour.gameObject);
+				}
 			}
 
 			m_PendingMortarCell    = null;

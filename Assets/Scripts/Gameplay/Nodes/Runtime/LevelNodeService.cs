@@ -22,12 +22,17 @@ namespace Gameplay.Nodes.Runtime
 			for (int i = 0; i < tiles.Length; i++) {
 				TileBehaviour tile = tiles[i];
 				tile.ResetRuntimeState();
+				tile.BindToGrid(navGrid);
 				m_Tiles[tile.GridPosition] = tile;
 			}
 		}
 
 		public void ClearLevel()
 		{
+			foreach (TileBehaviour tile in m_Tiles.Values) {
+				tile?.ClearBoundGrid();
+			}
+
 			m_CurrentGrid = null;
 			m_Tiles.Clear();
 		}

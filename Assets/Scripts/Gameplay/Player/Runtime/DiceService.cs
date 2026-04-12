@@ -1,6 +1,4 @@
-using System;
 using Cysharp.Threading.Tasks;
-using Gameplay.Actors.Runtime;
 using Gameplay.Flow.GameState;
 using Gameplay.Navigation;
 using Gameplay.Navigation.Tracing;
@@ -24,7 +22,6 @@ namespace Gameplay.Player.Runtime
 
 		private readonly INavigationService     m_NavigationService;
 		private readonly ILevelNodeService      m_LevelNodeService;
-		private readonly ICombatResolverService m_CombatResolverService;
 		private readonly IGameplayStateService  m_GameplayStateService;
 
 		// === Runtime ===
@@ -38,13 +35,11 @@ namespace Gameplay.Player.Runtime
 		public DiceService(
 			INavigationService     navigationService,
 			ILevelNodeService      levelNodeService,
-			ICombatResolverService combatResolverService,
 			IGameplayStateService  gameplayStateService
 		)
 		{
 			m_NavigationService     = navigationService;
 			m_LevelNodeService      = levelNodeService;
-			m_CombatResolverService = combatResolverService;
 			m_GameplayStateService  = gameplayStateService;
 		}
 
@@ -74,7 +69,7 @@ namespace Gameplay.Player.Runtime
 			m_DiceView.Initialize();
 			m_DiceView.Snap(initialState, m_NavigationService.Basis);
 			m_GridActor = new(this);
-			m_CombatResolverService.RegisterActor(m_GridActor);
+			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
 			m_LevelNodeService.NotifyActorEntered(initialState.Position, m_Player.gameObject);
 		}
 
@@ -85,7 +80,7 @@ namespace Gameplay.Player.Runtime
 					m_LevelNodeService.NotifyActorLeft(m_Controller.State.Position, m_Player.gameObject);
 				}
 
-				m_CombatResolverService.UnregisterActor(m_GridActor);
+				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
 			}
 
 			if (m_Player != null) {
@@ -116,7 +111,7 @@ namespace Gameplay.Player.Runtime
 
 			if (CurrentHealth <= 0) {
 				m_LevelNodeService.NotifyActorLeft(m_Controller.State.Position, m_Player.gameObject);
-				m_CombatResolverService.UnregisterActor(m_GridActor);
+				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
 				m_GameplayStateService.End(GameplayEndReason.PlayerDefeated);
 			}
 
@@ -142,7 +137,7 @@ namespace Gameplay.Player.Runtime
 				m_Player.SetGridPosition(appliedState.Position);
 				await m_DiceView.PlayRollAsync(currentState, appliedState, direction, m_NavigationService.Basis);
 				m_LevelNodeService.NotifyActorLeft(currentState.Position, m_Player.gameObject);
-				m_CombatResolverService.MoveActor(m_GridActor, currentState.Position, appliedState.Position);
+				m_NavigationService.TryMoveEntity(m_GridActor, currentState.Position, appliedState.Position);
 				m_LevelNodeService.NotifyActorEntered(appliedState.Position, m_Player.gameObject);
 				return true;
 			} finally {
@@ -190,7 +185,7 @@ namespace Gameplay.Player.Runtime
 				await m_DiceView.PlayShootAsync(request);
 
 				if (traceResult.Entity != null) {
-					m_CombatResolverService.ApplyDamage(traceResult.Entity, shotCount, m_Player.gameObject);
+					traceResult.Entity.ApplyDamage(shotCount, m_Player.gameObject);
 				}
 
 				return true;
@@ -201,7 +196,7 @@ namespace Gameplay.Player.Runtime
 
 		// === Actor Adapter ===
 
-		private sealed class PlayerGridActor : IGridActor
+		private sealed class PlayerGridActor : INavCellEntity
 		{
 			private readonly DiceService m_Owner;
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Gameplay.Actors.Runtime;
 using Gameplay.Composition;
 using Gameplay.Enemies.Authoring;
 using Gameplay.Flow.GameState;
@@ -19,7 +18,7 @@ namespace Gameplay.Enemies.Runtime
 {
 	public sealed class EnemyService : IEnemyService
 	{
-		private const float ActorHeightOffset = 0.5f;
+		private const float ACTOR_HEIGHT_OFFSET = 0.5f;
 
 		// === Dependencies ===
 
@@ -27,7 +26,6 @@ namespace Gameplay.Enemies.Runtime
 		private readonly IObjectResolver            m_ObjectResolver;
 		private readonly INavigationService         m_NavigationService;
 		private readonly IPlayerService             m_PlayerService;
-		private readonly ICombatResolverService     m_CombatResolverService;
 		private readonly IGameplayStateService      m_GameplayStateService;
 		private readonly ILevelNodeService          m_LevelNodeService;
 
@@ -40,7 +38,6 @@ namespace Gameplay.Enemies.Runtime
 			IObjectResolver            objectResolver,
 			INavigationService         navigationService,
 			IPlayerService             playerService,
-			ICombatResolverService     combatResolverService,
 			IGameplayStateService      gameplayStateService,
 			ILevelNodeService          levelNodeService
 		)
@@ -49,7 +46,6 @@ namespace Gameplay.Enemies.Runtime
 			m_ObjectResolver        = objectResolver;
 			m_NavigationService     = navigationService;
 			m_PlayerService         = playerService;
-			m_CombatResolverService = combatResolverService;
 			m_GameplayStateService  = gameplayStateService;
 			m_LevelNodeService      = levelNodeService;
 		}
@@ -76,7 +72,7 @@ namespace Gameplay.Enemies.Runtime
 			for (int i = 0; i < m_Enemies.Count; i++) {
 				if (m_Enemies[i].IsAlive) {
 					m_LevelNodeService.NotifyActorLeft(m_Enemies[i].State.Position, m_Enemies[i].Behaviour.gameObject);
-					m_CombatResolverService.UnregisterActor(m_Enemies[i]);
+					m_NavigationService.TryClearEntity(m_Enemies[i].Cell, m_Enemies[i]);
 					Object.Destroy(m_Enemies[i].Behaviour.gameObject);
 				}
 			}
@@ -95,15 +91,15 @@ namespace Gameplay.Enemies.Runtime
 			EnemyBehaviour enemyBehaviour = m_ObjectResolver.Instantiate(prefab, m_Configuration.ActorParent);
 			GridBasis basis = m_NavigationService.Basis;
 			enemyBehaviour.transform.SetPositionAndRotation(
-			                                                basis.GetCellCenter(cell) + basis.Up * ActorHeightOffset,
+			                                                basis.GetCellCenter(cell) + basis.Up * ACTOR_HEIGHT_OFFSET,
 			                                                Quaternion.identity
 			                                               );
 
 			OverrideSpawnCell(enemyBehaviour, cell);
 
-			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_CombatResolverService, m_LevelNodeService);
+			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_LevelNodeService);
 			m_Enemies.Add(handle);
-			m_CombatResolverService.RegisterActor(handle);
+			m_NavigationService.TrySetEntity(handle.Cell, handle);
 			await handle.SpawnAsync(cancellationToken);
 			return handle;
 		}
