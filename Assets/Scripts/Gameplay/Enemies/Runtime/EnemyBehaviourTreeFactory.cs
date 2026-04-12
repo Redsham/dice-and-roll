@@ -39,8 +39,9 @@ namespace Gameplay.Enemies.Runtime
 			                                         })
 			                                        ),
 			                        new ActionNode("Move Towards Player", context => {
-				                        if (!context.TryGetPawnPathDirectionToPlayer(out RollDirection direction)
-				                            && !context.TryGetPrimaryDirectionToPlayer(out direction)) {
+				                        int shootRange = enemy.Behaviour is PawnEnemyBehaviour pawn ? pawn.Config.ShootRange : 1;
+				                        if (!context.TryGetPawnAdvanceDirection(shootRange, out RollDirection direction)
+				                            && !context.TryGetDirectApproachDirection(out direction)) {
 					                        context.SelectAction(EnemyTurnAction.Wait());
 					                        return true;
 				                        }

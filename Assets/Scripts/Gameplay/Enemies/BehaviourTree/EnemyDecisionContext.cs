@@ -10,6 +10,8 @@ namespace Gameplay.Enemies.BehaviourTree
 {
 	public sealed class EnemyDecisionContext
 	{
+		private const int InitialPathBufferSize = 8;
+
 		public EnemyRuntimeHandle Enemy             { get; }
 		public IPlayerService     PlayerService     { get; }
 		public INavigationService NavigationService { get; }
@@ -61,13 +63,115 @@ namespace Gameplay.Enemies.BehaviourTree
 			return true;
 		}
 
+		public bool TryGetDirectApproachDirection(out RollDirection direction)
+		{
+			Vector2Int delta = GetDeltaToPlayer();
+			if (delta == Vector2Int.zero) {
+				direction = default;
+				return false;
+			}
+
+			if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y)) {
+				if (TryGetApproachDirection(delta.x >= 0 ? RollDirection.East : RollDirection.West, out direction)) {
+					return true;
+				}
+
+				return TryGetApproachDirection(delta.y >= 0 ? RollDirection.North : RollDirection.South, out direction);
+			}
+
+			if (TryGetApproachDirection(delta.y >= 0 ? RollDirection.North : RollDirection.South, out direction)) {
+				return true;
+			}
+
+			return TryGetApproachDirection(delta.x >= 0 ? RollDirection.East : RollDirection.West, out direction);
+		}
+
 		public bool TryGetPawnPathDirectionToPlayer(out RollDirection direction)
 		{
-			PawnTurnPriorityTraversalCostProvider weights    = default;
-			Vector2Int[]                         pathBuffer = new Vector2Int[8];
+			return TryGetPathDirection(Enemy.State.Position, PlayerService.Position, out direction);
+		}
+
+		public bool TryGetPawnAdvanceDirection(int shootRange, out RollDirection direction)
+		{
+			PawnTurnPriorityTraversalCostProvider weights        = CreatePawnWeights();
+			Vector2Int                           bestTargetCell = default;
+			int                                  bestTotalCost  = int.MaxValue;
+			int                                  bestPathLength = int.MaxValue;
+			bool                                 hasBestCell    = false;
+
+			for (int distance = 1; distance <= shootRange; distance++) {
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.up * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+					hasBestCell = true;
+				}
+
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.right * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+					hasBestCell = true;
+				}
+
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.down * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+					hasBestCell = true;
+				}
+
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.left * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+					hasBestCell = true;
+				}
+			}
+
+			if (hasBestCell) {
+				return TryGetPathDirection(Enemy.State.Position, bestTargetCell, out direction);
+			}
+
+			direction = default;
+			return false;
+		}
+
+		private bool EvaluatePawnAttackCell(
+			Vector2Int                              candidateCell,
+			ref PawnTurnPriorityTraversalCostProvider weights,
+			ref Vector2Int                          bestTargetCell,
+			ref int                                 bestTotalCost,
+			ref int                                 bestPathLength
+		)
+		{
+			if (candidateCell == Enemy.State.Position || !NavigationService.CanOccupy(candidateCell)) {
+				return false;
+			}
+
+			Vector2Int[] pathBuffer = new Vector2Int[InitialPathBufferSize];
+			NavPathResult result;
+			while (!NavigationService.TryFindPath(Enemy.State.Position, candidateCell, ref weights, pathBuffer, out result)) {
+				if (result.Status != NavPathStatus.BufferTooSmall || result.RequiredSize <= pathBuffer.Length) {
+					return false;
+				}
+
+				pathBuffer = new Vector2Int[result.RequiredSize];
+			}
+
+			if (result.PathLength < 2) {
+				return false;
+			}
+
+			if (result.TotalCost > bestTotalCost) {
+				return false;
+			}
+
+			if (result.TotalCost == bestTotalCost && result.PathLength >= bestPathLength) {
+				return false;
+			}
+
+			bestTargetCell = candidateCell;
+			bestTotalCost  = result.TotalCost;
+			bestPathLength = result.PathLength;
+			return true;
+		}
+
+		private bool TryGetPathDirection(Vector2Int start, Vector2Int goal, out RollDirection direction)
+		{
+			PawnTurnPriorityTraversalCostProvider weights    = CreatePawnWeights();
+			Vector2Int[]                         pathBuffer = new Vector2Int[InitialPathBufferSize];
 			NavPathResult                        result;
 
-			while (!NavigationService.TryFindPath(Enemy.State.Position, PlayerService.Position, ref weights, pathBuffer, out result)) {
+			while (!NavigationService.TryFindPath(start, goal, ref weights, pathBuffer, out result)) {
 				if (result.Status != NavPathStatus.BufferTooSmall || result.RequiredSize <= pathBuffer.Length) {
 					direction = default;
 					return false;
@@ -81,7 +185,30 @@ namespace Gameplay.Enemies.BehaviourTree
 				return false;
 			}
 
-			Vector2Int step = pathBuffer[1] - pathBuffer[0];
+			return TryGetDirectionFromStep(pathBuffer[1] - pathBuffer[0], out direction);
+		}
+
+		private PawnTurnPriorityTraversalCostProvider CreatePawnWeights()
+		{
+			return new() {
+				InitialFacing = Enemy.State.Facing
+			};
+		}
+
+		private bool TryGetApproachDirection(RollDirection candidate, out RollDirection direction)
+		{
+			Vector2Int nextCell = Enemy.State.Position.Move(candidate);
+			if (NavigationService.CanOccupy(nextCell)) {
+				direction = candidate;
+				return true;
+			}
+
+			direction = default;
+			return false;
+		}
+
+		private static bool TryGetDirectionFromStep(Vector2Int step, out RollDirection direction)
+		{
 			if (step == Vector2Int.up) {
 				direction = RollDirection.North;
 				return true;

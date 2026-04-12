@@ -11,7 +11,7 @@ namespace Gameplay.World.Runtime
 {
 	public sealed class NavigationService : INavigationService
 	{
-		private const float CellSize = 1.0f;
+		private const float CELL_SIZE = 1.0f;
 
 		private readonly IGridActorRegistry m_ActorRegistry;
 		private          LevelBehaviour     m_CurrentLevel;
@@ -33,7 +33,7 @@ namespace Gameplay.World.Runtime
 				           navGrid.transform.right.normalized,
 				           navGrid.transform.forward.normalized,
 				           navGrid.transform.up.normalized,
-				           CellSize
+				           CELL_SIZE
 				          );
 			}
 		}

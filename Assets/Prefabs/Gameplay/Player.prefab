@@ -177,10 +177,12 @@ MonoBehaviour:
     <ShotVfx>k__BackingField:
     - {fileID: 165277354574145831}
     - {fileID: 3970693755481706272}
-  m_ShootCameraShakeAmplitude: 0.2
-  m_ShootCameraShakeDuration: 0.18
-  m_ShootCameraShakeFrequency: 28
-  m_ShootCameraShakeRotationalAmplitude: 1.2
+  m_ShootCameraShake:
+    Amplitude: 0.2
+    Duration: 0.18
+    Frequency: 28
+    RotationalAmplitude: 1.2
+  m_ImpactVfx: {fileID: 6870930968389686395, guid: 46dd7036b09a269459044d6a9016b01c, type: 3}
   m_Audio: {fileID: 2476398649066522975}
 --- !u!1 &1660508095063747161
 GameObject:
