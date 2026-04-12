@@ -8,22 +8,20 @@ namespace Gameplay.Player.Presentation.Combat
 {
 	public readonly struct DiceShotPresentationRequest
 	{
-		public DiceOrientation    Orientation { get; }
-		public DiceFace           Face        { get; }
-		public RollDirection      Direction   { get; }
-		public int                ShotCount   { get; }
-		public float              BurstDelay  { get; }
-		public GridBasis          GridBasis   { get; }
-		public NavLineTraceStep[] TraceSteps  { get; }
+		public DiceOrientation Orientation { get; }
+		public DiceFace        Face        { get; }
+		public RollDirection   Direction   { get; }
+		public int             ShotCount   { get; }
+		public float           BurstDelay  { get; }
+		public GridBasis       GridBasis   { get; }
 
 		public DiceShotPresentationRequest(
-			DiceOrientation    orientation,
-			DiceFace           face,
-			RollDirection      direction,
-			int                shotCount,
-			float              burstDelay,
-			GridBasis          gridBasis,
-			NavLineTraceStep[] traceSteps
+			DiceOrientation orientation,
+			DiceFace        face,
+			RollDirection   direction,
+			int             shotCount,
+			float           burstDelay,
+			GridBasis       gridBasis
 		)
 		{
 			Orientation = orientation;
@@ -32,7 +30,6 @@ namespace Gameplay.Player.Presentation.Combat
 			ShotCount   = shotCount;
 			BurstDelay  = burstDelay;
 			GridBasis   = gridBasis;
-			TraceSteps  = traceSteps;
 		}
 	}
 }

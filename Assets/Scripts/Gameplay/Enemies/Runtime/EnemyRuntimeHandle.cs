@@ -7,7 +7,6 @@ using Gameplay.Enemies.BehaviourTree;
 using Gameplay.Enemies.Configs;
 using Gameplay.Enemies.Presentation;
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
@@ -36,7 +35,6 @@ namespace Gameplay.Enemies.Runtime
 
 		// === Runtime ===
 
-		private readonly NavLineTraceStep[] m_TraceBuffer;
 		private          EnemyState         m_State;
 		private          Vector2Int?        m_PendingMortarCell;
 
@@ -77,7 +75,6 @@ namespace Gameplay.Enemies.Runtime
 			m_LevelNodeService      = levelNodeService;
 			m_State                 = EnemyState.Create(enemyBehaviour.GridPosition, Config.MaxHealth);
 			m_State.Facing          = enemyBehaviour.InitialFacing;
-			m_TraceBuffer           = new NavLineTraceStep[Mathf.Max(1, (enemyBehaviour as PawnEnemyBehaviour)?.Config.ShootRange ?? 1)];
 			m_BehaviourTree         = EnemyBehaviourTreeFactory.Create(this);
 			Behaviour.SetGridPosition(m_State.Position);
 			enemyBehaviour.BindRuntime(this);
@@ -137,12 +134,6 @@ namespace Gameplay.Enemies.Runtime
 		}
 
 		// === Combat ===
-
-		public NodeProjectileImpactInfo PreviewProjectileImpact(int incomingDamage)
-		{
-			int consumedDamage = Mathf.Clamp(incomingDamage, 0, m_State.CurrentHealth);
-			return new(consumedDamage, consumedDamage > 0, consumedDamage > 0);
-		}
 
 		public int ApplyDamage(int damage, GameObject source = null)
 		{
@@ -244,19 +235,14 @@ namespace Gameplay.Enemies.Runtime
 				return;
 			}
 
-			NavLineTraceResult traceResult = m_GridLineTraceService.Trace(
+			GridTraceResult traceResult = m_GridLineTraceService.Trace(
 			                                                              m_State.Position,
 			                                                              m_State.Facing,
-			                                                              pawn.Config.ShootRange,
-			                                                              pawn.Config.ShootDamage,
-			                                                              m_TraceBuffer
+			                                                              pawn.Config.ShootRange
 			                                                             );
 
-			for (int i = 0; i < traceResult.StepCount && i < m_TraceBuffer.Length; i++) {
-				NavLineTraceStep step = m_TraceBuffer[i];
-				if (step.PowerConsumed > 0) {
-					m_CombatResolverService.ApplyDamage(step.Coordinates, step.PowerConsumed, Behaviour.gameObject);
-				}
+			if (traceResult.Hit) {
+				m_CombatResolverService.ApplyDamage(traceResult.Point, pawn.Config.ShootDamage, Behaviour.gameObject);
 			}
 
 			await UniTask.CompletedTask;

@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Gameplay.Actors.Runtime;
 using Gameplay.Flow.GameState;
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Authoring;
 using Gameplay.Player.Configuration;
@@ -35,7 +34,6 @@ namespace Gameplay.Player.Runtime
 		private IDiceView          m_DiceView;
 		private DiceController     m_Controller;
 		private DiceConfig         m_Config;
-		private NavLineTraceStep[] m_TraceBuffer;
 		private PlayerGridActor    m_GridActor;
 
 		public DiceService(
@@ -71,8 +69,6 @@ namespace Gameplay.Player.Runtime
 			m_Player      = player;
 			m_DiceView    = player.View;
 			m_Config      = player.Config != null ? player.Config : DiceConfig.CreateRuntimeDefault();
-			m_TraceBuffer = new NavLineTraceStep[Mathf.Max(1, m_Config.ShootRange)];
-
 			DiceState initialState = DiceState.Create(startPosition);
 			m_Controller  = new(initialState);
 			CurrentHealth = m_Config.MaxHealth;
@@ -103,7 +99,6 @@ namespace Gameplay.Player.Runtime
 			m_DiceView    = null;
 			m_Controller  = null;
 			m_Config      = null;
-			m_TraceBuffer = null;
 			m_GridActor   = null;
 			CurrentHealth = 0;
 			IsRolling     = false;
@@ -179,13 +174,10 @@ namespace Gameplay.Player.Runtime
 			IsRolling = true;
 
 			try {
-				Array.Clear(m_TraceBuffer, 0, m_TraceBuffer.Length);
-				NavLineTraceResult traceResult = m_GridLineTraceService.Trace(
+				GridTraceResult traceResult = m_GridLineTraceService.Trace(
 				                                                              m_Controller.State.Position,
 				                                                              direction,
-				                                                              m_Config.ShootRange,
-				                                                              shotCount,
-				                                                              m_TraceBuffer
+				                                                              m_Config.ShootRange
 				                                                             );
 
 				DiceShotPresentationRequest request = new(
@@ -194,17 +186,13 @@ namespace Gameplay.Player.Runtime
 				                                          direction,
 				                                          shotCount,
 				                                          m_Config.ShootBurstDelay,
-				                                          basis,
-				                                          m_TraceBuffer
+				                                          basis
 				                                         );
 
 				await m_DiceView.PlayShootAsync(request);
 
-				for (int i = 0; i < traceResult.StepCount && i < m_TraceBuffer.Length; i++) {
-					NavLineTraceStep step = m_TraceBuffer[i];
-					if (step.PowerConsumed > 0) {
-						m_CombatResolverService.ApplyDamage(step.Coordinates, step.PowerConsumed, m_Player.gameObject);
-					}
+				if (traceResult.Hit) {
+					m_CombatResolverService.ApplyDamage(traceResult.Point, shotCount, m_Player.gameObject);
 				}
 
 				return true;
@@ -230,12 +218,6 @@ namespace Gameplay.Player.Runtime
 				Type = NavCellOccupancyType.Actor
 			};
 			public bool IsAlive => m_Owner.IsAlive;
-
-			public NodeProjectileImpactInfo PreviewProjectileImpact(int incomingDamage)
-			{
-				int consumedDamage = Mathf.Clamp(incomingDamage, 0, m_Owner.CurrentHealth);
-				return new(consumedDamage, consumedDamage > 0, consumedDamage > 0);
-			}
 
 			public int ApplyDamage(int damage, GameObject source = null)
 			{

@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 namespace Gameplay.Nodes.Authoring
 {
-	public class DestructiblePropNodeBehaviour : TileBehaviour, INodeDamageHandler, INodeProjectileImpactHandler
+	public class DestructiblePropNodeBehaviour : TileBehaviour, INodeDamageHandler
 	{
 		[Title("Destructible")]
 		[SerializeField, Min(1)] private int m_HitPoints = 1;
@@ -36,16 +36,6 @@ namespace Gameplay.Nodes.Authoring
 			return new() {
 				Type = NavCellOccupancyType.DestructibleProp
 			};
-		}
-
-		public virtual NodeProjectileImpactInfo PreviewProjectileImpact(int incomingDamage)
-		{
-			if (m_IsDestroyed || incomingDamage <= 0) {
-				return default;
-			}
-
-			int consumedDamage = Mathf.Min(incomingDamage, m_CurrentHitPoints);
-			return new(consumedDamage, false, consumedDamage > 0);
 		}
 
 		public virtual NodeDamageResult ApplyDamage(in NodeDamageContext context)

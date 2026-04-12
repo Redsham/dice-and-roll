@@ -1,5 +1,4 @@
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using Gameplay.Nodes.Runtime;
 using UnityEngine;
 
@@ -21,42 +20,16 @@ namespace Gameplay.Actors.Runtime
 
 		// === Lifecycle ===
 
-		public void Clear()
-		{
-			m_ActorRegistry.Clear();
-		}
+		public void Clear() => m_ActorRegistry.Clear();
 
-		public void RegisterActor(IGridActor actor)
-		{
-			m_ActorRegistry.Register(actor);
-		}
+		public void RegisterActor(IGridActor actor) => m_ActorRegistry.Register(actor);
+		public void UnregisterActor(IGridActor actor) => m_ActorRegistry.Unregister(actor);
 
-		public void UnregisterActor(IGridActor actor)
-		{
-			m_ActorRegistry.Unregister(actor);
-		}
-
-		public void MoveActor(IGridActor actor, Vector2Int from, Vector2Int to)
-		{
-			m_ActorRegistry.Move(actor, from, to);
-		}
+		public void MoveActor(IGridActor actor, Vector2Int from, Vector2Int to) => m_ActorRegistry.Move(actor, from, to);
 
 		// === Queries ===
 
-		public bool IsCellOccupiedByActor(Vector2Int cell)
-		{
-			return m_ActorRegistry.IsOccupied(cell);
-		}
-
-		public NodeProjectileImpactInfo PreviewProjectileImpact(Vector2Int cell, int incomingDamage, out NavCellOccupancy occupancy)
-		{
-			if (m_ActorRegistry.TryGet(cell, out IGridActor actor)) {
-				occupancy = actor.Occupancy;
-				return actor.PreviewProjectileImpact(incomingDamage);
-			}
-
-			return m_LevelNodeService.PreviewProjectileImpact(cell, incomingDamage, out occupancy);
-		}
+		public bool IsCellOccupiedByActor(Vector2Int cell) => m_ActorRegistry.IsOccupied(cell);
 
 		public int ApplyDamage(Vector2Int cell, int damage, GameObject source = null)
 		{

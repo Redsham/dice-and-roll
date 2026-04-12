@@ -1,5 +1,4 @@
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using UnityEngine;
 
 
@@ -16,8 +15,7 @@ namespace Gameplay.Actors.Runtime
 
 		// === Queries ===
 
-		bool                     IsCellOccupiedByActor(Vector2Int   cell);
-		NodeProjectileImpactInfo PreviewProjectileImpact(Vector2Int cell, int incomingDamage, out NavCellOccupancy occupancy);
-		int                      ApplyDamage(Vector2Int             cell, int damage,         GameObject           source = null);
+		bool IsCellOccupiedByActor(Vector2Int cell);
+		int  ApplyDamage(Vector2Int cell, int damage, GameObject source = null);
 	}
 }

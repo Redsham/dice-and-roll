@@ -37,29 +37,6 @@ namespace Gameplay.Nodes.Runtime
 			return m_Tiles.TryGetValue(cell, out tile);
 		}
 
-		public NodeProjectileImpactInfo PreviewProjectileImpact(Vector2Int cell, int incomingDamage, out NavCellOccupancy occupancy)
-		{
-			if (m_CurrentGrid == null || !m_CurrentGrid.TryGetOccupancy(cell, out occupancy)) {
-				occupancy = NavCellOccupancy.Empty;
-				return default;
-			}
-
-			if (!m_Tiles.TryGetValue(cell, out TileBehaviour tile) || tile is not INodeProjectileImpactHandler projectileImpactHandler) {
-				return new(
-				           consumedDamage: occupancy.StopsProjectileImmediately ? incomingDamage : 0,
-				           stopsProjectile: occupancy.StopsProjectileImmediately,
-				           canApplyDamage: false
-				          );
-			}
-
-			NodeProjectileImpactInfo impactInfo = projectileImpactHandler.PreviewProjectileImpact(incomingDamage);
-			return new(
-			           impactInfo.ConsumedDamage,
-			           impactInfo.StopsProjectile || occupancy.StopsProjectileImmediately,
-			           impactInfo.CanApplyDamage
-			          );
-		}
-
 		public void NotifyActorEntered(Vector2Int cell, GameObject actor)
 		{
 			if (!m_Tiles.TryGetValue(cell, out TileBehaviour tile)) {

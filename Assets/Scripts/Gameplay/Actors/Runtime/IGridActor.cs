@@ -1,5 +1,4 @@
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using UnityEngine;
 
 
@@ -18,8 +17,7 @@ namespace Gameplay.Actors.Runtime
 
 		// === Combat ===
 
-		bool                     IsAlive { get; }
-		NodeProjectileImpactInfo PreviewProjectileImpact(int incomingDamage);
-		int                      ApplyDamage(int             damage, GameObject source = null);
+		bool IsAlive { get; }
+		int  ApplyDamage(int damage, GameObject source = null);
 	}
 }

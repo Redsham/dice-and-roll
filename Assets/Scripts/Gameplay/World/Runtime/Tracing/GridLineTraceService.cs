@@ -1,6 +1,5 @@
 using Gameplay.Actors.Runtime;
 using Gameplay.Navigation;
-using Gameplay.Nodes.Models;
 using Gameplay.Player.Domain;
 using UnityEngine;
 
@@ -18,50 +17,25 @@ namespace Gameplay.World.Runtime.Tracing
 			m_CombatResolverService = combatResolverService;
 		}
 
-		public NavLineTraceResult Trace(Vector2Int origin, RollDirection direction, int maxDistance, int initialPower, NavLineTraceStep[] stepBuffer = null)
+		public GridTraceResult Trace(Vector2Int origin, RollDirection direction, int maxDistance)
 		{
-			int        remainingPower = Mathf.Max(0, initialPower);
-			int        stepCount      = 0;
-			bool       wasStopped     = false;
-			bool       exitedBounds   = false;
-			Vector2Int currentCell    = origin;
-			Vector2Int stepDirection  = ToStepDirection(direction);
+			Vector2Int currentCell   = origin;
+			Vector2Int stepDirection = ToStepDirection(direction);
 
-			for (int distance = 1; distance <= maxDistance && remainingPower > 0; distance++) {
+			for (int distance = 1; distance <= maxDistance; distance++) {
 				currentCell += stepDirection;
-				if (!m_NavigationService.TryGetOccupancy(currentCell, out _)) {
-					exitedBounds = true;
-					break;
+				if (!m_NavigationService.TryGetOccupancy(currentCell, out NavCellOccupancy occupancy)) {
+					return new(distance, false, true, currentCell);
 				}
 
-				NodeProjectileImpactInfo impactInfo = m_CombatResolverService.PreviewProjectileImpact(currentCell, remainingPower, out NavCellOccupancy occupancy);
-
-				int powerBefore   = remainingPower;
-				int powerConsumed = impactInfo.ConsumedDamage;
-				remainingPower = Mathf.Max(0, powerBefore - powerConsumed);
-				bool stopsTrace = impactInfo.StopsProjectile || remainingPower <= 0;
-
-				if (stepBuffer != null && stepCount < stepBuffer.Length) {
-					stepBuffer[stepCount] = new(
-					                            currentCell,
-					                            occupancy,
-					                            distance,
-					                            powerBefore,
-					                            powerConsumed,
-					                            remainingPower,
-					                            stopsTrace
-					                           );
-				}
-
-				stepCount++;
-
-				if (stopsTrace) {
-					wasStopped = true;
-					break;
+				bool hitActor = m_CombatResolverService.IsCellOccupiedByActor(currentCell);
+				bool hitNode  = occupancy.Type != NavCellOccupancyType.Empty;
+				if (hitActor || hitNode) {
+					return new(distance, true, false, currentCell);
 				}
 			}
 
-			return new(stepCount, remainingPower, wasStopped, exitedBounds, currentCell);
+			return new(maxDistance, false, false, currentCell);
 		}
 
 		private static Vector2Int ToStepDirection(RollDirection direction)
