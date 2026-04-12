@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
+using Gameplay.Camera.Models;
 using Gameplay.Camera.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
@@ -21,11 +22,8 @@ namespace Gameplay.Player.Presentation
 		private readonly DiceRotator m_Rotator = new();
 
 		[Title("Shoot")]
-		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces = Array.Empty<DiceShotFaceDescriptor>();
-		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeAmplitude           = 0.2f;
-		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeDuration            = 0.18f;
-		[SerializeField, Min(0.01f)] private float        m_ShootCameraShakeFrequency           = 28.0f;
-		[SerializeField, Min(0.0f)] private float         m_ShootCameraShakeRotationalAmplitude = 1.2f;
+		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces        = Array.Empty<DiceShotFaceDescriptor>();
+		[SerializeField] private CameraShakeSettings      m_ShootCameraShake = CameraShakeSettings.Default;
 
 		[Title("References")]
 		[SerializeField] private DiceAudio m_Audio;
@@ -44,7 +42,9 @@ namespace Gameplay.Player.Presentation
 
 		public async UniTask PlayRollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
 		{
+			m_Audio?.PlayRoll();
 			await m_Rotator.RollAsync(fromState, toState, direction, gridBasis);
+			
 			Snap(toState, gridBasis);
 		}
 
@@ -58,15 +58,10 @@ namespace Gameplay.Player.Presentation
 
 			for (int i = 0; i < request.ShotCount; i++) {
 				// Audio
-				m_Audio?.PlayShot();
+				m_Audio?.PlayShot((i + 1) / (float)request.ShotCount);
 				
 				// Camera shake
-				m_GameCameraController?.Shake(
-				                              m_ShootCameraShakeAmplitude,
-				                              m_ShootCameraShakeDuration,
-				                              m_ShootCameraShakeFrequency,
-				                              m_ShootCameraShakeRotationalAmplitude
-				                             );
+				m_GameCameraController?.Shake(m_ShootCameraShake);
 				
 				// Play VFX
 				if (shotVfx.Length > 0) {

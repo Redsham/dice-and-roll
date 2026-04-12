@@ -162,17 +162,17 @@ namespace Gameplay.Camera.Runtime
 			};
 		}
 
-		public void Shake(float amplitude, float duration, float frequency = 25.0f, float rotationalAmplitude = 1.0f)
+		public void Shake(CameraShakeSettings settings)
 		{
-			if (amplitude <= 0.0f || duration <= 0.0f) {
+			if (!settings.IsEnabled) {
 				return;
 			}
 
-			m_ShakeAmplitude           = Mathf.Max(m_ShakeAmplitude, amplitude);
-			m_ShakeDuration            = Mathf.Max(m_ShakeDuration,  duration);
+			m_ShakeAmplitude           = Mathf.Max(m_ShakeAmplitude, settings.Amplitude);
+			m_ShakeDuration            = Mathf.Max(m_ShakeDuration,  settings.Duration);
 			m_ShakeElapsed             = 0.0f;
-			m_ShakeFrequency           = Mathf.Max(0.01f,                      frequency);
-			m_ShakeRotationalAmplitude = Mathf.Max(m_ShakeRotationalAmplitude, rotationalAmplitude);
+			m_ShakeFrequency           = Mathf.Max(0.01f, settings.Frequency);
+			m_ShakeRotationalAmplitude = Mathf.Max(m_ShakeRotationalAmplitude, settings.RotationalAmplitude);
 		}
 
 		public bool TryProjectScreenPointToPlane(Vector2 screenPosition, Vector3 planeOrigin, Vector3 planeNormal, out Vector3 worldPoint)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Gameplay.Camera.Models;
 
 
 namespace Gameplay.Camera.Abstractions
@@ -11,6 +12,6 @@ namespace Gameplay.Camera.Abstractions
 		void RotateOrbitLeft();
 		void RotateOrbitRight();
 		void AdjustOrbitZoom(float delta);
-		void Shake(float           amplitude, float duration, float frequency = 25.0f, float rotationalAmplitude = 1.0f);
+		void Shake(CameraShakeSettings settings);
 	}
 }
