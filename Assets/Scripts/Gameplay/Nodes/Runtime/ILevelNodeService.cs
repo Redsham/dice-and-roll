@@ -12,6 +12,5 @@ namespace Gameplay.Nodes.Runtime
 		bool                     TryGetTile(Vector2Int              cell, out TileBehaviour tile);
 		void                     NotifyActorEntered(Vector2Int      cell, GameObject        actor);
 		void                     NotifyActorLeft(Vector2Int         cell, GameObject        actor);
-		int                      ApplyDamage(Vector2Int             cell, int               damage, GameObject source = null);
 	}
 }

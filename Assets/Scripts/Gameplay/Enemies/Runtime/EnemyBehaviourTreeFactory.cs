@@ -119,7 +119,7 @@ namespace Gameplay.Enemies.Runtime
 				}
 
 				Vector2Int targetCell = context.PlayerService.Position + randomOffset;
-				if (!context.NavigationService.TryGetOccupancy(targetCell, out _)) {
+				if (!context.NavigationService.TryGetEntity(targetCell, out _)) {
 					continue;
 				}
 

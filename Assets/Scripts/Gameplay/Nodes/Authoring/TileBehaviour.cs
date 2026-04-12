@@ -4,18 +4,26 @@ using UnityEngine;
 
 namespace Gameplay.Nodes.Authoring
 {
-	public abstract class TileBehaviour : MonoBehaviour, IGridPositionEntity
+	public abstract class TileBehaviour : MonoBehaviour, IGridPositionEntity, INavCellEntity
 	{
 		[field: SerializeField] public Vector2Int GridPosition { get; private set; }
 		[field: SerializeField] public GridPositionAlignment Alignment { get; private set; } = GridPositionAlignment.Corner;
 
+		public GameObject Owner => gameObject;
+		public Vector2Int Cell => GridPosition;
+		public virtual NavCellFlags Flags => NavCellFlags.None;
+		public virtual bool IsAlive => true;
+
 		public bool   IsInNavGrid => m_IsInNavGrid;
 		public string GridWarning => m_GridWarning;
 
-		public abstract NavCellOccupancy CreateOccupancy();
-
 		public virtual void ResetRuntimeState()
 		{
+		}
+
+		public virtual int ApplyDamage(int damage, GameObject source = null)
+		{
+			return 0;
 		}
 
 		public bool SyncToGrid(NavGrid navGrid)

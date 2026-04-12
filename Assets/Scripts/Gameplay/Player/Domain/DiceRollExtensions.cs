@@ -56,6 +56,17 @@ namespace Gameplay.Player.Domain
 			};
 		}
 
+		public static Vector2Int ToVector2Int(this RollDirection direction)
+		{
+			return direction switch {
+				RollDirection.North => Vector2Int.up,
+				RollDirection.East  => Vector2Int.right,
+				RollDirection.South => Vector2Int.down,
+				RollDirection.West  => Vector2Int.left,
+				_                   => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+			};
+		}
+
 		public static Quaternion GetRotation(this DiceOrientation orientation)
 		{
 			Vector3 up      = GetDirectionForFace(orientation, 1);

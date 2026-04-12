@@ -15,7 +15,7 @@ namespace Gameplay.Actors.Runtime
 
 		// === Queries ===
 
-		bool IsCellOccupiedByActor(Vector2Int cell);
+		int  ApplyDamage(INavCellEntity entity, int damage, GameObject source = null);
 		int  ApplyDamage(Vector2Int cell, int damage, GameObject source = null);
 	}
 }

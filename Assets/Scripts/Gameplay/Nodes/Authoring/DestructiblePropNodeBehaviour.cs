@@ -17,25 +17,13 @@ namespace Gameplay.Nodes.Authoring
 		private int  m_CurrentHitPoints;
 		private bool m_IsDestroyed;
 
+		public override NavCellFlags Flags => IsAlive ? NavCellFlags.Hittable : NavCellFlags.None;
+		public override bool IsAlive => !m_IsDestroyed;
+
 		public override void ResetRuntimeState()
 		{
 			m_CurrentHitPoints = Mathf.Max(1, m_HitPoints);
 			m_IsDestroyed      = false;
-		}
-
-		public override NavCellOccupancy CreateOccupancy()
-		{
-			if (m_IsDestroyed) {
-				return NavCellOccupancy.Empty;
-			}
-
-			if (m_CurrentHitPoints <= 0) {
-				m_CurrentHitPoints = Mathf.Max(1, m_HitPoints);
-			}
-
-			return new() {
-				Type = NavCellOccupancyType.DestructibleProp
-			};
 		}
 
 		public virtual NodeDamageResult ApplyDamage(in NodeDamageContext context)
@@ -52,6 +40,11 @@ namespace Gameplay.Nodes.Authoring
 			}
 
 			return new(consumedDamage, false);
+		}
+
+		public override int ApplyDamage(int damage, GameObject source = null)
+		{
+			return ApplyDamage(new(source, Cell, damage)).ConsumedDamage;
 		}
 
 		protected void DestroyNode()

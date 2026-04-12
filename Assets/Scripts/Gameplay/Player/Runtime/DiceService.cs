@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Gameplay.Actors.Runtime;
 using Gameplay.Flow.GameState;
 using Gameplay.Navigation;
+using Gameplay.Navigation.Tracing;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Authoring;
 using Gameplay.Player.Configuration;
@@ -11,7 +12,6 @@ using Gameplay.Player.Domain.Combat;
 using Gameplay.Player.Presentation;
 using Gameplay.Player.Presentation.Combat;
 using Gameplay.World.Runtime;
-using Gameplay.World.Runtime.Tracing;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -24,7 +24,6 @@ namespace Gameplay.Player.Runtime
 
 		private readonly INavigationService     m_NavigationService;
 		private readonly ILevelNodeService      m_LevelNodeService;
-		private readonly IGridLineTraceService  m_GridLineTraceService;
 		private readonly ICombatResolverService m_CombatResolverService;
 		private readonly IGameplayStateService  m_GameplayStateService;
 
@@ -39,14 +38,12 @@ namespace Gameplay.Player.Runtime
 		public DiceService(
 			INavigationService     navigationService,
 			ILevelNodeService      levelNodeService,
-			IGridLineTraceService  gridLineTraceService,
 			ICombatResolverService combatResolverService,
 			IGameplayStateService  gameplayStateService
 		)
 		{
 			m_NavigationService     = navigationService;
 			m_LevelNodeService      = levelNodeService;
-			m_GridLineTraceService  = gridLineTraceService;
 			m_CombatResolverService = combatResolverService;
 			m_GameplayStateService  = gameplayStateService;
 		}
@@ -174,11 +171,12 @@ namespace Gameplay.Player.Runtime
 			IsRolling = true;
 
 			try {
-				GridTraceResult traceResult = m_GridLineTraceService.Trace(
-				                                                              m_Controller.State.Position,
-				                                                              direction,
-				                                                              m_Config.ShootRange
-				                                                             );
+				GridTraceResult traceResult = NavGridLineTrace.Trace(
+				                                                    m_NavigationService.Grid,
+				                                                    m_Controller.State.Position,
+				                                                    direction.ToVector2Int(),
+				                                                    m_Config.ShootRange
+				                                                   );
 
 				DiceShotPresentationRequest request = new(
 				                                          m_Controller.State.Orientation,
@@ -191,8 +189,8 @@ namespace Gameplay.Player.Runtime
 
 				await m_DiceView.PlayShootAsync(request);
 
-				if (traceResult.Hit) {
-					m_CombatResolverService.ApplyDamage(traceResult.Point, shotCount, m_Player.gameObject);
+				if (traceResult.Entity != null) {
+					m_CombatResolverService.ApplyDamage(traceResult.Entity, shotCount, m_Player.gameObject);
 				}
 
 				return true;
@@ -214,9 +212,7 @@ namespace Gameplay.Player.Runtime
 
 			public GameObject Owner => m_Owner.PlayerObject;
 			public Vector2Int Cell  => m_Owner.Position;
-			public NavCellOccupancy Occupancy => new() {
-				Type = NavCellOccupancyType.Actor
-			};
+			public NavCellFlags Flags => NavCellFlags.Hittable;
 			public bool IsAlive => m_Owner.IsAlive;
 
 			public int ApplyDamage(int damage, GameObject source = null)

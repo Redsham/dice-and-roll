@@ -1,5 +1,4 @@
 using System;
-using Gameplay.Actors.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Navigation;
 using Gameplay.Navigation.Pathfinding;
@@ -9,18 +8,13 @@ using UnityEngine;
 
 namespace Gameplay.World.Runtime
 {
-	public sealed class NavigationService : INavigationService
+	public sealed class NavigationService : INavigationService, INavEntityService
 	{
 		private const float CELL_SIZE = 1.0f;
 
-		private readonly IGridActorRegistry m_ActorRegistry;
-		private          LevelBehaviour     m_CurrentLevel;
+		private LevelBehaviour m_CurrentLevel;
 
-		public NavigationService(IGridActorRegistry actorRegistry)
-		{
-			m_ActorRegistry = actorRegistry;
-		}
-
+		public NavGrid Grid => RequireGrid();
 		public bool HasLevel => m_CurrentLevel != null;
 
 		public GridBasis Basis
@@ -49,6 +43,12 @@ namespace Gameplay.World.Runtime
 			m_CurrentLevel = null;
 		}
 
+		public bool IsInBounds(Vector2Int coordinates)
+		{
+			EnsureGridReady();
+			return RequireGrid().IsInBounds(coordinates);
+		}
+
 		public bool CanOccupy(Vector2Int coordinates)
 		{
 			EnsureGridReady();
@@ -59,13 +59,31 @@ namespace Gameplay.World.Runtime
 			}
 
 			int index = navGrid.ToIndex(coordinates);
-			return navGrid.Nodes[index].CanOccupy && !m_ActorRegistry.IsOccupied(coordinates);
+			return navGrid.Nodes[index].CanOccupy;
 		}
 
-		public bool TryGetOccupancy(Vector2Int coordinates, out NavCellOccupancy occupancy)
+		public bool TryGetEntity(Vector2Int coordinates, out INavCellEntity entity)
 		{
 			EnsureGridReady();
-			return RequireGrid().TryGetOccupancy(coordinates, out occupancy);
+			return RequireGrid().TryGetEntity(coordinates, out entity);
+		}
+
+		public bool TrySetEntity(Vector2Int coordinates, INavCellEntity entity)
+		{
+			EnsureGridReady();
+			return RequireGrid().TrySetEntity(coordinates, entity);
+		}
+
+		public bool TryClearEntity(Vector2Int coordinates, INavCellEntity expectedEntity = null)
+		{
+			EnsureGridReady();
+			return RequireGrid().TryClearEntity(coordinates, expectedEntity);
+		}
+
+		public bool TryMoveEntity(INavCellEntity entity, Vector2Int from, Vector2Int to)
+		{
+			EnsureGridReady();
+			return RequireGrid().TryMoveEntity(entity, from, to);
 		}
 
 		public bool TryFindPath(Vector2Int start, Vector2Int goal, int[] pathBuffer, out NavPathResult result)

@@ -9,7 +9,6 @@ using Gameplay.Flow.GameState;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
-using Gameplay.World.Runtime.Tracing;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -29,7 +28,6 @@ namespace Gameplay.Enemies.Runtime
 		private readonly INavigationService         m_NavigationService;
 		private readonly IPlayerService             m_PlayerService;
 		private readonly ICombatResolverService     m_CombatResolverService;
-		private readonly IGridLineTraceService      m_GridLineTraceService;
 		private readonly IGameplayStateService      m_GameplayStateService;
 		private readonly ILevelNodeService          m_LevelNodeService;
 
@@ -43,7 +41,6 @@ namespace Gameplay.Enemies.Runtime
 			INavigationService         navigationService,
 			IPlayerService             playerService,
 			ICombatResolverService     combatResolverService,
-			IGridLineTraceService      gridLineTraceService,
 			IGameplayStateService      gameplayStateService,
 			ILevelNodeService          levelNodeService
 		)
@@ -53,7 +50,6 @@ namespace Gameplay.Enemies.Runtime
 			m_NavigationService     = navigationService;
 			m_PlayerService         = playerService;
 			m_CombatResolverService = combatResolverService;
-			m_GridLineTraceService  = gridLineTraceService;
 			m_GameplayStateService  = gameplayStateService;
 			m_LevelNodeService      = levelNodeService;
 		}
@@ -105,7 +101,7 @@ namespace Gameplay.Enemies.Runtime
 
 			OverrideSpawnCell(enemyBehaviour, cell);
 
-			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_CombatResolverService, m_GridLineTraceService, m_LevelNodeService);
+			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_CombatResolverService, m_LevelNodeService);
 			m_Enemies.Add(handle);
 			m_CombatResolverService.RegisterActor(handle);
 			await handle.SpawnAsync(cancellationToken);

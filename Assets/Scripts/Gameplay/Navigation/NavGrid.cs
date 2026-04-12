@@ -116,16 +116,16 @@ namespace Gameplay.Navigation
 			return IsInBounds(coordinates) && TrySetWalkable(ToIndex(coordinates), isWalkable);
 		}
 
-		public void ClearOccupancy()
+		public void ClearEntities()
 		{
 			EnsureReady();
 
 			for (int i = 0; i < Nodes.Data.Length; i++) {
-				Nodes[i].Occupancy = NavCellOccupancy.Empty;
+				Nodes[i].Entity = null;
 			}
 		}
 
-		public bool TrySetOccupancy(int index, NavCellOccupancy occupancy)
+		public bool TrySetEntity(int index, INavCellEntity entity)
 		{
 			EnsureReady();
 
@@ -133,25 +133,59 @@ namespace Gameplay.Navigation
 				return false;
 			}
 
-			Nodes[index].Occupancy = occupancy;
+			Nodes[index].Entity = entity;
 			return true;
 		}
 
-		public bool TrySetOccupancy(Vector2Int coordinates, NavCellOccupancy occupancy)
+		public bool TrySetEntity(Vector2Int coordinates, INavCellEntity entity)
 		{
 			EnsureReady();
-			return IsInBounds(coordinates) && TrySetOccupancy(ToIndex(coordinates), occupancy);
+			return IsInBounds(coordinates) && TrySetEntity(ToIndex(coordinates), entity);
 		}
 
-		public bool TryGetOccupancy(Vector2Int coordinates, out NavCellOccupancy occupancy)
+		public bool TryClearEntity(Vector2Int coordinates, INavCellEntity expectedEntity = null)
 		{
 			EnsureReady();
 			if (!IsInBounds(coordinates)) {
-				occupancy = NavCellOccupancy.Empty;
 				return false;
 			}
 
-			occupancy = Nodes[ToIndex(coordinates)].Occupancy;
+			int index = ToIndex(coordinates);
+			if (expectedEntity != null && !ReferenceEquals(Nodes[index].Entity, expectedEntity)) {
+				return false;
+			}
+
+			Nodes[index].Entity = null;
+			return true;
+		}
+
+		public bool TryMoveEntity(INavCellEntity entity, Vector2Int from, Vector2Int to)
+		{
+			EnsureReady();
+			if (!IsInBounds(from) || !IsInBounds(to)) {
+				return false;
+			}
+
+			int fromIndex = ToIndex(from);
+			int toIndex   = ToIndex(to);
+			if (!ReferenceEquals(Nodes[fromIndex].Entity, entity)) {
+				return false;
+			}
+
+			Nodes[fromIndex].Entity = null;
+			Nodes[toIndex].Entity   = entity;
+			return true;
+		}
+
+		public bool TryGetEntity(Vector2Int coordinates, out INavCellEntity entity)
+		{
+			EnsureReady();
+			if (!IsInBounds(coordinates)) {
+				entity = null;
+				return false;
+			}
+
+			entity = Nodes[ToIndex(coordinates)].Entity;
 			return true;
 		}
 

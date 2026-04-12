@@ -32,13 +32,6 @@ namespace Gameplay.Enemies.Authoring
 
 		// === API ===
 
-		public virtual NavCellOccupancy CreateOccupancy()
-		{
-			return new() {
-				Type = NavCellOccupancyType.Actor
-			};
-		}
-
 		public EnemyRuntimeHandle RuntimeHandle { get; private set; }
 
 		public void BindRuntime(EnemyRuntimeHandle runtimeHandle)

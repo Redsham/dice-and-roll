@@ -7,11 +7,11 @@ using Gameplay.Enemies.BehaviourTree;
 using Gameplay.Enemies.Configs;
 using Gameplay.Enemies.Presentation;
 using Gameplay.Navigation;
+using Gameplay.Navigation.Tracing;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
-using Gameplay.World.Runtime.Tracing;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -25,7 +25,6 @@ namespace Gameplay.Enemies.Runtime
 		private readonly IPlayerService         m_PlayerService;
 		private readonly INavigationService     m_NavigationService;
 		private readonly ICombatResolverService m_CombatResolverService;
-		private readonly IGridLineTraceService  m_GridLineTraceService;
 		private readonly ILevelNodeService      m_LevelNodeService;
 
 		// === Authoring ===
@@ -43,7 +42,6 @@ namespace Gameplay.Enemies.Runtime
 			IPlayerService         playerService,
 			INavigationService     navigationService,
 			ICombatResolverService combatResolverService,
-			IGridLineTraceService  gridLineTraceService,
 			ILevelNodeService      levelNodeService
 		)
 		{
@@ -71,7 +69,6 @@ namespace Gameplay.Enemies.Runtime
 			m_PlayerService         = playerService;
 			m_NavigationService     = navigationService;
 			m_CombatResolverService = combatResolverService;
-			m_GridLineTraceService  = gridLineTraceService;
 			m_LevelNodeService      = levelNodeService;
 			m_State                 = EnemyState.Create(enemyBehaviour.GridPosition, Config.MaxHealth);
 			m_State.Facing          = enemyBehaviour.InitialFacing;
@@ -95,10 +92,10 @@ namespace Gameplay.Enemies.Runtime
 
 		// === Actor ===
 
-		public GameObject       Owner     => Behaviour.gameObject;
-		public Vector2Int       Cell      => m_State.Position;
-		public NavCellOccupancy Occupancy => Behaviour.CreateOccupancy();
-		public bool             IsAlive   => m_State.CurrentHealth > 0;
+		public GameObject   Owner   => Behaviour.gameObject;
+		public Vector2Int   Cell    => m_State.Position;
+		public NavCellFlags Flags   => NavCellFlags.Hittable;
+		public bool         IsAlive => m_State.CurrentHealth > 0;
 
 		// === State ===
 
@@ -235,14 +232,15 @@ namespace Gameplay.Enemies.Runtime
 				return;
 			}
 
-			GridTraceResult traceResult = m_GridLineTraceService.Trace(
-			                                                              m_State.Position,
-			                                                              m_State.Facing,
-			                                                              pawn.Config.ShootRange
-			                                                             );
+			GridTraceResult traceResult = NavGridLineTrace.Trace(
+			                                                    m_NavigationService.Grid,
+			                                                    m_State.Position,
+			                                                    m_State.Facing.ToVector2Int(),
+			                                                    pawn.Config.ShootRange
+			                                                   );
 
-			if (traceResult.Hit) {
-				m_CombatResolverService.ApplyDamage(traceResult.Point, pawn.Config.ShootDamage, Behaviour.gameObject);
+			if (traceResult.Entity != null) {
+				m_CombatResolverService.ApplyDamage(traceResult.Entity, pawn.Config.ShootDamage, Behaviour.gameObject);
 			}
 
 			await UniTask.CompletedTask;

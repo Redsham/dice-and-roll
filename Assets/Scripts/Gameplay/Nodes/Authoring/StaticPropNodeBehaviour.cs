@@ -8,13 +8,6 @@ namespace Gameplay.Nodes.Authoring
 	{
 		[Title("Static Prop")]
 		[ShowInInspector, ReadOnly]
-		private NavCellOccupancyType PreviewType => NavCellOccupancyType.StaticProp;
-
-		public override NavCellOccupancy CreateOccupancy()
-		{
-			return new() {
-				Type = NavCellOccupancyType.StaticProp
-			};
-		}
+		private NavCellFlags PreviewFlags => Flags;
 	}
 }

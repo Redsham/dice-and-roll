@@ -62,15 +62,15 @@ namespace Gameplay.Navigation.Editor
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
-					NavCellOccupancy occupancy = navGrid.Nodes[x, y].Occupancy;
-					if (occupancy.Type == NavCellOccupancyType.Empty) {
+					INavCellEntity entity = navGrid.Nodes[x, y].Entity;
+					if (entity == null) {
 						continue;
 					}
 
 					GetCellCorners(navGrid, x, y, cellCorners);
-					GetColors(occupancy.Type, out Color fillColor, out Color outlineColor);
+					GetColors(entity, out Color fillColor, out Color outlineColor);
 					Handles.DrawSolidRectangleWithOutline(cellCorners, fillColor, outlineColor);
-					Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(occupancy));
+					Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity));
 				}
 			}
 		}
@@ -95,41 +95,56 @@ namespace Gameplay.Navigation.Editor
 			SceneView.RepaintAll();
 		}
 
-		private static void GetColors(NavCellOccupancyType type, out Color fillColor, out Color outlineColor)
+		private static void GetColors(INavCellEntity entity, out Color fillColor, out Color outlineColor)
 		{
-			switch (type) {
-				case NavCellOccupancyType.StaticProp:
-					fillColor    = StaticPropFillColor;
-					outlineColor = StaticPropOutlineColor;
-					break;
-				case NavCellOccupancyType.DestructibleProp:
-					fillColor    = DestructibleFillColor;
-					outlineColor = DestructibleOutlineColor;
-					break;
-				case NavCellOccupancyType.DecorativeDestructibleProp:
-					fillColor    = DecorativeFillColor;
-					outlineColor = DecorativeOutlineColor;
-					break;
-				case NavCellOccupancyType.Actor:
-					fillColor    = ActorFillColor;
-					outlineColor = ActorOutlineColor;
-					break;
-				default:
-					fillColor    = Color.clear;
-					outlineColor = Color.clear;
-					break;
+			if (IsActor(entity)) {
+				fillColor    = ActorFillColor;
+				outlineColor = ActorOutlineColor;
+				return;
 			}
+
+			if (entity.Flags.HasFlag(NavCellFlags.Walkable) && entity.Flags.HasFlag(NavCellFlags.Hittable)) {
+				fillColor    = DecorativeFillColor;
+				outlineColor = DecorativeOutlineColor;
+				return;
+			}
+
+			if (entity.Flags.HasFlag(NavCellFlags.Hittable)) {
+				fillColor    = DestructibleFillColor;
+				outlineColor = DestructibleOutlineColor;
+				return;
+			}
+
+			fillColor    = StaticPropFillColor;
+			outlineColor = StaticPropOutlineColor;
 		}
 
-		private static string GetLabel(NavCellOccupancy occupancy)
+		private static string GetLabel(INavCellEntity entity)
 		{
-			return occupancy.Type switch {
-				NavCellOccupancyType.StaticProp                 => "S",
-				NavCellOccupancyType.DestructibleProp           => "D",
-				NavCellOccupancyType.DecorativeDestructibleProp => "Dec",
-				NavCellOccupancyType.Actor                      => "A",
-				_                                               => string.Empty
-			};
+			if (IsActor(entity)) {
+				return "A";
+			}
+
+			if (entity.Flags.HasFlag(NavCellFlags.Walkable) && entity.Flags.HasFlag(NavCellFlags.Hittable)) {
+				return "Dec";
+			}
+
+			if (entity.Flags.HasFlag(NavCellFlags.Hittable)) {
+				return "D";
+			}
+
+			return "S";
+		}
+
+		private static bool IsActor(INavCellEntity entity)
+		{
+			GameObject owner = entity.Owner;
+			if (owner == null) {
+				return false;
+			}
+
+			return owner.GetComponent("EnemyBehaviour") != null
+				|| owner.GetComponent("DiceBehaviour") != null;
 		}
 	}
 }

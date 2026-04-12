@@ -4,10 +4,10 @@ namespace Gameplay.Navigation
 	{
 		// === Data ===
 
-		public readonly int              Index;
-		public          bool             IsWalkable;
-		public          NavCellOccupancy Occupancy;
-		public          bool             CanOccupy => IsWalkable && !Occupancy.BlocksMovement;
+		public readonly int            Index;
+		public          bool           IsWalkable;
+		public          INavCellEntity Entity;
+		public          bool           CanOccupy => IsWalkable && (Entity == null || Entity.Flags.HasFlag(NavCellFlags.Walkable));
 
 		// === Lifecycle ===
 
@@ -15,7 +15,7 @@ namespace Gameplay.Navigation
 		{
 			Index      = index;
 			IsWalkable = isWalkable;
-			Occupancy  = NavCellOccupancy.Empty;
+			Entity     = null;
 		}
 	}
 }

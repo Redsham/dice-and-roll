@@ -14,10 +14,10 @@ using Gameplay.Flow.Transitions;
 using Gameplay.Flow.Turns;
 using Gameplay.Flow.Turns.Enemies;
 using Gameplay.Levels.Runtime;
+using Gameplay.Navigation;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
-using Gameplay.World.Runtime.Tracing;
 using UI.Gameplay;
 using VContainer;
 using VContainer.Unity;
@@ -35,12 +35,10 @@ namespace Infrastructure.Scopes.Gameplay
 			       .As<ICameraGridOrientation>()
 			       .As<ICameraScreenProjector>();
 
-			builder.Register<GridActorRegistry>(Lifetime.Scoped).As<IGridActorRegistry>();
 			builder.Register<CombatResolverService>(Lifetime.Scoped).As<ICombatResolverService>();
 			builder.Register<GameplayStateService>(Lifetime.Scoped).As<IGameplayStateService>();
-			builder.Register<NavigationService>(Lifetime.Scoped).As<INavigationService>();
+			builder.Register<NavigationService>(Lifetime.Scoped).As<INavigationService>().As<INavEntityService>();
 			builder.Register<LevelNodeService>(Lifetime.Scoped).As<ILevelNodeService>();
-			builder.Register<GridLineTraceService>(Lifetime.Scoped).As<IGridLineTraceService>();
 			builder.Register<LevelService>(Lifetime.Scoped).As<ILevelService>();
 			builder.Register<DiceService>(Lifetime.Scoped).As<IPlayerService>();
 			builder.Register<EnemyService>(Lifetime.Scoped).As<IEnemyService>();

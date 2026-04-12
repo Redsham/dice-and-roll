@@ -61,25 +61,18 @@ namespace Gameplay.Nodes.Runtime
 			}
 		}
 
-		public int ApplyDamage(Vector2Int cell, int damage, GameObject source = null)
-		{
-			if (damage <= 0 || !m_Tiles.TryGetValue(cell, out TileBehaviour tile) || tile is not INodeDamageHandler damageHandler) {
-				return 0;
-			}
-
-			NodeDamageResult result = damageHandler.ApplyDamage(new(source, cell, damage));
-			SyncTile(cell, tile);
-			return result.ConsumedDamage;
-		}
-
 		private void SyncTile(Vector2Int cell, TileBehaviour tile)
 		{
 			if (m_CurrentGrid == null) {
 				return;
 			}
 
-			NavCellOccupancy occupancy = tile.CreateOccupancy();
-			m_CurrentGrid.TrySetOccupancy(cell, occupancy);
+			if (tile != null && tile.IsAlive) {
+				m_CurrentGrid.TrySetEntity(cell, tile);
+				return;
+			}
+
+			m_CurrentGrid.TryClearEntity(cell, tile);
 		}
 	}
 }

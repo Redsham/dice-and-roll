@@ -1,5 +1,4 @@
 using Gameplay.Navigation;
-using Gameplay.Nodes.Runtime;
 using UnityEngine;
 
 
@@ -9,44 +8,67 @@ namespace Gameplay.Actors.Runtime
 	{
 		// === Dependencies ===
 
-		private readonly IGridActorRegistry m_ActorRegistry;
-		private readonly ILevelNodeService  m_LevelNodeService;
+		private readonly INavEntityService m_NavEntityService;
 
-		public CombatResolverService(IGridActorRegistry actorRegistry, ILevelNodeService levelNodeService)
+		public CombatResolverService(INavEntityService navEntityService)
 		{
-			m_ActorRegistry    = actorRegistry;
-			m_LevelNodeService = levelNodeService;
+			m_NavEntityService = navEntityService;
 		}
 
 		// === Lifecycle ===
 
-		public void Clear() => m_ActorRegistry.Clear();
+		public void Clear()
+		{
+		}
 
-		public void RegisterActor(IGridActor actor) => m_ActorRegistry.Register(actor);
-		public void UnregisterActor(IGridActor actor) => m_ActorRegistry.Unregister(actor);
+		public void RegisterActor(IGridActor actor)
+		{
+			if (actor == null) {
+				return;
+			}
 
-		public void MoveActor(IGridActor actor, Vector2Int from, Vector2Int to) => m_ActorRegistry.Move(actor, from, to);
+			m_NavEntityService.TrySetEntity(actor.Cell, actor);
+		}
+
+		public void UnregisterActor(IGridActor actor)
+		{
+			if (actor == null) {
+				return;
+			}
+
+			m_NavEntityService.TryClearEntity(actor.Cell, actor);
+		}
+
+		public void MoveActor(IGridActor actor, Vector2Int from, Vector2Int to)
+		{
+			if (actor == null) {
+				return;
+			}
+
+			m_NavEntityService.TryMoveEntity(actor, from, to);
+		}
 
 		// === Queries ===
 
-		public bool IsCellOccupiedByActor(Vector2Int cell) => m_ActorRegistry.IsOccupied(cell);
-
-		public int ApplyDamage(Vector2Int cell, int damage, GameObject source = null)
+		public int ApplyDamage(INavCellEntity entity, int damage, GameObject source = null)
 		{
-			if (damage <= 0) {
+			if (entity == null || damage <= 0) {
 				return 0;
 			}
 
-			if (m_ActorRegistry.TryGet(cell, out IGridActor actor)) {
-				int consumedDamage = actor.ApplyDamage(damage, source);
-				if (!actor.IsAlive) {
-					m_ActorRegistry.Unregister(actor);
-				}
-
-				return consumedDamage;
+			int consumedDamage = entity.ApplyDamage(damage, source);
+			if (!entity.IsAlive) {
+				m_NavEntityService.TryClearEntity(entity.Cell, entity);
 			}
 
-			return m_LevelNodeService.ApplyDamage(cell, damage, source);
+			return consumedDamage;
+		}
+
+		public int ApplyDamage(Vector2Int cell, int damage, GameObject source = null)
+		{
+			return m_NavEntityService.TryGetEntity(cell, out INavCellEntity entity)
+				? ApplyDamage(entity, damage, source)
+				: 0;
 		}
 	}
 }

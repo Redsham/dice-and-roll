@@ -248,7 +248,7 @@ namespace Gameplay.Levels.Authoring
 			Dictionary<Vector2Int, TileFloor> tiles = EnsureTileHierarchy();
 
 			NavGrid.RebuildGrid();
-			NavGrid.ClearOccupancy();
+			NavGrid.ClearEntities();
 
 			SyncPlayerStart();
 			SyncTileBehaviours(tiles, resetRuntimeState);
@@ -281,7 +281,7 @@ namespace Gameplay.Levels.Authoring
 					continue;
 				}
 
-				NavGrid.TrySetOccupancy(tileBehaviour.GridPosition, tileBehaviour.CreateOccupancy());
+				NavGrid.TrySetEntity(tileBehaviour.GridPosition, tileBehaviour.IsAlive ? tileBehaviour : null);
 				MarkTileBehaviourChanged(tileBehaviour);
 			}
 		}

@@ -7,16 +7,7 @@ namespace Gameplay.Nodes.Authoring
 {
 	public sealed class DecorativeDestructibleNodeBehaviour : DestructiblePropNodeBehaviour, INodeActorEnterHandler
 	{
-		public override NavCellOccupancy CreateOccupancy()
-		{
-			NavCellOccupancy occupancy = base.CreateOccupancy();
-			if (occupancy.Type == NavCellOccupancyType.Empty) {
-				return occupancy;
-			}
-
-			occupancy.Type = NavCellOccupancyType.DecorativeDestructibleProp;
-			return occupancy;
-		}
+		public override NavCellFlags Flags => IsAlive ? NavCellFlags.Walkable | NavCellFlags.Hittable : NavCellFlags.None;
 
 		public void OnActorEnter(in NodeActorContext context)
 		{
