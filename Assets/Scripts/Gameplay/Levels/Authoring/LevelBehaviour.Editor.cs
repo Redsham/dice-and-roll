@@ -197,7 +197,7 @@ namespace Gameplay.Levels.Authoring
 					continue;
 				}
 
-				Vector2Int targetCell = NavGrid.GetCellCoordinates(tileBehaviour.transform.position, tileBehaviour.Alignment);
+				Vector2Int targetCell = NavGrid.GetCellCoordinates(tileBehaviour.transform.position, tileBehaviour.Pivot);
 				if (!tiles.TryGetValue(targetCell, out TileFloor tile) || tile == null) {
 					continue;
 				}

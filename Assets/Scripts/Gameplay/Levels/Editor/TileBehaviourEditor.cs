@@ -22,7 +22,7 @@ namespace Gameplay.Levels.Editor
 				EditorGUILayout.HelpBox("TileBehaviour is not attached to a generated TileFloor in the hierarchy.", MessageType.Info);
 			}
 
-			EditorGUILayout.HelpBox("Hold Shift while moving a TileBehaviour to snap it to the grid using the selected alignment mode.", MessageType.None);
+			EditorGUILayout.HelpBox("Hold Shift while moving a TileBehaviour to snap it to the grid using the selected pivot mode.", MessageType.None);
 
 			DrawDefaultInspector();
 		}
@@ -50,14 +50,8 @@ namespace Gameplay.Levels.Editor
 		private static void SnapNodeToGrid(TileBehaviour node, LevelBehaviour level)
 		{
 			NavGrid    navGrid       = level.NavGrid;
-			Vector2Int targetCell    = navGrid.GetCellCoordinates(node.transform.position, node.Alignment);
-			Vector3    snappedPoint  = node.GetAlignedWorldPosition(navGrid, targetCell);
+			Vector2Int targetCell    = navGrid.GetCellCoordinates(node.transform.position, node.Pivot);
 			Transform  nodeTransform = node.transform;
-
-			if (nodeTransform.position != snappedPoint) {
-				Undo.RecordObject(nodeTransform, "Snap Node To Grid");
-				nodeTransform.position = snappedPoint;
-			}
 
 			if (level.TryGetTile(targetCell, out TileFloor tile) && tile != null && nodeTransform.parent != tile.transform) {
 				Undo.SetTransformParent(nodeTransform, tile.transform, "Attach Node To Tile");

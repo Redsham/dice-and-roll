@@ -63,21 +63,21 @@ namespace Gameplay.Navigation
 			return GetCellWorldCorner(x, y) + (transform.right + transform.forward) * 0.5f;
 		}
 
-		public Vector3 GetCellWorldPosition(Vector2Int coordinates, GridPositionAlignment alignment)
+		public Vector3 GetCellWorldPosition(Vector2Int coordinates, GridPivot pivot)
 		{
-			return alignment == GridPositionAlignment.Center
+			return pivot == GridPivot.Center
 				? GetCellWorldCenter(coordinates.x, coordinates.y)
 				: GetCellWorldCorner(coordinates.x, coordinates.y);
 		}
 
 		public Vector2Int GetCellCoordinates(Vector3 worldPosition)
 		{
-			return GetCellCoordinates(worldPosition, GridPositionAlignment.Corner);
+			return GetCellCoordinates(worldPosition, GridPivot.Corner);
 		}
 
-		public Vector2Int GetCellCoordinates(Vector3 worldPosition, GridPositionAlignment alignment)
+		public Vector2Int GetCellCoordinates(Vector3 worldPosition, GridPivot pivot)
 		{
-			Vector3 anchor  = alignment == GridPositionAlignment.Center
+			Vector3 anchor  = pivot == GridPivot.Center
 				? worldPosition - (transform.right + transform.forward) * 0.5f
 				: worldPosition;
 			Vector3 delta   = anchor - transform.position;

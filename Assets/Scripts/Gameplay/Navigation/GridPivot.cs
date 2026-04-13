@@ -1,6 +1,6 @@
 namespace Gameplay.Navigation
 {
-	public enum GridPositionAlignment
+	public enum GridPivot
 	{
 		Corner = 0,
 		Center = 1

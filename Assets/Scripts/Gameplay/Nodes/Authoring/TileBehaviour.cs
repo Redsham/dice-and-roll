@@ -6,7 +6,7 @@ namespace Gameplay.Nodes.Authoring
 {
 	public abstract class TileBehaviour : GridAlignedBehaviour, INavCellEntity
 	{
-		[field: SerializeField] public GridPositionAlignment Alignment { get; private set; } = GridPositionAlignment.Corner;
+		[field: SerializeField] public GridPivot Pivot { get; private set; } = GridPivot.Corner;
 
 		public         NavCellEntityLayer Layer => NavCellEntityLayer.Tile;
 		public         GameObject   Owner   => gameObject;
@@ -22,8 +22,8 @@ namespace Gameplay.Nodes.Authoring
 		public void BindToGrid(NavGrid navGrid) => m_NavGrid = navGrid;
 		public void ClearBoundGrid()            => m_NavGrid = null;
 
-		public override    Vector3    GetAlignedWorldPosition(NavGrid navGrid, Vector2Int gridPosition) => navGrid.GetCellWorldPosition(gridPosition, Alignment);
-		protected override Vector2Int CalculateGridPosition(NavGrid   navGrid) => navGrid.GetCellCoordinates(transform.position, Alignment);
+		public override    Vector3    GetAlignedWorldPosition(NavGrid navGrid, Vector2Int gridPosition) => navGrid.GetCellWorldPosition(gridPosition, Pivot);
+		protected override Vector2Int CalculateGridPosition(NavGrid   navGrid) => navGrid.GetCellCoordinates(transform.position, Pivot);
 
 		protected override string ValidationLabel => "Tile";
 

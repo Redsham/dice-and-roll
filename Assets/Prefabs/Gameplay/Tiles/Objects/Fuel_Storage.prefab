@@ -82,6 +82,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay.Nodes::Gameplay.Nodes.Authoring.StaticPropNodeBehaviour
   <GridPosition>k__BackingField: {x: 0, y: 0}
-  <Alignment>k__BackingField: 1
   m_IsInNavGrid: 1
   m_GridWarning: 
+  <Pivot>k__BackingField: 1

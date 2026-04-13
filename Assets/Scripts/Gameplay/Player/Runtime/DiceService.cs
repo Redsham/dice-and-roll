@@ -34,6 +34,7 @@ namespace Gameplay.Player.Runtime
 
 		public bool      HasPlayer     => m_Player != null;
 		public DiceState State         => m_Controller?.State ?? default;
+		
 		public bool      IsAlive       => HasPlayer && CurrentHealth > 0;
 		public int       CurrentHealth { get; private set; }
 		public int       MaxHealth     => m_Config != null ? m_Config.MaxHealth : 0;
@@ -112,7 +113,6 @@ namespace Gameplay.Player.Runtime
 			try {
 				DiceState currentState = m_Controller.State;
 				DiceState appliedState = m_Controller.Roll(direction);
-				m_Player.GridPosition = appliedState.Position;
 
 				await m_DiceView.PlayRollAsync(currentState, appliedState, direction, m_NavigationService.Basis);
 
@@ -169,9 +169,7 @@ namespace Gameplay.Player.Runtime
 			m_Controller  = new(state);
 			m_GridActor   = new(this);
 			CurrentHealth = m_Config.MaxHealth;
-
-			m_Player.GridPosition = state.Position;
-
+			
 			m_DiceView.Initialize();
 			m_DiceView.Snap(state, m_NavigationService.Basis);
 			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
