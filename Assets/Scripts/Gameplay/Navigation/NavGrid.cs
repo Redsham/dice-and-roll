@@ -121,7 +121,8 @@ namespace Gameplay.Navigation
 			EnsureReady();
 
 			for (int i = 0; i < Nodes.Data.Length; i++) {
-				Nodes[i].Entity = null;
+				Nodes[i].Tile  = null;
+				Nodes[i].Actor = null;
 			}
 		}
 
@@ -133,7 +134,22 @@ namespace Gameplay.Navigation
 				return false;
 			}
 
-			Nodes[index].Entity = entity;
+			ref NavNode node = ref Nodes[index];
+			if (entity == null) {
+				node.Tile  = null;
+				node.Actor = null;
+				return true;
+			}
+
+			switch (entity.Layer) {
+				case NavCellEntityLayer.Tile:
+					node.Tile = entity;
+					break;
+				case NavCellEntityLayer.Actor:
+					node.Actor = entity;
+					break;
+			}
+
 			return true;
 		}
 
@@ -150,13 +166,23 @@ namespace Gameplay.Navigation
 				return false;
 			}
 
-			int index = ToIndex(coordinates);
-			if (expectedEntity != null && !ReferenceEquals(Nodes[index].Entity, expectedEntity)) {
-				return false;
+			ref NavNode node = ref Nodes[ToIndex(coordinates)];
+			if (expectedEntity == null) {
+				node.Tile  = null;
+				node.Actor = null;
+				return true;
 			}
 
-			Nodes[index].Entity = null;
-			return true;
+			switch (expectedEntity.Layer) {
+				case NavCellEntityLayer.Tile when ReferenceEquals(node.Tile, expectedEntity):
+					node.Tile = null;
+					return true;
+				case NavCellEntityLayer.Actor when ReferenceEquals(node.Actor, expectedEntity):
+					node.Actor = null;
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		public bool TryMoveEntity(INavCellEntity entity, Vector2Int from, Vector2Int to)
@@ -168,13 +194,29 @@ namespace Gameplay.Navigation
 
 			int fromIndex = ToIndex(from);
 			int toIndex   = ToIndex(to);
-			if (!ReferenceEquals(Nodes[fromIndex].Entity, entity)) {
-				return false;
-			}
+			ref NavNode fromNode = ref Nodes[fromIndex];
+			ref NavNode toNode   = ref Nodes[toIndex];
 
-			Nodes[fromIndex].Entity = null;
-			Nodes[toIndex].Entity   = entity;
-			return true;
+			switch (entity.Layer) {
+				case NavCellEntityLayer.Tile:
+					if (!ReferenceEquals(fromNode.Tile, entity)) {
+						return false;
+					}
+
+					fromNode.Tile = null;
+					toNode.Tile   = entity;
+					return true;
+				case NavCellEntityLayer.Actor:
+					if (!ReferenceEquals(fromNode.Actor, entity)) {
+						return false;
+					}
+
+					fromNode.Actor = null;
+					toNode.Actor   = entity;
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		public bool TryGetEntity(Vector2Int coordinates, out INavCellEntity entity)
@@ -185,7 +227,8 @@ namespace Gameplay.Navigation
 				return false;
 			}
 
-			entity = Nodes[ToIndex(coordinates)].Entity;
+			NavNode node = Nodes[ToIndex(coordinates)];
+			entity = node.Actor ?? node.Tile;
 			return true;
 		}
 

@@ -62,17 +62,23 @@ namespace Gameplay.Navigation.Editor
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
-					INavCellEntity entity = navGrid.Nodes[x, y].Entity;
-					if (entity == null) {
-						continue;
-					}
-
 					GetCellCorners(navGrid, x, y, cellCorners);
-					GetColors(entity, out Color fillColor, out Color outlineColor);
-					Handles.DrawSolidRectangleWithOutline(cellCorners, fillColor, outlineColor);
-					Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity));
+					DrawEntity(navGrid.Nodes[x, y].Tile, navGrid, x, y, cellCorners, 0.0f);
+					DrawEntity(navGrid.Nodes[x, y].Actor, navGrid, x, y, cellCorners, 0.18f);
 				}
 			}
+		}
+
+		private static void DrawEntity(INavCellEntity entity, NavGrid navGrid, int x, int y, Vector3[] cellCorners, float inset)
+		{
+			if (entity == null) {
+				return;
+			}
+
+			Vector3[] corners = inset <= 0.0f ? cellCorners : InsetCorners(cellCorners, inset);
+			GetColors(entity, out Color fillColor, out Color outlineColor);
+			Handles.DrawSolidRectangleWithOutline(corners, fillColor, outlineColor);
+			Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity));
 		}
 
 		private static void GetCellCorners(NavGrid navGrid, int x, int y, Vector3[] corners)
@@ -85,6 +91,17 @@ namespace Gameplay.Navigation.Editor
 			corners[1] = origin + forward;
 			corners[2] = origin + forward + right;
 			corners[3] = origin + right;
+		}
+
+		private static Vector3[] InsetCorners(Vector3[] corners, float inset)
+		{
+			Vector3 center = (corners[0] + corners[2]) * 0.5f;
+			return new[] {
+				Vector3.Lerp(corners[0], center, inset),
+				Vector3.Lerp(corners[1], center, inset),
+				Vector3.Lerp(corners[2], center, inset),
+				Vector3.Lerp(corners[3], center, inset)
+			};
 		}
 
 		private static void RebuildGrid(NavGrid navGrid)

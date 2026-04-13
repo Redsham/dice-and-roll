@@ -45,7 +45,8 @@ namespace Gameplay.Player.Presentation
 		#region Positioning
 		public void Snap(DiceState state, GridBasis gridBasis)
 		{
-			transform.SetPositionAndRotation(GetCellPosition(state.Position, gridBasis), gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
+			transform.SetPositionAndRotation(GetCellPosition(state.Position, gridBasis), 
+			                                 gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
 		}
 		#endregion
 
@@ -69,12 +70,10 @@ namespace Gameplay.Player.Presentation
 				PlayShotFeedback(request, shotIndex);
 				finish = Mathf.Max(finish, PlayShotVfx(shotVfx, order, shotIndex, elapsed));
 
-				if (!ShouldWaitForNextShot(request, shotIndex)) {
-					continue;
+				if (shotIndex < request.ShotCount - 1 && request.BurstDelay > 0.0f) {
+					await UniTask.Delay(TimeSpan.FromSeconds(request.BurstDelay));
+					elapsed += request.BurstDelay;
 				}
-
-				await UniTask.Delay(TimeSpan.FromSeconds(request.BurstDelay));
-				elapsed += request.BurstDelay;
 			}
 
 			float remainingSeconds = finish - elapsed;
@@ -111,11 +110,7 @@ namespace Gameplay.Player.Presentation
 			vfx.Play(true);
 			return elapsedSeconds + GetDurationSeconds(vfx);
 		}
-
-		private static bool ShouldWaitForNextShot(DiceShotPresentationRequest request, int shotIndex)
-		{
-			return shotIndex < request.ShotCount - 1 && request.BurstDelay > 0.0f;
-		}
+		
 		#endregion
 
 		#region Shot Lookup

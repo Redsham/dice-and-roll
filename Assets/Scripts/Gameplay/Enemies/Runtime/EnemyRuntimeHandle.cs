@@ -88,6 +88,7 @@ namespace Gameplay.Enemies.Runtime
 
 		// === Actor ===
 
+		public NavCellEntityLayer Layer => NavCellEntityLayer.Actor;
 		public GameObject   Owner   => Behaviour.gameObject;
 		public Vector2Int   Cell    => m_State.Position;
 		public NavCellFlags Flags   => NavCellFlags.Hittable;

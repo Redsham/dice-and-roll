@@ -6,8 +6,10 @@ namespace Gameplay.Navigation
 
 		public readonly int            Index;
 		public          bool           IsWalkable;
-		public          INavCellEntity Entity;
-		public          bool           CanOccupy => IsWalkable && (Entity == null || Entity.Flags.HasFlag(NavCellFlags.Walkable));
+		public          INavCellEntity Tile;
+		public          INavCellEntity Actor;
+		public readonly INavCellEntity Entity => Actor ?? Tile;
+		public          bool           CanOccupy => IsWalkable && Actor == null && (Tile == null || Tile.Flags.HasFlag(NavCellFlags.Walkable));
 
 		// === Lifecycle ===
 
@@ -15,7 +17,8 @@ namespace Gameplay.Navigation
 		{
 			Index      = index;
 			IsWalkable = isWalkable;
-			Entity     = null;
+			Tile       = null;
+			Actor      = null;
 		}
 	}
 }

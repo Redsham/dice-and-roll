@@ -3,8 +3,15 @@ using UnityEngine;
 
 namespace Gameplay.Navigation
 {
+	public enum NavCellEntityLayer
+	{
+		Tile,
+		Actor
+	}
+
 	public interface INavCellEntity
 	{
+		NavCellEntityLayer Layer   { get; }
 		GameObject   Owner   { get; }
 		Vector2Int   Cell    { get; }
 		NavCellFlags Flags   { get; }

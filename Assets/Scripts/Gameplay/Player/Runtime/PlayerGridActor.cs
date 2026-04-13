@@ -13,6 +13,7 @@ namespace Gameplay.Player.Runtime
 			m_Owner = owner;
 		}
 
+		public NavCellEntityLayer Layer => NavCellEntityLayer.Actor;
 		public GameObject   Owner   => m_Owner.PlayerObject;
 		public Vector2Int   Cell    => m_Owner.Position;
 		public NavCellFlags Flags   => NavCellFlags.Hittable;
