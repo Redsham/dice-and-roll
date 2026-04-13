@@ -10,6 +10,7 @@ using Gameplay.Player.Presentation;
 using Gameplay.Player.Presentation.Combat;
 using Gameplay.World.Runtime;
 using UnityEngine;
+using VContainer;
 using Object = UnityEngine.Object;
 
 
@@ -17,34 +18,20 @@ namespace Gameplay.Player.Runtime
 {
 	public sealed class DiceService
 	{
-		#region Dependencies
-		private readonly INavigationService    m_NavigationService;
-		private readonly LevelNodeService      m_LevelNodeService;
-		private readonly IGameplayStateService m_GameplayStateService;
-		#endregion
+		// === Dependencies ===
+		[Inject] private readonly INavigationService    m_NavigationService;
+		[Inject] private readonly LevelNodeService      m_LevelNodeService;
+		[Inject] private readonly IGameplayStateService m_GameplayStateService;
 
-		#region Runtime State
+		// === Runtime ===
 		private DiceBehaviour   m_Player;
 		private IDiceView       m_DiceView;
 		private DiceController  m_Controller;
 		private DiceConfig      m_Config;
 		private PlayerGridActor m_GridActor;
-		#endregion
-
-		#region Construction
-		public DiceService(
-			INavigationService    navigationService,
-			LevelNodeService      levelNodeService,
-			IGameplayStateService gameplayStateService
-		)
-		{
-			m_NavigationService    = navigationService;
-			m_LevelNodeService     = levelNodeService;
-			m_GameplayStateService = gameplayStateService;
-		}
-		#endregion
 
 		#region Properties
+
 		public bool      HasPlayer     => m_Player != null;
 		public DiceState State         => m_Controller?.State ?? default;
 		public bool      IsAlive       => HasPlayer && CurrentHealth > 0;
@@ -53,10 +40,12 @@ namespace Gameplay.Player.Runtime
 
 		public Vector2Int Position     => m_Controller != null ? m_Controller.State.Position : default;
 		public GameObject PlayerObject => m_Player     != null ? m_Player.gameObject : null;
-		public bool       InAction    { get; private set; }
+		public bool       InAction     { get; private set; }
+
 		#endregion
 
 		#region Player Lifecycle
+
 		public void BindPlayer(DiceBehaviour player, Vector2Int startPosition)
 		{
 			DiceState initialState = InitializePlayerRuntime(player, startPosition);
@@ -71,11 +60,22 @@ namespace Gameplay.Player.Runtime
 
 			ClearGridActor();
 			DestroyPlayerObject();
-			ResetRuntimeState();
+
+			// The service is long-lived within the gameplay scope, so it must forget the
+			// destroyed player instance before the next level/player bind happens.
+			m_Player      = null;
+			m_DiceView    = null;
+			m_Controller  = null;
+			m_Config      = null;
+			m_GridActor   = null;
+			CurrentHealth = 0;
+			InAction      = false;
 		}
+
 		#endregion
 
 		#region Combat
+
 		public int ApplyDamage(int damage, GameObject source = null)
 		{
 			if (!CanTakeDamage(damage)) {
@@ -91,9 +91,11 @@ namespace Gameplay.Player.Runtime
 
 			return consumedDamage;
 		}
+
 		#endregion
 
 		#region Actions
+
 		public async UniTask<bool> TryRollAsync(RollDirection direction)
 		{
 			if (!CanStartAction()) {
@@ -153,9 +155,11 @@ namespace Gameplay.Player.Runtime
 				InAction = false;
 			}
 		}
+
 		#endregion
 
 		#region Initialization
+
 		private DiceState InitializePlayerRuntime(DiceBehaviour player, Vector2Int startPosition)
 		{
 			m_Player   = player;
@@ -173,9 +177,11 @@ namespace Gameplay.Player.Runtime
 			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
 			return state;
 		}
+
 		#endregion
 
 		#region Validation
+
 		private bool CanTakeDamage(int damage)
 		{
 			return HasPlayer && damage > 0 && IsAlive;
@@ -190,9 +196,11 @@ namespace Gameplay.Player.Runtime
 			    && m_NavigationService.HasLevel
 			    && IsAlive;
 		}
+
 		#endregion
 
 		#region Cell Notifications
+
 		private void EnterCell(Vector2Int cell)
 		{
 			if (m_Player != null) {
@@ -206,9 +214,11 @@ namespace Gameplay.Player.Runtime
 				m_LevelNodeService.NotifyActorLeft(cell, m_Player.gameObject);
 			}
 		}
+
 		#endregion
 
 		#region Cleanup
+
 		private void HandleDeath()
 		{
 			LeaveCell(m_Controller.State.Position);
@@ -230,16 +240,6 @@ namespace Gameplay.Player.Runtime
 			}
 		}
 
-		private void ResetRuntimeState()
-		{
-			m_Player      = null;
-			m_DiceView    = null;
-			m_Controller  = null;
-			m_Config      = null;
-			m_GridActor   = null;
-			CurrentHealth = 0;
-			InAction     = false;
-		}
 		#endregion
 	}
 }
