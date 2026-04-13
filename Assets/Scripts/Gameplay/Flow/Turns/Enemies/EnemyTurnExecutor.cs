@@ -7,9 +7,9 @@ namespace Gameplay.Flow.Turns.Enemies
 {
 	public sealed class EnemyTurnExecutor : IEnemyTurnExecutor
 	{
-		private readonly IEnemyService m_EnemyService;
+		private readonly EnemyService m_EnemyService;
 
-		public EnemyTurnExecutor(IEnemyService enemyService)
+		public EnemyTurnExecutor(EnemyService enemyService)
 		{
 			m_EnemyService = enemyService;
 		}

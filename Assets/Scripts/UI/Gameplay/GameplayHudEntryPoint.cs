@@ -12,8 +12,8 @@ namespace UI.Gameplay
 	{
 		// === Dependencies ===
 
-		private readonly IPlayerService        m_PlayerService;
-		private readonly IEnemyService         m_EnemyService;
+		private readonly DiceService           m_PlayerService;
+		private readonly EnemyService          m_EnemyService;
 		private readonly IGameplayStateService m_GameplayStateService;
 		private readonly SceneService          m_SceneService;
 		private readonly UIFade                m_Fade;
@@ -22,7 +22,7 @@ namespace UI.Gameplay
 
 		private GameplayHudView m_View;
 
-		public GameplayHudEntryPoint(IPlayerService playerService, IEnemyService enemyService, IGameplayStateService gameplayStateService, SceneService sceneService, UIFade fade
+		public GameplayHudEntryPoint(DiceService playerService, EnemyService enemyService, IGameplayStateService gameplayStateService, SceneService sceneService, UIFade fade
 		)
 		{
 			m_PlayerService        = playerService;

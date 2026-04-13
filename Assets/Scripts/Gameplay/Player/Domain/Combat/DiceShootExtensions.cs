@@ -5,22 +5,29 @@ using UnityEngine;
 
 namespace Gameplay.Player.Domain.Combat
 {
+	// === Shot Definition ===
 	public readonly struct DiceShotDefinition
 	{
+		#region Data
 		public RollDirection Direction { get; }
 		public DiceFace      Face      { get; }
 		public int           ShotCount { get; }
+		#endregion
 
+		#region Construction
 		public DiceShotDefinition(RollDirection direction, DiceFace face, int shotCount)
 		{
 			Direction = direction;
 			Face      = face;
 			ShotCount = shotCount;
 		}
+		#endregion
 	}
 
+	// === Shot Resolution ===
 	public static class DiceShootExtensions
 	{
+		#region Orientation
 		public static int GetFaceValue(this DiceOrientation orientation, DiceFace face)
 		{
 			return face switch {
@@ -33,7 +40,9 @@ namespace Gameplay.Player.Domain.Combat
 				_                 => throw new ArgumentOutOfRangeException(nameof(face), face, null)
 			};
 		}
+		#endregion
 
+		#region Direction Mapping
 		public static DiceFace GetFaceForDirection(this RollDirection direction)
 		{
 			return direction switch {
@@ -64,7 +73,9 @@ namespace Gameplay.Player.Domain.Combat
 			direction = right >= 0.0f ? RollDirection.East : RollDirection.West;
 			return true;
 		}
+		#endregion
 
+		#region Shot Resolution
 		public static bool TryResolveShot(this DiceState state, GridBasis basis, Vector3 aimPoint, out DiceShotDefinition shot)
 		{
 			Vector3 origin = basis.GetCellCenter(state.Position);
@@ -83,5 +94,6 @@ namespace Gameplay.Player.Domain.Combat
 			shot = new(direction, face, shotCount);
 			return true;
 		}
+		#endregion
 	}
 }

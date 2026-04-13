@@ -16,12 +16,12 @@ namespace Gameplay.Flow.Spawning.Runtime
 {
 	public sealed class RandomEnemySpawner : IEnemySpawner
 	{
-		private readonly ILevelService      m_LevelService;
+		private readonly LevelService       m_LevelService;
 		private readonly INavigationService m_NavigationService;
-		private readonly IPlayerService     m_PlayerService;
-		private readonly IEnemyService      m_EnemyService;
+		private readonly DiceService        m_PlayerService;
+		private readonly EnemyService       m_EnemyService;
 
-		public RandomEnemySpawner(ILevelService levelService, INavigationService navigationService, IPlayerService playerService, IEnemyService enemyService)
+		public RandomEnemySpawner(LevelService levelService, INavigationService navigationService, DiceService playerService, EnemyService enemyService)
 		{
 			m_LevelService      = levelService;
 			m_NavigationService = navigationService;

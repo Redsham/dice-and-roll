@@ -23,7 +23,7 @@ namespace Gameplay.Navigation.Tracing
 					return new(distance, false, true, currentCell);
 				}
 
-				if (entity != null && entity.IsAlive) {
+				if (entity is { IsAlive: true }) {
 					return new(distance, true, false, currentCell, entity);
 				}
 			}

@@ -21,9 +21,9 @@ namespace Gameplay.Enemies.Runtime
 	{
 		// === Dependencies ===
 
-		private readonly IPlayerService         m_PlayerService;
+		private readonly DiceService            m_PlayerService;
 		private readonly INavigationService     m_NavigationService;
-		private readonly ILevelNodeService      m_LevelNodeService;
+		private readonly LevelNodeService       m_LevelNodeService;
 
 		// === Authoring ===
 
@@ -37,9 +37,9 @@ namespace Gameplay.Enemies.Runtime
 
 		public EnemyRuntimeHandle(
 			EnemyBehaviour         enemyBehaviour,
-			IPlayerService         playerService,
+			DiceService            playerService,
 			INavigationService     navigationService,
-			ILevelNodeService      levelNodeService
+			LevelNodeService       levelNodeService
 		)
 		{
 			// === Validation ===

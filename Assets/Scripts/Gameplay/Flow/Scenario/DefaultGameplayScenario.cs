@@ -24,12 +24,12 @@ namespace Gameplay.Flow.Scenario
 	{
 		private readonly GameplaySceneConfiguration m_Configuration;
 		private readonly ILevelSequence             m_LevelSequence;
-		private readonly ILevelService              m_LevelService;
+		private readonly LevelService               m_LevelService;
 		private readonly IObjectResolver            m_ObjectResolver;
-		private readonly IPlayerService             m_PlayerService;
+		private readonly DiceService                m_PlayerService;
 		private readonly IGameCameraController      m_GameCameraController;
 		private readonly IEnemySpawner              m_EnemySpawner;
-		private readonly IEnemyService              m_EnemyService;
+		private readonly EnemyService               m_EnemyService;
 		private readonly IGameplayLoop              m_GameplayLoop;
 		private readonly IGameplayStateService      m_GameplayStateService;
 		private readonly ILocationTransitionService m_LocationTransition;
@@ -37,12 +37,12 @@ namespace Gameplay.Flow.Scenario
 		public DefaultGameplayScenario(
 			GameplaySceneConfiguration configuration,
 			ILevelSequence             levelSequence,
-			ILevelService              levelService,
+			LevelService               levelService,
 			IObjectResolver            objectResolver,
-			IPlayerService             playerService,
+			DiceService                playerService,
 			IGameCameraController      gameCameraController,
 			IEnemySpawner              enemySpawner,
-			IEnemyService              enemyService,
+			EnemyService               enemyService,
 			IGameplayLoop              gameplayLoop,
 			IGameplayStateService      gameplayStateService,
 			ILocationTransitionService locationTransition

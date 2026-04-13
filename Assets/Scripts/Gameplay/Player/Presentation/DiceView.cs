@@ -16,29 +16,40 @@ namespace Gameplay.Player.Presentation
 {
 	public class DiceView : MonoBehaviour, IDiceView
 	{
+		#region Constants
 		private const float HEIGHT_OFFSET = 0.5f;
+		#endregion
 
+		#region Fields
 		private readonly DiceRotator m_Rotator = new();
 
+		// === Shoot ===
 		[Title("Shoot")]
 		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces        = Array.Empty<DiceShotFaceDescriptor>();
 		[SerializeField] private CameraShakeSettings      m_ShootCameraShake = CameraShakeSettings.Default;
 
+		// === References ===
 		[Title("References")]
 		[SerializeField] private DiceAudio m_Audio;
 
 		[Inject] private readonly IGameCameraController m_GameCameraController;
+		#endregion
 
+		#region Lifecycle
 		public void Initialize()
 		{
 			m_Rotator.Initialize(transform);
 		}
+		#endregion
 
+		#region Positioning
 		public void Snap(DiceState state, GridBasis gridBasis)
 		{
 			transform.SetPositionAndRotation(GetCellPosition(state.Position, gridBasis), gridBasis.ToWorldRotation(state.Orientation.GetRotation()));
 		}
+		#endregion
 
+		#region Playback
 		public async UniTask PlayRollAsync(DiceState fromState, DiceState toState, RollDirection direction, GridBasis gridBasis)
 		{
 			m_Audio?.PlayRoll();
@@ -71,7 +82,9 @@ namespace Gameplay.Player.Presentation
 				await UniTask.Delay(TimeSpan.FromSeconds(remainingSeconds));
 			}
 		}
+		#endregion
 
+		#region Shot Presentation
 		private ParticleSystem[] ResolveShotVfx(DiceShotPresentationRequest request)
 		{
 			DiceFace descriptorFace = ResolveLocalShotFace(request);
@@ -103,7 +116,9 @@ namespace Gameplay.Player.Presentation
 		{
 			return shotIndex < request.ShotCount - 1 && request.BurstDelay > 0.0f;
 		}
+		#endregion
 
+		#region Shot Lookup
 		private DiceShotFaceDescriptor FindDescriptor(DiceFace face)
 		{
 			for (int i = 0; i < m_ShotFaces.Length; i++) {
@@ -127,7 +142,9 @@ namespace Gameplay.Player.Presentation
 
 			return request.Face;
 		}
+		#endregion
 
+		#region Utilities
 		private static int[] CreatePlayOrder(int count)
 		{
 			if (count <= 0) {
@@ -163,5 +180,6 @@ namespace Gameplay.Player.Presentation
 		{
 			return gridBasis.GetCellCenter(cell) + gridBasis.Up * HEIGHT_OFFSET;
 		}
+		#endregion
 	}
 }

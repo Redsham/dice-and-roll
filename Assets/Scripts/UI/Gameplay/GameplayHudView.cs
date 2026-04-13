@@ -12,15 +12,15 @@ namespace UI.Gameplay
 	{
 		// === Dependencies ===
 
-		private IPlayerService        m_PlayerService;
-		private IEnemyService         m_EnemyService;
+		private DiceService           m_PlayerService;
+		private EnemyService          m_EnemyService;
 		private IGameplayStateService m_GameplayStateService;
 		private SceneService          m_SceneService;
 		private UIFade                m_Fade;
 
 		// === API ===
 
-		public void Initialize(IPlayerService playerService, IEnemyService enemyService, IGameplayStateService gameplayStateService, SceneService sceneService, UIFade fade)
+		public void Initialize(DiceService playerService, EnemyService enemyService, IGameplayStateService gameplayStateService, SceneService sceneService, UIFade fade)
 		{
 			m_PlayerService        = playerService;
 			m_EnemyService         = enemyService;

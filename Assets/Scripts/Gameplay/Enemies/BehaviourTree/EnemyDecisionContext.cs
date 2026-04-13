@@ -13,7 +13,7 @@ namespace Gameplay.Enemies.BehaviourTree
 		private const int InitialPathBufferSize = 8;
 
 		public EnemyRuntimeHandle Enemy             { get; }
-		public IPlayerService     PlayerService     { get; }
+		public DiceService        PlayerService     { get; }
 		public INavigationService NavigationService { get; }
 
 		public EnemyTurnAction SelectedAction    { get; private set; }
@@ -21,7 +21,7 @@ namespace Gameplay.Enemies.BehaviourTree
 
 		public EnemyDecisionContext(
 			EnemyRuntimeHandle enemy,
-			IPlayerService     playerService,
+			DiceService        playerService,
 			INavigationService navigationService
 		)
 		{

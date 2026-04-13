@@ -16,7 +16,7 @@ using Object = UnityEngine.Object;
 
 namespace Gameplay.Enemies.Runtime
 {
-	public sealed class EnemyService : IEnemyService
+	public sealed class EnemyService
 	{
 		private const float ACTOR_HEIGHT_OFFSET = 0.5f;
 
@@ -25,9 +25,9 @@ namespace Gameplay.Enemies.Runtime
 		private readonly GameplaySceneConfiguration m_Configuration;
 		private readonly IObjectResolver            m_ObjectResolver;
 		private readonly INavigationService         m_NavigationService;
-		private readonly IPlayerService             m_PlayerService;
+		private readonly DiceService                m_PlayerService;
 		private readonly IGameplayStateService      m_GameplayStateService;
-		private readonly ILevelNodeService          m_LevelNodeService;
+		private readonly LevelNodeService           m_LevelNodeService;
 
 		// === Runtime ===
 
@@ -37,9 +37,9 @@ namespace Gameplay.Enemies.Runtime
 			GameplaySceneConfiguration configuration,
 			IObjectResolver            objectResolver,
 			INavigationService         navigationService,
-			IPlayerService             playerService,
+			DiceService                playerService,
 			IGameplayStateService      gameplayStateService,
-			ILevelNodeService          levelNodeService
+			LevelNodeService           levelNodeService
 		)
 		{
 			m_Configuration         = configuration;

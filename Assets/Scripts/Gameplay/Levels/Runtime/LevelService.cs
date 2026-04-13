@@ -15,19 +15,19 @@ using VContainer.Unity;
 
 namespace Gameplay.Levels.Runtime
 {
-	public sealed class LevelService : ILevelService
+	public sealed class LevelService
 	{
 		private readonly GameplaySceneConfiguration        m_Configuration;
 		private readonly IObjectResolver                   m_ObjectResolver;
 		private readonly INavigationService                m_NavigationService;
-		private readonly ILevelNodeService                 m_LevelNodeService;
+		private readonly LevelNodeService                  m_LevelNodeService;
 		private          AsyncOperationHandle<GameObject>? m_CurrentLevelHandle;
 
 		public LevelService(
 			GameplaySceneConfiguration configuration,
 			IObjectResolver            objectResolver,
 			INavigationService         navigationService,
-			ILevelNodeService          levelNodeService
+			LevelNodeService           levelNodeService
 		)
 		{
 			m_Configuration         = configuration;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Gameplay.Nodes.Runtime
 {
-	public sealed class LevelNodeService : ILevelNodeService
+	public sealed class LevelNodeService
 	{
 		private readonly Dictionary<Vector2Int, TileBehaviour> m_Tiles = new();
 

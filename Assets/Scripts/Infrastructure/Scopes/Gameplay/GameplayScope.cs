@@ -36,10 +36,10 @@ namespace Infrastructure.Scopes.Gameplay
 
 			builder.Register<GameplayStateService>(Lifetime.Scoped).As<IGameplayStateService>();
 			builder.Register<NavigationService>(Lifetime.Scoped).As<INavigationService>().As<INavEntityService>();
-			builder.Register<LevelNodeService>(Lifetime.Scoped).As<ILevelNodeService>();
-			builder.Register<LevelService>(Lifetime.Scoped).As<ILevelService>();
-			builder.Register<DiceService>(Lifetime.Scoped).As<IPlayerService>();
-			builder.Register<EnemyService>(Lifetime.Scoped).As<IEnemyService>();
+			builder.Register<LevelNodeService>(Lifetime.Scoped);
+			builder.Register<LevelService>(Lifetime.Scoped);
+			builder.Register<DiceService>(Lifetime.Scoped);
+			builder.Register<EnemyService>(Lifetime.Scoped);
 
 			builder.Register<SingleLevelSequence>(Lifetime.Scoped).As<ILevelSequence>();
 			builder.Register<RandomEnemySpawner>(Lifetime.Scoped).As<IEnemySpawner>();

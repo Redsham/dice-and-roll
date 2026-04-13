@@ -9,9 +9,9 @@ namespace Gameplay.Flow.Turns
 	public sealed class PlayerCommandTurn : IGameTurn
 	{
 		private readonly IPlayerTurnSource m_TurnSource;
-		private readonly IPlayerService    m_PlayerService;
+		private readonly DiceService       m_PlayerService;
 
-		public PlayerCommandTurn(IPlayerTurnSource turnSource, IPlayerService playerService)
+		public PlayerCommandTurn(IPlayerTurnSource turnSource, DiceService playerService)
 		{
 			m_TurnSource    = turnSource;
 			m_PlayerService = playerService;
