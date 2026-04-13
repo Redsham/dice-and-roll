@@ -1,7 +1,6 @@
 using Gameplay.Enemies.Configs;
 using Gameplay.Enemies.Presentation;
 using Gameplay.Enemies.Runtime;
-using Gameplay.Navigation;
 using Gameplay.Player.Domain;
 using TriInspector;
 using UnityEngine;
@@ -9,7 +8,7 @@ using UnityEngine;
 
 namespace Gameplay.Enemies.Authoring
 {
-	public abstract class EnemyBehaviour : MonoBehaviour, IGridPositionEntity
+	public abstract class EnemyBehaviour : MonoBehaviour
 	{
 		// === Identity ===
 

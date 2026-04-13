@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Gameplay.Flow.GameState;
-using Gameplay.Navigation;
 using Gameplay.Navigation.Tracing;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Authoring;
@@ -18,101 +17,65 @@ namespace Gameplay.Player.Runtime
 {
 	public sealed class DiceService : IPlayerService
 	{
-		// === Dependencies ===
+		private readonly INavigationService    m_NavigationService;
+		private readonly ILevelNodeService     m_LevelNodeService;
+		private readonly IGameplayStateService m_GameplayStateService;
 
-		private readonly INavigationService     m_NavigationService;
-		private readonly ILevelNodeService      m_LevelNodeService;
-		private readonly IGameplayStateService  m_GameplayStateService;
-
-		// === Runtime ===
-
-		private DiceBehaviour      m_Player;
-		private IDiceView          m_DiceView;
-		private DiceController     m_Controller;
-		private DiceConfig         m_Config;
-		private PlayerGridActor    m_GridActor;
+		private DiceBehaviour   m_Player;
+		private IDiceView       m_DiceView;
+		private DiceController  m_Controller;
+		private DiceConfig      m_Config;
+		private PlayerGridActor m_GridActor;
 
 		public DiceService(
-			INavigationService     navigationService,
-			ILevelNodeService      levelNodeService,
-			IGameplayStateService  gameplayStateService
+			INavigationService    navigationService,
+			ILevelNodeService     levelNodeService,
+			IGameplayStateService gameplayStateService
 		)
 		{
-			m_NavigationService     = navigationService;
-			m_LevelNodeService      = levelNodeService;
-			m_GameplayStateService  = gameplayStateService;
+			m_NavigationService    = navigationService;
+			m_LevelNodeService     = levelNodeService;
+			m_GameplayStateService = gameplayStateService;
 		}
 
-		public bool      HasPlayer => m_Player != null;
-		public DiceState State     => m_Controller.State;
-		public bool      IsAlive   => HasPlayer && CurrentHealth > 0;
-		public int CurrentHealth
-		{
-			get;
-			private set;
-		}
-		public int        MaxHealth    => m_Config     != null ? m_Config.MaxHealth : 0;
+		public bool      HasPlayer     => m_Player != null;
+		public DiceState State         => m_Controller?.State ?? default;
+		public bool      IsAlive       => HasPlayer && CurrentHealth > 0;
+		public int       CurrentHealth { get; private set; }
+		public int       MaxHealth     => m_Config != null ? m_Config.MaxHealth : 0;
+
 		public Vector2Int Position     => m_Controller != null ? m_Controller.State.Position : default;
 		public GameObject PlayerObject => m_Player     != null ? m_Player.gameObject : null;
 		public bool       IsRolling    { get; private set; }
 
 		public void BindPlayer(DiceBehaviour player, Vector2Int startPosition)
 		{
-			m_Player      = player;
-			m_DiceView    = player.View;
-			m_Config      = player.Config != null ? player.Config : DiceConfig.CreateRuntimeDefault();
-			DiceState initialState = DiceState.Create(startPosition);
-			m_Controller  = new(initialState);
-			CurrentHealth = m_Config.MaxHealth;
-			m_Player.SetGridPosition(initialState.Position);
-
-			m_DiceView.Initialize();
-			m_DiceView.Snap(initialState, m_NavigationService.Basis);
-			m_GridActor = new(this);
-			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
-			m_LevelNodeService.NotifyActorEntered(initialState.Position, m_Player.gameObject);
+			DiceState initialState = InitializePlayerRuntime(player, startPosition);
+			EnterCell(initialState.Position);
 		}
 
 		public void ClearPlayer()
 		{
-			if (m_GridActor != null) {
-				if (m_Controller != null && m_Player != null) {
-					m_LevelNodeService.NotifyActorLeft(m_Controller.State.Position, m_Player.gameObject);
-				}
-
-				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
+			if (HasPlayer && m_Controller != null) {
+				LeaveCell(m_Controller.State.Position);
 			}
 
-			if (m_Player != null) {
-				Object.Destroy(m_Player.gameObject);
-			}
-
-			m_Player      = null;
-			m_DiceView    = null;
-			m_Controller  = null;
-			m_Config      = null;
-			m_GridActor   = null;
-			CurrentHealth = 0;
-			IsRolling     = false;
+			ClearGridActor();
+			DestroyPlayerObject();
+			ResetRuntimeState();
 		}
 
 		public int ApplyDamage(int damage, GameObject source = null)
 		{
-			// === Validation ===
-
-			if (!HasPlayer || damage <= 0 || !IsAlive) {
+			if (!CanTakeDamage(damage)) {
 				return 0;
 			}
-
-			// === Apply ===
 
 			int consumedDamage = Mathf.Min(CurrentHealth, damage);
 			CurrentHealth -= consumedDamage;
 
 			if (CurrentHealth <= 0) {
-				m_LevelNodeService.NotifyActorLeft(m_Controller.State.Position, m_Player.gameObject);
-				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
-				m_GameplayStateService.End(GameplayEndReason.PlayerDefeated);
+				HandleDeath();
 			}
 
 			return consumedDamage;
@@ -120,7 +83,7 @@ namespace Gameplay.Player.Runtime
 
 		public async UniTask<bool> TryRollAsync(RollDirection direction)
 		{
-			if (IsRolling || m_Controller == null || !m_NavigationService.HasLevel || !IsAlive) {
+			if (!CanStartAction()) {
 				return false;
 			}
 
@@ -134,11 +97,13 @@ namespace Gameplay.Player.Runtime
 			try {
 				DiceState currentState = m_Controller.State;
 				DiceState appliedState = m_Controller.Roll(direction);
-				m_Player.SetGridPosition(appliedState.Position);
+				m_Player.GridPosition = appliedState.Position;
+
 				await m_DiceView.PlayRollAsync(currentState, appliedState, direction, m_NavigationService.Basis);
-				m_LevelNodeService.NotifyActorLeft(currentState.Position, m_Player.gameObject);
+
+				LeaveCell(currentState.Position);
 				m_NavigationService.TryMoveEntity(m_GridActor, currentState.Position, appliedState.Position);
-				m_LevelNodeService.NotifyActorEntered(appliedState.Position, m_Player.gameObject);
+				EnterCell(appliedState.Position);
 				return true;
 			} finally {
 				IsRolling = false;
@@ -147,19 +112,12 @@ namespace Gameplay.Player.Runtime
 
 		public async UniTask<bool> TryShootAsync(Vector3 aimPoint)
 		{
-			if (IsRolling || m_Controller == null || !m_NavigationService.HasLevel || m_DiceView == null || m_Config == null || !IsAlive) {
+			if (!CanStartAction()) {
 				return false;
 			}
 
-			GridBasis basis  = m_NavigationService.Basis;
-			Vector3   center = basis.GetCellCenter(m_Controller.State.Position);
-			if (!basis.TryGetAimDirection(center, aimPoint, out RollDirection direction)) {
-				return false;
-			}
-
-			DiceFace face      = direction.GetFaceForDirection();
-			int      shotCount = m_Controller.State.Orientation.GetFaceValue(face);
-			if (shotCount <= 0) {
+			GridBasis basis = m_NavigationService.Basis;
+			if (!m_Controller.State.TryResolveShot(basis, aimPoint, out DiceShotDefinition shot)) {
 				return false;
 			}
 
@@ -167,17 +125,17 @@ namespace Gameplay.Player.Runtime
 
 			try {
 				GridTraceResult traceResult = NavGridLineTrace.Trace(
-				                                                    m_NavigationService.Grid,
-				                                                    m_Controller.State.Position,
-				                                                    direction.ToVector2Int(),
-				                                                    m_Config.ShootRange
-				                                                   );
+				                                                     m_NavigationService.Grid,
+				                                                     m_Controller.State.Position,
+				                                                     shot.Direction.ToVector2Int(),
+				                                                     m_Config.ShootRange
+				                                                    );
 
 				DiceShotPresentationRequest request = new(
 				                                          m_Controller.State.Orientation,
-				                                          face,
-				                                          direction,
-				                                          shotCount,
+				                                          shot.Face,
+				                                          shot.Direction,
+				                                          shot.ShotCount,
 				                                          m_Config.ShootBurstDelay,
 				                                          basis
 				                                         );
@@ -185,7 +143,7 @@ namespace Gameplay.Player.Runtime
 				await m_DiceView.PlayShootAsync(request);
 
 				if (traceResult.Entity != null) {
-					traceResult.Entity.ApplyDamage(shotCount, m_Player.gameObject);
+					traceResult.Entity.ApplyDamage(shot.ShotCount, m_Player.gameObject);
 				}
 
 				return true;
@@ -194,26 +152,83 @@ namespace Gameplay.Player.Runtime
 			}
 		}
 
-		// === Actor Adapter ===
-
-		private sealed class PlayerGridActor : INavCellEntity
+		private DiceState InitializePlayerRuntime(DiceBehaviour player, Vector2Int startPosition)
 		{
-			private readonly DiceService m_Owner;
+			m_Player   = player;
+			m_DiceView = player.View;
+			m_Config   = player.Config != null ? player.Config : DiceConfig.CreateRuntimeDefault();
+			DiceState state = DiceState.Create(startPosition);
+			m_Controller  = new(state);
+			m_GridActor   = new(this);
+			CurrentHealth = m_Config.MaxHealth;
 
-			public PlayerGridActor(DiceService owner)
-			{
-				m_Owner = owner;
+			m_Player.GridPosition = state.Position;
+
+			m_DiceView.Initialize();
+			m_DiceView.Snap(state, m_NavigationService.Basis);
+			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
+			return state;
+		}
+
+		private bool CanTakeDamage(int damage)
+		{
+			return HasPlayer && damage > 0 && IsAlive;
+		}
+
+		private bool CanStartAction()
+		{
+			return !IsRolling
+			    && m_Controller != null
+			    && m_DiceView   != null
+			    && m_Config     != null
+			    && m_NavigationService.HasLevel
+			    && IsAlive;
+		}
+
+		private void EnterCell(Vector2Int cell)
+		{
+			if (m_Player != null) {
+				m_LevelNodeService.NotifyActorEntered(cell, m_Player.gameObject);
 			}
+		}
 
-			public GameObject Owner => m_Owner.PlayerObject;
-			public Vector2Int Cell  => m_Owner.Position;
-			public NavCellFlags Flags => NavCellFlags.Hittable;
-			public bool IsAlive => m_Owner.IsAlive;
-
-			public int ApplyDamage(int damage, GameObject source = null)
-			{
-				return m_Owner.ApplyDamage(damage, source);
+		private void LeaveCell(Vector2Int cell)
+		{
+			if (m_Player != null) {
+				m_LevelNodeService.NotifyActorLeft(cell, m_Player.gameObject);
 			}
+		}
+
+		private void HandleDeath()
+		{
+			LeaveCell(m_Controller.State.Position);
+			ClearGridActor();
+			m_GameplayStateService.End(GameplayEndReason.PlayerDefeated);
+		}
+
+		private void ClearGridActor()
+		{
+			if (m_GridActor != null) {
+				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
+			}
+		}
+
+		private void DestroyPlayerObject()
+		{
+			if (m_Player != null) {
+				Object.Destroy(m_Player.gameObject);
+			}
+		}
+
+		private void ResetRuntimeState()
+		{
+			m_Player      = null;
+			m_DiceView    = null;
+			m_Controller  = null;
+			m_Config      = null;
+			m_GridActor   = null;
+			CurrentHealth = 0;
+			IsRolling     = false;
 		}
 	}
 }

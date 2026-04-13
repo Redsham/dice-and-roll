@@ -10,7 +10,7 @@ namespace Gameplay.Player.Presentation
 	public class DiceRotator
 	{
 		private const float ROLL_DURATION = 0.3f;
-		private const float HeightOffset  = 0.5f;
+		private const float HEIGHT_OFFSET = 0.5f;
 
 		private Transform m_Transform;
 
@@ -73,7 +73,7 @@ namespace Gameplay.Player.Presentation
 
 		private static Vector3 GetCellPosition(Vector2Int position, GridBasis gridBasis)
 		{
-			return gridBasis.GetCellCenter(position) + gridBasis.Up * HeightOffset;
+			return gridBasis.GetCellCenter(position) + gridBasis.Up * HEIGHT_OFFSET;
 		}
 	}
 }

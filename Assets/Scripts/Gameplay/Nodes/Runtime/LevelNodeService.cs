@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Gameplay.Navigation;
 using Gameplay.Nodes.Authoring;
 using Gameplay.Nodes.Contracts;
-using Gameplay.Nodes.Models;
 using UnityEngine;
 
 

@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Camera.Models;
-using Gameplay.Camera.Runtime;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
 using Gameplay.Player.Presentation.Combat;
@@ -17,7 +16,7 @@ namespace Gameplay.Player.Presentation
 {
 	public class DiceView : MonoBehaviour, IDiceView
 	{
-		private const float HeightOffset = 0.5f;
+		private const float HEIGHT_OFFSET = 0.5f;
 
 		private readonly DiceRotator m_Rotator = new();
 
@@ -50,38 +49,59 @@ namespace Gameplay.Player.Presentation
 
 		public async UniTask PlayShootAsync(DiceShotPresentationRequest request)
 		{
-			DiceShotFaceDescriptor descriptor        = FindDescriptor(ResolveLocalShotFace(request));
-			ParticleSystem[]       shotVfx           = descriptor.ShotVfx ?? Array.Empty<ParticleSystem>();
-			int[]                  playOrder         = CreatePlayOrder(shotVfx.Length);
-			float                  elapsedSeconds    = 0.0f;
-			float                  completionSeconds = 0.0f;
+			ParticleSystem[] shotVfx = ResolveShotVfx(request);
+			int[]            order   = CreatePlayOrder(shotVfx.Length);
+			float            elapsed = 0.0f;
+			float            finish  = 0.0f;
 
-			for (int i = 0; i < request.ShotCount; i++) {
-				// Audio
-				m_Audio?.PlayShot((i + 1) / (float)request.ShotCount);
-				
-				// Camera shake
-				m_GameCameraController?.Shake(m_ShootCameraShake);
-				
-				// Play VFX
-				if (shotVfx.Length > 0) {
-					ParticleSystem vfx = shotVfx[playOrder[i % playOrder.Length]];
-					if (vfx != null) {
-						vfx.Play(true);
-						completionSeconds = Mathf.Max(completionSeconds, elapsedSeconds + GetDurationSeconds(vfx));
-					}
+			for (int shotIndex = 0; shotIndex < request.ShotCount; shotIndex++) {
+				PlayShotFeedback(request, shotIndex);
+				finish = Mathf.Max(finish, PlayShotVfx(shotVfx, order, shotIndex, elapsed));
+
+				if (!ShouldWaitForNextShot(request, shotIndex)) {
+					continue;
 				}
 
-				if (i < request.ShotCount - 1 && request.BurstDelay > 0.0f) {
-					await UniTask.Delay(TimeSpan.FromSeconds(request.BurstDelay));
-					elapsedSeconds += request.BurstDelay;
-				}
+				await UniTask.Delay(TimeSpan.FromSeconds(request.BurstDelay));
+				elapsed += request.BurstDelay;
 			}
 
-			float remainingSeconds = completionSeconds - elapsedSeconds;
+			float remainingSeconds = finish - elapsed;
 			if (remainingSeconds > 0.0f) {
 				await UniTask.Delay(TimeSpan.FromSeconds(remainingSeconds));
 			}
+		}
+
+		private ParticleSystem[] ResolveShotVfx(DiceShotPresentationRequest request)
+		{
+			DiceFace descriptorFace = ResolveLocalShotFace(request);
+			return FindDescriptor(descriptorFace).ShotVfx ?? Array.Empty<ParticleSystem>();
+		}
+
+		private void PlayShotFeedback(DiceShotPresentationRequest request, int shotIndex)
+		{
+			m_Audio?.PlayShot((shotIndex + 1) / (float)request.ShotCount);
+			m_GameCameraController?.Shake(m_ShootCameraShake);
+		}
+
+		private static float PlayShotVfx(ParticleSystem[] shotVfx, int[] playOrder, int shotIndex, float elapsedSeconds)
+		{
+			if (shotVfx.Length == 0) {
+				return elapsedSeconds;
+			}
+
+			ParticleSystem vfx = shotVfx[playOrder[shotIndex % playOrder.Length]];
+			if (vfx == null) {
+				return elapsedSeconds;
+			}
+
+			vfx.Play(true);
+			return elapsedSeconds + GetDurationSeconds(vfx);
+		}
+
+		private static bool ShouldWaitForNextShot(DiceShotPresentationRequest request, int shotIndex)
+		{
+			return shotIndex < request.ShotCount - 1 && request.BurstDelay > 0.0f;
 		}
 
 		private DiceShotFaceDescriptor FindDescriptor(DiceFace face)
@@ -141,7 +161,7 @@ namespace Gameplay.Player.Presentation
 
 		private static Vector3 GetCellPosition(Vector2Int cell, GridBasis gridBasis)
 		{
-			return gridBasis.GetCellCenter(cell) + gridBasis.Up * HeightOffset;
+			return gridBasis.GetCellCenter(cell) + gridBasis.Up * HEIGHT_OFFSET;
 		}
 	}
 }

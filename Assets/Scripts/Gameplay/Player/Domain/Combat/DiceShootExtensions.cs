@@ -5,6 +5,20 @@ using UnityEngine;
 
 namespace Gameplay.Player.Domain.Combat
 {
+	public readonly struct DiceShotDefinition
+	{
+		public RollDirection Direction { get; }
+		public DiceFace      Face      { get; }
+		public int           ShotCount { get; }
+
+		public DiceShotDefinition(RollDirection direction, DiceFace face, int shotCount)
+		{
+			Direction = direction;
+			Face      = face;
+			ShotCount = shotCount;
+		}
+	}
+
 	public static class DiceShootExtensions
 	{
 		public static int GetFaceValue(this DiceOrientation orientation, DiceFace face)
@@ -48,6 +62,25 @@ namespace Gameplay.Player.Domain.Combat
 			}
 
 			direction = right >= 0.0f ? RollDirection.East : RollDirection.West;
+			return true;
+		}
+
+		public static bool TryResolveShot(this DiceState state, GridBasis basis, Vector3 aimPoint, out DiceShotDefinition shot)
+		{
+			Vector3 origin = basis.GetCellCenter(state.Position);
+			if (!basis.TryGetAimDirection(origin, aimPoint, out RollDirection direction)) {
+				shot = default;
+				return false;
+			}
+
+			DiceFace face      = direction.GetFaceForDirection();
+			int      shotCount = state.Orientation.GetFaceValue(face);
+			if (shotCount <= 0) {
+				shot = default;
+				return false;
+			}
+
+			shot = new(direction, face, shotCount);
 			return true;
 		}
 	}

@@ -1,4 +1,3 @@
-using Gameplay.Navigation;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
 using Gameplay.World.Runtime;

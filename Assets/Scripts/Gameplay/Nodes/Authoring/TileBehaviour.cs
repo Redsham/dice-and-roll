@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gameplay.Nodes.Authoring
 {
-	public abstract class TileBehaviour : MonoBehaviour, IGridPositionEntity, INavCellEntity
+	public abstract class TileBehaviour : MonoBehaviour, INavCellEntity
 	{
 		[field: SerializeField] public Vector2Int GridPosition { get; private set; }
 		[field: SerializeField] public GridPositionAlignment Alignment { get; private set; } = GridPositionAlignment.Corner;
