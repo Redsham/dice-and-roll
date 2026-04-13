@@ -475,18 +475,6 @@ PrefabInstance:
       value: 371576763331641606
       objectReference: {fileID: 0}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: 'managedReferences[371576763331641602]'
-      value: Assembly-CSharp UI.Elements.Buttons.Animations.RotationTween
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: 'managedReferences[371576763331641603]'
-      value: Assembly-CSharp UI.Elements.Buttons.Animations.RotationTween
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: 'managedReferences[371576763331641604]'
-      value: Assembly-CSharp UI.Elements.Buttons.Animations.RotationTween
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: 'managedReferences[371576763331641606]'
       value: Assembly-CSharp UI.Elements.Buttons.Animations.Rect.RotationTween
       objectReference: {fileID: 0}
@@ -509,18 +497,6 @@ PrefabInstance:
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: 'managedReferences[371576763331641614]'
       value: Assembly-CSharp UI.Elements.Buttons.Animations.Punch.ScalePunchTween
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].Ease
-      value: 27
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].Ease
-      value: 27
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].Ease
-      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: managedReferences[371576763331641606].Ease
@@ -549,18 +525,6 @@ PrefabInstance:
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].Duration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].Duration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].Duration
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: managedReferences[371576763331641606].Duration
@@ -600,30 +564,6 @@ PrefabInstance:
       objectReference: {fileID: 2079313609}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: managedReferences[371576763331641614].TargetRect
-      value: 
-      objectReference: {fileID: 2079313609}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].m_ResetAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].m_TargetRect
-      value: 
-      objectReference: {fileID: 2079313609}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].m_ResetAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].m_TargetRect
-      value: 
-      objectReference: {fileID: 2079313609}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].m_ResetAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].m_TargetRect
       value: 
       objectReference: {fileID: 2079313609}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
@@ -669,30 +609,6 @@ PrefabInstance:
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: managedReferences[371576763331641614].DampingRatio
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].m_ResetOnPlay
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641602].m_TargetAngle
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].m_ResetOnPlay
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641603].m_TargetAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].m_ResetOnPlay
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
-      propertyPath: managedReferences[371576763331641604].m_TargetAngle
-      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2650907513896669716, guid: c6e0fb78a2aae41778f0ff85b1a7c99d, type: 3}
       propertyPath: managedReferences[371576763331641606].m_ResetOnPlay

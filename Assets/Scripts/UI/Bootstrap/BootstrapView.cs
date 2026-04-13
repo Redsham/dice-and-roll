@@ -1,3 +1,4 @@
+using System;
 using Infrastructure.Services;
 using LitMotion;
 using LitMotion.Extensions;
@@ -15,17 +16,24 @@ namespace UI.Bootstrap
 		[SerializeField] private RectTransform   m_Circular;
 
 		[Inject] private readonly BootstrapService m_Bootstrap;
+		
+		private MotionHandle m_CircularHandle;
 
 
 		private void Start()
 		{
 			m_Bootstrap.Message.Subscribe(UpdateMessage).AddTo(this);
 
-			LMotion.Create(0f, -360f, 1.0f)
-			       .WithEase(Ease.Linear)
-			       .WithLoops(-1)
-			       .BindToEulerAnglesZ(m_Circular)
-			       .AddTo(this);
+			m_CircularHandle = LMotion.Create(0f, -360f, 1.0f)
+			                       .WithEase(Ease.Linear)
+			                       .WithLoops(-1)
+			                       .BindToEulerAnglesZ(m_Circular)
+			                       .AddTo(this);
+		}
+
+		private void OnDestroy()
+		{
+			m_CircularHandle.TryCancel();
 		}
 
 		private void UpdateMessage(string msg)
