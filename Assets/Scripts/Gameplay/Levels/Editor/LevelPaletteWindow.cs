@@ -9,6 +9,8 @@ namespace Gameplay.Levels.Editor
 {
 	public sealed class LevelPaletteWindow : EditorWindow
 	{
+		// === Constants ===
+
 		private static readonly Vector2 FixedWindowSize = new(420f, 560f);
 		private static GUIContent[] s_LayerContents;
 		private static GUIContent[] s_ToolContents;
@@ -16,6 +18,8 @@ namespace Gameplay.Levels.Editor
 		private const float CardWidth = 92f;
 		private const float CardHeight = 120f;
 		private const float PreviewSize = 72f;
+
+		// === State ===
 
 		private Vector2 m_Scroll;
 
@@ -152,9 +156,9 @@ namespace Gameplay.Levels.Editor
 			EditorGUILayout.LabelField("Object Prefabs", EditorStyles.boldLabel);
 			DrawAddObjectDropArea(settings);
 			EditorGUILayout.Space(6f);
-			DrawObjectCategoryGrid(settings, PaletteObjectCategory.Blocking);
-			DrawObjectCategoryGrid(settings, PaletteObjectCategory.Destructible);
-			DrawObjectCategoryGrid(settings, PaletteObjectCategory.Interactive);
+			DrawObjectCategoryGrid(settings, PaletteObjectCategory.StaticObstacle);
+			DrawObjectCategoryGrid(settings, PaletteObjectCategory.DestructibleObstacle);
+			DrawObjectCategoryGrid(settings, PaletteObjectCategory.CrushableProp);
 			DrawObjectCategoryGrid(settings, PaletteObjectCategory.Other);
 			EditorGUILayout.Space(8f);
 			DrawSelectedObjectDetails(settings);
@@ -173,7 +177,7 @@ namespace Gameplay.Levels.Editor
 				return;
 			}
 
-			EditorGUILayout.LabelField(category.ToString(), EditorStyles.miniBoldLabel);
+			EditorGUILayout.LabelField(LevelPaletteState.GetCategoryLabel(category), EditorStyles.miniBoldLabel);
 			DrawGrid(
 				indices.Count,
 				localIndex => DrawObjectCard(settings, indices[localIndex]));

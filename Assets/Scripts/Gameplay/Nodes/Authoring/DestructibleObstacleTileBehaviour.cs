@@ -3,39 +3,44 @@ using Gameplay.Nodes.Contracts;
 using Gameplay.Nodes.Models;
 using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
 
 namespace Gameplay.Nodes.Authoring
 {
-	public class DestructiblePropNodeBehaviour : TileBehaviour, INodeDamageHandler
+	public class DestructibleObstacleTileBehaviour : DestroyableTileBehaviour, INodeDamageHandler
 	{
-		[Title("Destructible")]
+		// === Inspector ===
+
+		[Title("Destructible Obstacle")]
 		[SerializeField, Min(1)] private int m_HitPoints = 1;
-		[SerializeField] private UnityEvent m_OnDestroyed;
 
-		private int  m_CurrentHitPoints;
-		private bool m_IsDestroyed;
+		// === State ===
 
-		public override NavCellFlags Flags => IsAlive ? NavCellFlags.Hittable : NavCellFlags.None;
-		public override bool IsAlive => !m_IsDestroyed;
+		private int m_CurrentHitPoints;
 
-		public override void ResetRuntimeState()
+		// === Navigation ===
+
+		public override NavCellFlags Flags => IsAlive
+			? NavCellFlags.BlocksMovement | NavCellFlags.BlocksTrace
+			: NavCellFlags.None;
+
+		// === Lifecycle ===
+
+		protected override void OnResetRuntimeState()
 		{
 			m_CurrentHitPoints = Mathf.Max(1, m_HitPoints);
-			m_IsDestroyed      = false;
 		}
 
 		public virtual NodeDamageResult ApplyDamage(in NodeDamageContext context)
 		{
-			if (m_IsDestroyed || context.RequestedDamage <= 0) {
+			if (!IsAlive || context.RequestedDamage <= 0) {
 				return default;
 			}
 
 			int consumedDamage = Mathf.Min(context.RequestedDamage, m_CurrentHitPoints);
 			m_CurrentHitPoints -= consumedDamage;
 			if (m_CurrentHitPoints <= 0) {
-				DestroyNode();
+				DestroyTile();
 				return new(consumedDamage, true);
 			}
 
@@ -45,18 +50,6 @@ namespace Gameplay.Nodes.Authoring
 		public override int ApplyDamage(int damage, GameObject source = null)
 		{
 			return ApplyDamage(new(source, Cell, damage)).ConsumedDamage;
-		}
-
-		protected void DestroyNode()
-		{
-			if (m_IsDestroyed) {
-				return;
-			}
-
-			m_IsDestroyed      = true;
-			m_CurrentHitPoints = 0;
-			RemoveFromGrid();
-			m_OnDestroyed?.Invoke();
 		}
 	}
 }

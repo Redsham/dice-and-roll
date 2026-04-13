@@ -35,7 +35,7 @@ namespace Gameplay.Levels.Editor
 				return;
 			}
 
-			if (currentEvent.type != EventType.MouseDrag && currentEvent.type != EventType.MouseUp) {
+			if (currentEvent.type != EventType.MouseUp) {
 				return;
 			}
 
@@ -52,12 +52,21 @@ namespace Gameplay.Levels.Editor
 			NavGrid    navGrid       = level.NavGrid;
 			Vector2Int targetCell    = navGrid.GetCellCoordinates(node.transform.position, node.Pivot);
 			Transform  nodeTransform = node.transform;
+			Vector3    alignedPosition = node.GetAlignedWorldPosition(navGrid, targetCell);
 
-			if (level.TryGetTile(targetCell, out TileFloor tile) && tile != null && nodeTransform.parent != tile.transform) {
+			if (level.TryGetTile(targetCell, out TileFloor tile)
+				&& tile != null
+				&& nodeTransform.parent != tile.transform) {
 				Undo.SetTransformParent(nodeTransform, tile.transform, "Attach Node To Tile");
 			}
 
+			if (node.GridPosition == targetCell && nodeTransform.position == alignedPosition) {
+				return;
+			}
+
+			Undo.RecordObject(nodeTransform, "Snap TileBehaviour To Grid");
 			node.SetGridPosition(targetCell);
+			nodeTransform.position = alignedPosition;
 			EditorUtility.SetDirty(node);
 			EditorUtility.SetDirty(nodeTransform);
 			SceneView.RepaintAll();

@@ -1,4 +1,5 @@
 using Gameplay.Enemies.Runtime;
+using Gameplay.Navigation.Tracing;
 using Gameplay.Navigation.Pathfinding;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
@@ -100,19 +101,19 @@ namespace Gameplay.Enemies.BehaviourTree
 			bool                                 hasBestCell    = false;
 
 			for (int distance = 1; distance <= shootRange; distance++) {
-				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.up * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.up * distance, shootRange, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
 					hasBestCell = true;
 				}
 
-				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.right * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.right * distance, shootRange, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
 					hasBestCell = true;
 				}
 
-				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.down * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.down * distance, shootRange, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
 					hasBestCell = true;
 				}
 
-				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.left * distance, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
+				if (EvaluatePawnAttackCell(PlayerService.Position + Vector2Int.left * distance, shootRange, ref weights, ref bestTargetCell, ref bestTotalCost, ref bestPathLength)) {
 					hasBestCell = true;
 				}
 			}
@@ -125,15 +126,38 @@ namespace Gameplay.Enemies.BehaviourTree
 			return false;
 		}
 
+		public bool CanShootPlayerFrom(Vector2Int originCell, int shootRange)
+		{
+			Vector2Int delta = PlayerService.Position - originCell;
+			if (delta == Vector2Int.zero || (delta.x != 0 && delta.y != 0)) {
+				return false;
+			}
+
+			int distance = Mathf.Abs(delta.x) + Mathf.Abs(delta.y);
+			if (distance <= 0 || distance > shootRange) {
+				return false;
+			}
+
+			Vector2Int direction = delta.x != 0
+				? new(Mathf.RoundToInt(Mathf.Sign(delta.x)), 0)
+				: new(0, Mathf.RoundToInt(Mathf.Sign(delta.y)));
+
+			GridTraceResult traceResult = NavGridLineTrace.Trace(NavigationService.Grid, originCell, direction, distance);
+			return traceResult.Hit && traceResult.Point == PlayerService.Position;
+		}
+
 		private bool EvaluatePawnAttackCell(
 			Vector2Int                              candidateCell,
+			int                                     shootRange,
 			ref PawnTurnPriorityTraversalCostProvider weights,
 			ref Vector2Int                          bestTargetCell,
 			ref int                                 bestTotalCost,
 			ref int                                 bestPathLength
 		)
 		{
-			if (candidateCell == Enemy.State.Position || !NavigationService.CanOccupy(candidateCell)) {
+			if (candidateCell == Enemy.State.Position
+			    || !NavigationService.CanOccupy(candidateCell)
+			    || !CanShootPlayerFrom(candidateCell, shootRange)) {
 				return false;
 			}
 

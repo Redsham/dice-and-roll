@@ -16,7 +16,7 @@ namespace Gameplay.Player.Runtime
 		public NavCellEntityLayer Layer => NavCellEntityLayer.Actor;
 		public GameObject   Owner   => m_Owner.PlayerObject;
 		public Vector2Int   Cell    => m_Owner.Position;
-		public NavCellFlags Flags   => NavCellFlags.Hittable;
+		public NavCellFlags Flags   => NavCellFlags.BlocksMovement | NavCellFlags.BlocksTrace;
 		public bool         IsAlive => m_Owner.IsAlive;
 
 		public int ApplyDamage(int damage, GameObject source = null)

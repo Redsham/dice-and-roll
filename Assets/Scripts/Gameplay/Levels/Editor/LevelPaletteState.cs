@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace Gameplay.Levels.Editor
 {
+	// === Palette Enums ===
+
 	internal enum PaletteLayer
 	{
 		Floor  = 0,
@@ -24,11 +26,13 @@ namespace Gameplay.Levels.Editor
 
 	internal enum PaletteObjectCategory
 	{
-		Blocking      = 0,
-		Destructible  = 1,
-		Interactive   = 2,
-		Other         = 3
+		StaticObstacle       = 0,
+		DestructibleObstacle = 1,
+		CrushableProp        = 2,
+		Other                = 3
 	}
+
+	// === Palette Settings ===
 
 	[Serializable]
 	internal sealed class ObjectPaletteEntry
@@ -107,6 +111,8 @@ namespace Gameplay.Levels.Editor
 		}
 	}
 
+	// === Palette State ===
+
 	internal static class LevelPaletteState
 	{
 		public static LevelPaletteSettings Settings => LevelPaletteSettings.instance;
@@ -154,19 +160,29 @@ namespace Gameplay.Levels.Editor
 			}
 
 			TileBehaviour behaviour = prefab.GetComponent<TileBehaviour>();
-			if (behaviour is StaticPropNodeBehaviour) {
-				return PaletteObjectCategory.Blocking;
+			if (behaviour is StaticObstacleTileBehaviour) {
+				return PaletteObjectCategory.StaticObstacle;
 			}
 
-			if (behaviour is DestructiblePropNodeBehaviour and not DecorativeDestructibleNodeBehaviour) {
-				return PaletteObjectCategory.Destructible;
+			if (behaviour is DestructibleObstacleTileBehaviour) {
+				return PaletteObjectCategory.DestructibleObstacle;
 			}
 
-			if (behaviour is DecorativeDestructibleNodeBehaviour) {
-				return PaletteObjectCategory.Interactive;
+			if (behaviour is CrushablePropTileBehaviour) {
+				return PaletteObjectCategory.CrushableProp;
 			}
 
 			return PaletteObjectCategory.Other;
+		}
+
+		public static string GetCategoryLabel(PaletteObjectCategory category)
+		{
+			return category switch {
+				PaletteObjectCategory.StaticObstacle       => "Static Obstacles",
+				PaletteObjectCategory.DestructibleObstacle => "Destructible Obstacles",
+				PaletteObjectCategory.CrushableProp        => "Crushable Props",
+				_                                          => "Other"
+			};
 		}
 	}
 }

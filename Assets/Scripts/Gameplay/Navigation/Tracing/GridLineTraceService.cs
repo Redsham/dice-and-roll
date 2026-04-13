@@ -23,7 +23,15 @@ namespace Gameplay.Navigation.Tracing
 					return new(distance, false, true, currentCell);
 				}
 
-				if (entity is { IsAlive: true }) {
+				if (entity == null) {
+					continue;
+				}
+
+				if (entity.Layer == NavCellEntityLayer.Actor && entity.IsAlive) {
+					return new(distance, true, false, currentCell, entity);
+				}
+
+				if (entity.Flags.HasFlag(NavCellFlags.BlocksTrace)) {
 					return new(distance, true, false, currentCell, entity);
 				}
 			}

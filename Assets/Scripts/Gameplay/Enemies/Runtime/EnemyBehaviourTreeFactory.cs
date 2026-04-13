@@ -92,13 +92,7 @@ namespace Gameplay.Enemies.Runtime
 				return false;
 			}
 
-			Vector2Int delta = context.GetDeltaToPlayer();
-			if (delta.x != 0 && delta.y != 0) {
-				return false;
-			}
-
-			int straightDistance = Mathf.Abs(delta.x) + Mathf.Abs(delta.y);
-			return straightDistance <= pawn.Config.ShootRange && straightDistance > 0;
+			return context.CanShootPlayerFrom(enemy.State.Position, pawn.Config.ShootRange);
 		}
 
 		private static bool TrySelectMortarTarget(EnemyRuntimeHandle enemy, EnemyDecisionContext context)

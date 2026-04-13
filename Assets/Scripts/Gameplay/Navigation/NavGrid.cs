@@ -77,14 +77,24 @@ namespace Gameplay.Navigation
 
 		public Vector2Int GetCellCoordinates(Vector3 worldPosition, GridPivot pivot)
 		{
-			Vector3 anchor  = pivot == GridPivot.Center
-				? worldPosition - (transform.right + transform.forward) * 0.5f
-				: worldPosition;
-			Vector3 delta   = anchor - transform.position;
-			Vector3 right   = transform.right.normalized;
-			Vector3 forward = transform.forward.normalized;
-			int     x       = Mathf.FloorToInt(Vector3.Dot(delta, right));
-			int     y       = Mathf.FloorToInt(Vector3.Dot(delta, forward));
+			_ = pivot;
+
+			// GridPosition should match the cell that contains the selected pivot point itself.
+			// For a centered pivot that means using the current world position directly instead of
+			// shifting it back to the cell corner.
+			Vector3 delta        = worldPosition - transform.position;
+			Vector3 rightAxis    = transform.right;
+			Vector3 forwardAxis  = transform.forward;
+			float   rightLength  = rightAxis.magnitude;
+			float   forwardLength = forwardAxis.magnitude;
+			float   xProjection  = rightLength > Mathf.Epsilon
+				? Vector3.Dot(delta, rightAxis.normalized) / rightLength
+				: 0f;
+			float   yProjection  = forwardLength > Mathf.Epsilon
+				? Vector3.Dot(delta, forwardAxis.normalized) / forwardLength
+				: 0f;
+			int     x            = Mathf.FloorToInt(xProjection);
+			int     y            = Mathf.FloorToInt(yProjection);
 
 			return new(x, y);
 		}

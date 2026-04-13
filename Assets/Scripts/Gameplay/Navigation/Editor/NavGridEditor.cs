@@ -7,15 +7,17 @@ namespace Gameplay.Navigation.Editor
 	[CustomEditor(typeof(NavGrid))]
 	public sealed class NavGridEditor : UnityEditor.Editor
 	{
-		private static readonly Color GridColor                = new(1f, 1f, 1f, 0.35f);
-		private static readonly Color StaticPropFillColor      = new(0.72f, 0.24f, 0.18f, 0.45f);
-		private static readonly Color StaticPropOutlineColor   = new(0.85f, 0.34f, 0.28f, 0.95f);
-		private static readonly Color DestructibleFillColor    = new(0.95f, 0.56f, 0.16f, 0.38f);
-		private static readonly Color DestructibleOutlineColor = new(1.0f, 0.72f, 0.28f, 0.95f);
-		private static readonly Color DecorativeFillColor      = new(0.82f, 0.78f, 0.18f, 0.2f);
-		private static readonly Color DecorativeOutlineColor   = new(0.98f, 0.92f, 0.35f, 0.9f);
-		private static readonly Color ActorFillColor           = new(0.22f, 0.5f, 0.95f, 0.32f);
-		private static readonly Color ActorOutlineColor        = new(0.42f, 0.68f, 1.0f, 0.92f);
+		// === Colors ===
+
+		private static readonly Color GridColor                       = new(1f, 1f, 1f, 0.35f);
+		private static readonly Color StaticObstacleFillColor         = new(0.72f, 0.24f, 0.18f, 0.45f);
+		private static readonly Color StaticObstacleOutlineColor      = new(0.85f, 0.34f, 0.28f, 0.95f);
+		private static readonly Color DestructibleObstacleFillColor   = new(0.95f, 0.56f, 0.16f, 0.38f);
+		private static readonly Color DestructibleObstacleOutlineColor = new(1.0f, 0.72f, 0.28f, 0.95f);
+		private static readonly Color CrushablePropFillColor          = new(0.82f, 0.78f, 0.18f, 0.2f);
+		private static readonly Color CrushablePropOutlineColor       = new(0.98f, 0.92f, 0.35f, 0.9f);
+		private static readonly Color ActorFillColor                  = new(0.22f, 0.5f, 0.95f, 0.32f);
+		private static readonly Color ActorOutlineColor               = new(0.42f, 0.68f, 1.0f, 0.92f);
 
 		public override void OnInspectorGUI()
 		{
@@ -120,20 +122,20 @@ namespace Gameplay.Navigation.Editor
 				return;
 			}
 
-			if (entity.Flags.HasFlag(NavCellFlags.Walkable) && entity.Flags.HasFlag(NavCellFlags.Hittable)) {
-				fillColor    = DecorativeFillColor;
-				outlineColor = DecorativeOutlineColor;
+			if (IsCrushableProp(entity)) {
+				fillColor    = CrushablePropFillColor;
+				outlineColor = CrushablePropOutlineColor;
 				return;
 			}
 
-			if (entity.Flags.HasFlag(NavCellFlags.Hittable)) {
-				fillColor    = DestructibleFillColor;
-				outlineColor = DestructibleOutlineColor;
+			if (IsDestructibleObstacle(entity)) {
+				fillColor    = DestructibleObstacleFillColor;
+				outlineColor = DestructibleObstacleOutlineColor;
 				return;
 			}
 
-			fillColor    = StaticPropFillColor;
-			outlineColor = StaticPropOutlineColor;
+			fillColor    = StaticObstacleFillColor;
+			outlineColor = StaticObstacleOutlineColor;
 		}
 
 		private static string GetLabel(INavCellEntity entity)
@@ -142,16 +144,18 @@ namespace Gameplay.Navigation.Editor
 				return "A";
 			}
 
-			if (entity.Flags.HasFlag(NavCellFlags.Walkable) && entity.Flags.HasFlag(NavCellFlags.Hittable)) {
-				return "Dec";
+			if (IsCrushableProp(entity)) {
+				return "C";
 			}
 
-			if (entity.Flags.HasFlag(NavCellFlags.Hittable)) {
-				return "D";
+			if (IsDestructibleObstacle(entity)) {
+				return "DO";
 			}
 
-			return "S";
+			return "SO";
 		}
+
+		// === Classification ===
 
 		private static bool IsActor(INavCellEntity entity)
 		{
@@ -162,6 +166,18 @@ namespace Gameplay.Navigation.Editor
 
 			return owner.GetComponent("EnemyBehaviour") != null
 				|| owner.GetComponent("DiceBehaviour") != null;
+		}
+
+		private static bool IsDestructibleObstacle(INavCellEntity entity)
+		{
+			GameObject owner = entity.Owner;
+			return owner != null && owner.GetComponent("DestructibleObstacleTileBehaviour") != null;
+		}
+
+		private static bool IsCrushableProp(INavCellEntity entity)
+		{
+			GameObject owner = entity.Owner;
+			return owner != null && owner.GetComponent("CrushablePropTileBehaviour") != null;
 		}
 	}
 }
