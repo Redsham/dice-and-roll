@@ -91,7 +91,7 @@ namespace Gameplay.Enemies.Runtime
 		public NavCellEntityLayer Layer => NavCellEntityLayer.Actor;
 		public GameObject   Owner   => Behaviour.gameObject;
 		public Vector2Int   Cell    => m_State.Position;
-		public NavCellFlags Flags   => NavCellFlags.Hittable;
+		public NavCellFlags Flags   => NavCellFlags.None;
 		public bool         IsAlive => m_State.CurrentHealth > 0;
 
 		// === State ===

@@ -9,7 +9,7 @@ namespace Gameplay.Navigation
 		public          INavCellEntity Tile;
 		public          INavCellEntity Actor;
 		public readonly INavCellEntity Entity => Actor ?? Tile;
-		public          bool           CanOccupy => IsWalkable && Actor == null && (Tile == null || Tile.Flags.HasFlag(NavCellFlags.Walkable));
+		public          bool           CanOccupy => IsWalkable && Actor == null && (Tile == null || !Tile.Flags.HasFlag(NavCellFlags.BlocksMovement));
 
 		// === Lifecycle ===
 
