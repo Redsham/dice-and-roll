@@ -128,7 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8161f813af154de58b6a5f71841ffffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Dice.DiceBehaviour
-  <GridPosition>k__BackingField: {x: 0, y: 0}
   <View>k__BackingField: {fileID: 1006}
   <Config>k__BackingField: {fileID: 11400000, guid: 3a4cf0c5c5eaa4301ac0560d85af7648, type: 2}
 --- !u!114 &1006
@@ -182,7 +181,6 @@ MonoBehaviour:
     Duration: 0.18
     Frequency: 28
     RotationalAmplitude: 1.2
-  m_ImpactVfx: {fileID: 6870930968389686395, guid: 46dd7036b09a269459044d6a9016b01c, type: 3}
   m_Audio: {fileID: 2476398649066522975}
 --- !u!1 &1660508095063747161
 GameObject:
@@ -265,7 +263,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.02
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -458,7 +456,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
