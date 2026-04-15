@@ -26,7 +26,7 @@ namespace Gameplay.Enemies.Presentation
 		public void Show(Vector2Int cell, GridBasis basis)
 		{
 			EnsureDetached();
-			transform.position = basis.GetCellCenter(cell);
+			transform.position = basis.GetCellCenter(cell) + new Vector3(0, 0.5f, 0);
 			Root.SetActive(true);
 		}
 
