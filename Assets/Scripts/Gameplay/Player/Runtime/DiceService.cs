@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Flow.GameState;
 using Gameplay.Navigation.Tracing;
@@ -18,6 +19,8 @@ namespace Gameplay.Player.Runtime
 {
 	public sealed class DiceService
 	{
+		public event Action<int, int> HealthChanged;
+
 		// === Dependencies ===
 		[Inject] private readonly INavigationService    m_NavigationService;
 		[Inject] private readonly LevelNodeService      m_LevelNodeService;
@@ -71,6 +74,7 @@ namespace Gameplay.Player.Runtime
 			m_GridActor   = null;
 			CurrentHealth = 0;
 			InAction      = false;
+			NotifyHealthChanged();
 		}
 
 		#endregion
@@ -85,6 +89,7 @@ namespace Gameplay.Player.Runtime
 
 			int consumedDamage = Mathf.Min(CurrentHealth, damage);
 			CurrentHealth -= consumedDamage;
+			NotifyHealthChanged();
 
 			if (CurrentHealth <= 0) {
 				HandleDeath();
@@ -169,6 +174,7 @@ namespace Gameplay.Player.Runtime
 			m_Controller  = new(state);
 			m_GridActor   = new(this);
 			CurrentHealth = m_Config.MaxHealth;
+			NotifyHealthChanged();
 			
 			m_DiceView.Initialize(m_Config.ShootRange);
 			m_DiceView.Snap(state, m_NavigationService.Basis);
@@ -177,6 +183,11 @@ namespace Gameplay.Player.Runtime
 		}
 
 		#endregion
+
+		private void NotifyHealthChanged()
+		{
+			HealthChanged?.Invoke(CurrentHealth, MaxHealth);
+		}
 
 		#region Validation
 

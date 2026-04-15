@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using Gameplay.Navigation;
 using Gameplay.Nodes.Authoring;
 using UnityEditor;
 using UnityEngine;
