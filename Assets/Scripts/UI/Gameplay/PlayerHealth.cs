@@ -1,14 +1,24 @@
+using Gameplay.Player.Runtime;
+using R3;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 
 namespace UI.Gameplay
 {
 	public class PlayerHealth : MonoBehaviour
 	{
+		[Inject] private readonly DiceService m_Dice;
+		
 		[SerializeField] private TextMeshProUGUI m_Text;
 		[SerializeField] private Image           m_Bar;
+		
+		[Inject] public void OnInjected()
+		{
+			m_Dice.CurrentHealth.Subscribe(health => SetHealth(health, m_Dice.MaxHealth)).AddTo(this);
+		}
 
 		public void SetHealth(int currentHealth, int maxHealth)
 		{

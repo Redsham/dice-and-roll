@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Flow.GameState;
 using Gameplay.Navigation.Tracing;
@@ -10,6 +9,7 @@ using Gameplay.Player.Domain.Combat;
 using Gameplay.Player.Presentation;
 using Gameplay.Player.Presentation.Combat;
 using Gameplay.World.Runtime;
+using R3;
 using UnityEngine;
 using VContainer;
 using Object = UnityEngine.Object;
@@ -19,8 +19,6 @@ namespace Gameplay.Player.Runtime
 {
 	public sealed class DiceService
 	{
-		public event Action<int, int> HealthChanged;
-
 		// === Dependencies ===
 		[Inject] private readonly INavigationService    m_NavigationService;
 		[Inject] private readonly LevelNodeService      m_LevelNodeService;
@@ -35,12 +33,12 @@ namespace Gameplay.Player.Runtime
 
 		#region Properties
 
-		public bool      HasPlayer     => m_Player != null;
-		public DiceState State         => m_Controller?.State ?? default;
-		
-		public bool      IsAlive       => HasPlayer && CurrentHealth > 0;
-		public int       CurrentHealth { get; private set; }
-		public int       MaxHealth     => m_Config != null ? m_Config.MaxHealth : 0;
+		public bool      HasPlayer => m_Player != null;
+		public DiceState State     => m_Controller?.State ?? default;
+
+		public bool                  IsAlive       => HasPlayer && CurrentHealth.Value > 0;
+		public ReactiveProperty<int> CurrentHealth { get; private set; } = new(0);
+		public int                   MaxHealth     => m_Config != null ? m_Config.MaxHealth : 0;
 
 		public Vector2Int Position     => m_Controller != null ? m_Controller.State.Position : default;
 		public GameObject PlayerObject => m_Player     != null ? m_Player.gameObject : null;
@@ -67,14 +65,13 @@ namespace Gameplay.Player.Runtime
 
 			// The service is long-lived within the gameplay scope, so it must forget the
 			// destroyed player instance before the next level/player bind happens.
-			m_Player      = null;
-			m_DiceView    = null;
-			m_Controller  = null;
-			m_Config      = null;
-			m_GridActor   = null;
-			CurrentHealth = 0;
-			InAction      = false;
-			NotifyHealthChanged();
+			m_Player            = null;
+			m_DiceView          = null;
+			m_Controller        = null;
+			m_Config            = null;
+			m_GridActor         = null;
+			CurrentHealth.Value = 0;
+			InAction            = false;
 		}
 
 		#endregion
@@ -87,11 +84,10 @@ namespace Gameplay.Player.Runtime
 				return 0;
 			}
 
-			int consumedDamage = Mathf.Min(CurrentHealth, damage);
-			CurrentHealth -= consumedDamage;
-			NotifyHealthChanged();
+			int consumedDamage = Mathf.Min(CurrentHealth.Value, damage);
+			CurrentHealth.Value -= consumedDamage;
 
-			if (CurrentHealth <= 0) {
+			if (CurrentHealth.Value <= 0) {
 				HandleDeath();
 			}
 
@@ -171,11 +167,10 @@ namespace Gameplay.Player.Runtime
 			m_DiceView = player.View;
 			m_Config   = player.Config != null ? player.Config : DiceConfig.CreateRuntimeDefault();
 			DiceState state = DiceState.Create(startPosition);
-			m_Controller  = new(state);
-			m_GridActor   = new(this);
-			CurrentHealth = m_Config.MaxHealth;
-			NotifyHealthChanged();
-			
+			m_Controller        = new(state);
+			m_GridActor         = new(this);
+			CurrentHealth.Value = m_Config.MaxHealth;
+
 			m_DiceView.Initialize(m_Config.ShootRange);
 			m_DiceView.Snap(state, m_NavigationService.Basis);
 			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
@@ -183,11 +178,6 @@ namespace Gameplay.Player.Runtime
 		}
 
 		#endregion
-
-		private void NotifyHealthChanged()
-		{
-			HealthChanged?.Invoke(CurrentHealth, MaxHealth);
-		}
 
 		#region Validation
 
@@ -199,11 +189,11 @@ namespace Gameplay.Player.Runtime
 		private bool CanStartAction()
 		{
 			return !InAction
-			    && m_Controller != null
-			    && m_DiceView   != null
-			    && m_Config     != null
-			    && m_NavigationService.HasLevel
-			    && IsAlive;
+			       && m_Controller != null
+			       && m_DiceView   != null
+			       && m_Config     != null
+			       && m_NavigationService.HasLevel
+			       && IsAlive;
 		}
 
 		#endregion

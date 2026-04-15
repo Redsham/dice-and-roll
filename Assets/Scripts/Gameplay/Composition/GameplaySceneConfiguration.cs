@@ -1,6 +1,7 @@
 using Gameplay.Levels.Data;
 using Gameplay.Player.Authoring;
 using TriInspector;
+using UI.Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ namespace Gameplay.Composition
 	{
 		[field: SerializeField, Required] public  LevelAsset       InitialLevel { get; private set; }
 		[field: SerializeField, Required] public  DiceBehaviour    PlayerPrefab { get; private set; }
+		[field: SerializeField, Required] public  GameplayHudView  HudPrefab    { get; private set; }
 		[field: SerializeField, Required] public  InputActionAsset InputActions { get; private set; }
 		[SerializeField]                  private Transform        m_LevelParent;
 		[SerializeField]                  private Transform        m_ActorParent;

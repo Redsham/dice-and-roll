@@ -29,7 +29,6 @@ namespace Infrastructure.Scopes.Gameplay
 		protected override void Configure(IContainerBuilder builder)
 		{
 			builder.RegisterComponentInHierarchy<GameplaySceneConfiguration>();
-			builder.RegisterComponentInHierarchy<GameplayHudView>();
 			builder.RegisterComponentInHierarchy<DynamicCameraRig>()
 			       .As<IGameCameraController>()
 			       .As<ICameraGridOrientation>()
@@ -55,8 +54,6 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.RegisterEntryPoint<GameplayCameraInput>();
 			builder.RegisterEntryPoint<GameplayEntryPoint>();
 			builder.RegisterEntryPoint<GameplayHudEntryPoint>();
-			
-			builder.RegisterEntryPoint<ShowcaseFunctions>(Lifetime.Scoped);
 		}
 	}
 }
