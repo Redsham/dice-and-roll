@@ -52,11 +52,11 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.Register<DefaultGameplayLoop>(Lifetime.Scoped).As<IGameplayLoop>();
 			builder.Register<DefaultGameplayScenario>(Lifetime.Scoped).As<IGameplayScenario>();
 			
-			builder.Register<ShowcaseFunctions>(Lifetime.Scoped);
-
 			builder.RegisterEntryPoint<GameplayCameraInput>();
 			builder.RegisterEntryPoint<GameplayEntryPoint>();
 			builder.RegisterEntryPoint<GameplayHudEntryPoint>();
+			
+			builder.RegisterEntryPoint<ShowcaseFunctions>(Lifetime.Scoped);
 		}
 	}
 }
