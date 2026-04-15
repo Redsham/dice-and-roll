@@ -14,7 +14,10 @@ namespace UI.Gameplay
 		[Inject] private SceneService m_SceneService;
 		
 		// === Lifecycle ===
-		
-		public void Shutdown() => Destroy(gameObject);
+
+		public void Shutdown()
+		{
+			if(gameObject != null) Destroy(gameObject);
+		}
 	}
 }
