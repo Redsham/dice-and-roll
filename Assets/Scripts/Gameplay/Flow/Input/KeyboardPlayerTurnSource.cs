@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Composition;
 using Gameplay.Player.Domain;
-using Gameplay.World.Runtime;
+using Gameplay.Player.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,16 +19,14 @@ namespace Gameplay.Flow.Input
 		private readonly InputAction            m_MoveAction;
 		private readonly InputAction            m_ShootAction;
 		private readonly ICameraGridOrientation m_CameraGridOrientation;
-		private readonly ICameraScreenProjector m_CameraScreenProjector;
-		private readonly INavigationService     m_NavigationService;
+		private readonly DiceShotAimService     m_ShotAimService;
 
 		private UniTaskCompletionSource<PlayerTurnCommand> m_PendingTurn;
 
 		public KeyboardPlayerTurnSource(
 			GameplaySceneConfiguration configuration,
 			ICameraGridOrientation     cameraGridOrientation,
-			ICameraScreenProjector     cameraScreenProjector,
-			INavigationService         navigationService
+			DiceShotAimService         shotAimService
 		)
 		{
 			if (configuration.InputActions == null) {
@@ -36,8 +34,7 @@ namespace Gameplay.Flow.Input
 			}
 
 			m_CameraGridOrientation =  cameraGridOrientation;
-			m_CameraScreenProjector =  cameraScreenProjector;
-			m_NavigationService     =  navigationService;
+			m_ShotAimService        =  shotAimService;
 			m_MoveAction            =  configuration.InputActions.FindAction(PLAYER_MOVE_ACTION_NAME,  throwIfNotFound: true);
 			m_ShootAction           =  configuration.InputActions.FindAction(PLAYER_SHOOT_ACTION_NAME, throwIfNotFound: true);
 			m_MoveAction.performed  += OnMovePerformed;
@@ -95,13 +92,11 @@ namespace Gameplay.Flow.Input
 
 		private void OnShootPerformed(InputAction.CallbackContext context)
 		{
-			if (m_PendingTurn == null || !m_NavigationService.HasLevel) {
+			if (m_PendingTurn == null) {
 				return;
 			}
 
-			Vector2   screenPosition = Pointer.current?.position.ReadValue() ?? default;
-			GridBasis basis          = m_NavigationService.Basis;
-			if (!m_CameraScreenProjector.TryProjectScreenPointToPlane(screenPosition, basis.Origin, basis.Up, out Vector3 worldPoint)) {
+			if (!m_ShotAimService.TryGetPointerAimPoint(out Vector3 worldPoint)) {
 				return;
 			}
 

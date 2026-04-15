@@ -170,7 +170,7 @@ namespace Gameplay.Player.Runtime
 			m_GridActor   = new(this);
 			CurrentHealth = m_Config.MaxHealth;
 			
-			m_DiceView.Initialize();
+			m_DiceView.Initialize(m_Config.ShootRange);
 			m_DiceView.Snap(state, m_NavigationService.Basis);
 			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
 			return state;

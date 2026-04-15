@@ -39,6 +39,7 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.Register<LevelNodeService>(Lifetime.Scoped);
 			builder.Register<LevelService>(Lifetime.Scoped);
 			builder.Register<DiceService>(Lifetime.Scoped);
+			builder.Register<DiceShotAimService>(Lifetime.Scoped);
 			builder.Register<EnemyService>(Lifetime.Scoped);
 
 			builder.Register<SingleLevelSequence>(Lifetime.Scoped).As<ILevelSequence>();

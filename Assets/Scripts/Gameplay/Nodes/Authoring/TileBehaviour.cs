@@ -12,11 +12,11 @@ namespace Gameplay.Nodes.Authoring
 
 		// === Navigation ===
 
-		public         NavCellEntityLayer Layer => NavCellEntityLayer.Tile;
-		public         GameObject         Owner => gameObject;
-		public         Vector2Int         Cell  => GridPosition;
-		public virtual NavCellFlags Flags   => NavCellFlags.None;
-		public virtual bool         IsAlive => true;
+		public         NavCellEntityLayer Layer   => NavCellEntityLayer.Tile;
+		public         GameObject         Owner   => gameObject;
+		public         Vector2Int         Cell    => GridPosition;
+		public virtual NavCellFlags       Flags   => NavCellFlags.None;
+		public virtual bool               IsAlive => true;
 
 		// === Runtime ===
 
@@ -34,8 +34,8 @@ namespace Gameplay.Nodes.Authoring
 
 		// === Grid Alignment ===
 
-		public override Vector3 GetAlignedWorldPosition(NavGrid navGrid, Vector2Int gridPosition) => navGrid.GetCellWorldPosition(gridPosition, Pivot);
-		protected override Vector2Int CalculateGridPosition(NavGrid navGrid) => navGrid.GetCellCoordinates(transform.position, Pivot);
+		public override    Vector3    GetAlignedWorldPosition(NavGrid navGrid, Vector2Int gridPosition) => navGrid.GetCellWorldPosition(gridPosition, Pivot);
+		protected override Vector2Int CalculateGridPosition(NavGrid   navGrid) => navGrid.GetCellCoordinates(transform.position, Pivot);
 
 		// === Editor ===
 

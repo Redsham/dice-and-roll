@@ -36,7 +36,7 @@ namespace Gameplay.Player.Editor
 				return;
 			}
 
-			Transform transform = diceView.transform;
+			Transform transform = diceView.Model != null ? diceView.Model : diceView.transform;
 			Vector3   center    = GetVisualCenter(diceView);
 			float     distance  = GetDistanceToFaceCenter(diceView, center) + LabelOffsetFromFace;
 
@@ -69,7 +69,8 @@ namespace Gameplay.Player.Editor
 		{
 			Renderer[] renderers = GetDiceRenderers(diceView);
 			if (renderers.Length == 0) {
-				return diceView.transform.position;
+				Transform target = diceView.Model != null ? diceView.Model : diceView.transform;
+				return target.position;
 			}
 
 			Bounds bounds = renderers[0].bounds;
@@ -97,7 +98,8 @@ namespace Gameplay.Player.Editor
 
 		private static Renderer[] GetDiceRenderers(DiceView diceView)
 		{
-			Renderer[] allRenderers = diceView.GetComponentsInChildren<Renderer>();
+			Transform target = diceView.Model != null ? diceView.Model : diceView.transform;
+			Renderer[] allRenderers = target.GetComponentsInChildren<Renderer>();
 			int        count        = 0;
 
 			for (int i = 0; i < allRenderers.Length; i++) {
