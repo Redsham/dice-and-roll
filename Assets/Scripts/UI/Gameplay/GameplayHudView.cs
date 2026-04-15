@@ -7,7 +7,7 @@ namespace UI.Gameplay
 {
 	public sealed class GameplayHudView : MonoBehaviour
 	{
-		[SerializeField] private PlayerHealth m_PlayerHealth;
+		[SerializeField] private PlayerHealthView m_PlayerHealthView;
 
 		// === Dependencies ===
 
