@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2394051916629924263
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -1865773335486353210, guid: ed3c3ad68b69eb54f9e3fdf6fdb31a0a, type: 3}
+    - target: {fileID: -5754084199372789682, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -1429492764948881414, guid: ed3c3ad68b69eb54f9e3fdf6fdb31a0a, type: 3}
+    - target: {fileID: 919132149155446097, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      propertyPath: m_Name
+      value: Oil_Pump
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4590436137443801926}
+  m_SourcePrefab: {fileID: 100100000, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+--- !u!1 &3312406705695679734 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 18be127944737c944bb88fdd04e060dd, type: 3}
+  m_PrefabInstance: {fileID: 2394051916629924263}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4590436137443801926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312406705695679734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ce39ba817b7a4e659fe073f0a8fb074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay.Nodes::Gameplay.Nodes.Authoring.StaticPropNodeBehaviour
+  <GridPosition>k__BackingField: {x: 0, y: 0}
+  m_IsInNavGrid: 1
+  m_GridWarning: 
+  <Pivot>k__BackingField: 1
