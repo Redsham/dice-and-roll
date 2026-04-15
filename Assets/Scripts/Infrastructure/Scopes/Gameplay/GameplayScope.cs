@@ -51,6 +51,8 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.Register<EnemyTurnExecutor>(Lifetime.Scoped).As<IEnemyTurnExecutor>();
 			builder.Register<DefaultGameplayLoop>(Lifetime.Scoped).As<IGameplayLoop>();
 			builder.Register<DefaultGameplayScenario>(Lifetime.Scoped).As<IGameplayScenario>();
+			
+			builder.Register<ShowcaseFunctions>(Lifetime.Scoped);
 
 			builder.RegisterEntryPoint<GameplayCameraInput>();
 			builder.RegisterEntryPoint<GameplayEntryPoint>();
