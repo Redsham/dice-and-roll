@@ -227,7 +227,8 @@ namespace Gameplay.Player.Presentation
 				return;
 			}
 
-			m_ShotDirectionView.Show(shot.Direction, visibleDistance, m_GridBasis.CellSize, animateOnDirectionChange);
+			int damage = m_CurrentState.Orientation.GetFaceValue(shot.Face);
+			m_ShotDirectionView.Show(shot.Direction, visibleDistance, damage, m_GridBasis.CellSize, animateOnDirectionChange);
 		}
 
 		private static int GetVisibleShotPreviewDistance(GridTraceResult traceResult)

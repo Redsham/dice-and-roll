@@ -1,9 +1,13 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Gameplay.Camera.Abstractions;
 using Gameplay.Player.Domain;
 using LitMotion;
+using TMPro;
+using TriInspector;
 using UnityEngine;
+using VContainer;
 
 
 namespace Gameplay.Player.Presentation.Combat
@@ -11,11 +15,16 @@ namespace Gameplay.Player.Presentation.Combat
 	public sealed class DiceShotDirectionView : MonoBehaviour
 	{
 		private const float MIN_DISTANCE = 1.0f;
+		
+		[Inject] private readonly IGameCameraController m_Camera;
 
 		[SerializeField] private GameObject m_Root;
 		[SerializeField] private Transform  m_Beam;
 		[SerializeField] private float      m_BeamThickness     = 0.08f;
 		[SerializeField] private float      m_DirectionAnimTime = 0.18f;
+
+		[Title("Damage")]
+		[SerializeField] private TMP_Text m_DamageText;
 
 		private RollDirection?          m_CurrentDirection;
 		private int                     m_CurrentDistance;
@@ -24,9 +33,16 @@ namespace Gameplay.Player.Presentation.Combat
 
 		private GameObject Root => m_Root != null ? m_Root : gameObject;
 		private Transform  Beam => m_Beam != null ? m_Beam : transform;
-		
 
-		public void Show(RollDirection direction, int distance, float cellSize, bool animate)
+
+		private void LateUpdate()
+		{
+			if(m_DamageText != null) {
+				m_DamageText.transform.rotation = Quaternion.LookRotation(m_DamageText.transform.position - m_Camera.Position, Vector3.up);
+			}
+		}
+
+		public void Show(RollDirection direction, int distance, int damage, float cellSize, bool animate)
 		{
 			distance = Mathf.Max(0, distance);
 			if (distance <= 0) {
@@ -43,6 +59,7 @@ namespace Gameplay.Player.Presentation.Combat
 			m_CurrentDistance  = distance;
 
 			ApplyDirection(direction);
+			ApplyDamage(damage);
 
 			if (animate && directionChanged) {
 				AnimateDistanceAsync(distance).Forget();
@@ -62,6 +79,7 @@ namespace Gameplay.Player.Presentation.Combat
 			Root.SetActive(false);
 		}
 
+		
 		private async UniTaskVoid AnimateDistanceAsync(int distance)
 		{
 			CancelAnimation();
@@ -98,8 +116,23 @@ namespace Gameplay.Player.Presentation.Combat
 		{
 			float clampedDistance = Mathf.Max(MIN_DISTANCE, distance);
 			float length          = clampedDistance * m_CellSize;
-			Beam.localPosition = new(0.0f, 0.0f, m_CellSize * (clampedDistance + 1.0f) * 0.5f);
-			Beam.localScale    = new(m_CellSize, m_BeamThickness, length);
+
+			if (Beam) {
+				Beam.localPosition = new(0.0f, 0.0f, m_CellSize * (clampedDistance + 1.0f) * 0.5f);
+				Beam.localScale    = new(m_CellSize, m_BeamThickness, length);
+			}
+			
+			if (m_DamageText != null) {
+				m_DamageText.transform.localPosition = new(0.0f, 1.0f, m_CellSize * (clampedDistance + 1.0f)  * 0.5f);
+			}
+		}
+
+		private void ApplyDamage(int damage)
+		{
+			if(m_DamageText == null)
+				return;
+			
+			m_DamageText.text = damage.ToString();
 		}
 
 		private void CancelAnimation()

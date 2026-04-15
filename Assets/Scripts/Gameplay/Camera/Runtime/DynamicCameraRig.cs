@@ -11,6 +11,9 @@ namespace Gameplay.Camera.Runtime
 	[DisallowMultipleComponent]
 	public sealed class DynamicCameraRig : MonoBehaviour, IGameCameraController, ICameraGridOrientation, ICameraScreenProjector
 	{
+		public Vector3    Position => transform.position;
+		public Quaternion Rotation => transform.rotation;
+
 		[SerializeField]              private UnityEngine.Camera  m_Camera;
 		[SerializeField]              private OrbitCameraSettings m_DefaultOrbit;
 		[SerializeField, Min(0.0f)]   private float               m_DefaultBlendDuration     = 0.35f;
@@ -171,7 +174,7 @@ namespace Gameplay.Camera.Runtime
 			m_ShakeAmplitude           = Mathf.Max(m_ShakeAmplitude, settings.Amplitude);
 			m_ShakeDuration            = Mathf.Max(m_ShakeDuration,  settings.Duration);
 			m_ShakeElapsed             = 0.0f;
-			m_ShakeFrequency           = Mathf.Max(0.01f, settings.Frequency);
+			m_ShakeFrequency           = Mathf.Max(0.01f,                      settings.Frequency);
 			m_ShakeRotationalAmplitude = Mathf.Max(m_ShakeRotationalAmplitude, settings.RotationalAmplitude);
 		}
 
