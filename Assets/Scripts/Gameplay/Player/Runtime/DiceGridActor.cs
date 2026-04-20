@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Gameplay.Player.Runtime
 {
-	public sealed class PlayerGridActor : INavCellEntity
+	public sealed class DiceGridActor : INavCellEntity
 	{
 		private readonly DiceService m_Owner;
 
-		public PlayerGridActor(DiceService owner)
+		public DiceGridActor(DiceService owner)
 		{
 			m_Owner = owner;
 		}
@@ -19,9 +19,6 @@ namespace Gameplay.Player.Runtime
 		public NavCellFlags Flags   => NavCellFlags.BlocksMovement | NavCellFlags.BlocksTrace;
 		public bool         IsAlive => m_Owner.IsAlive;
 
-		public int ApplyDamage(int damage, GameObject source = null)
-		{
-			return m_Owner.ApplyDamage(damage, source);
-		}
+		public int ApplyDamage(int damage, GameObject source = null) => m_Owner.ApplyDamage(damage, source);
 	}
 }

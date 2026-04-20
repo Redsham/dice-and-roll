@@ -68,5 +68,15 @@ namespace Gameplay.Player.Runtime
 				InAction = false;
 			}
 		}
+		
+		private bool CanDoAction()
+		{
+			return !InAction
+			    && m_Controller != null
+			    && m_DiceView   != null
+			    && m_Config     != null
+			    && m_NavigationService.HasLevel
+			    && IsAlive;
+		}
 	}
 }

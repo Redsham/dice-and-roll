@@ -19,20 +19,22 @@ namespace Gameplay.Player.Runtime
 {
 	public partial class DiceService
 	{
+		#region Properties
+		
 		// === Dependencies ===
+
 		[Inject] private readonly INavigationService    m_NavigationService;
 		[Inject] private readonly LevelNodeService      m_LevelNodeService;
 		[Inject] private readonly IGameplayStateService m_GameplayStateService;
 
 		// === Runtime ===
-		private DiceBehaviour   m_Player;
-		private DiceView        m_DiceView;
-		private DiceController  m_Controller;
-		private DiceConfig      m_Config;
-		private PlayerGridActor m_GridActor;
 
-		#region Properties
-
+		private DiceBehaviour  m_Player;
+		private DiceView       m_DiceView;
+		private DiceController m_Controller;
+		private DiceConfig     m_Config;
+		private DiceGridActor  m_GridActor;
+		
 		public bool      HasPlayer => m_Player != null;
 		public DiceState State     => m_Controller?.State ?? default;
 
@@ -46,7 +48,7 @@ namespace Gameplay.Player.Runtime
 
 		#endregion
 
-		#region Player Lifecycle
+		// === Lifecycle ===
 
 		public void BindPlayer(DiceBehaviour player, Vector2Int startPosition)
 		{
@@ -72,7 +74,7 @@ namespace Gameplay.Player.Runtime
 			CurrentHealth.Value = 0;
 			InAction            = false;
 		}
-		
+
 		private DiceState InitializePlayerRuntime(DiceBehaviour player, Vector2Int startPosition)
 		{
 			m_Player   = player;
@@ -88,57 +90,37 @@ namespace Gameplay.Player.Runtime
 			m_NavigationService.TrySetEntity(m_GridActor.Cell, m_GridActor);
 			return state;
 		}
+		private void Died()
+		{
+			LeaveCell(m_Controller.State.Position);
+			ClearGridActor();
+			m_GameplayStateService.End(GameplayEndReason.PlayerDefeated);
+		}
 		
-		#endregion
-
-		#region Combat
-
+		// === Combat ===
+		
 		public int ApplyDamage(int damage, GameObject source = null)
 		{
-			if (!CanTakeDamage(damage)) {
-				return 0;
-			}
+			if (!HasPlayer && damage > 0 && IsAlive) return 0;
 
 			int consumedDamage = Mathf.Min(CurrentHealth.Value, damage);
 			CurrentHealth.Value -= consumedDamage;
 
 			if (CurrentHealth.Value <= 0) {
-				HandleDeath();
+				Died();
 			}
 
 			return consumedDamage;
 		}
 
-		#endregion
-
-		#region Validation
-
-		private bool CanTakeDamage(int damage)
-		{
-			return HasPlayer && damage > 0 && IsAlive;
-		}
-
-		private bool CanDoAction()
-		{
-			return !InAction
-			    && m_Controller != null
-			    && m_DiceView   != null
-			    && m_Config     != null
-			    && m_NavigationService.HasLevel
-			    && IsAlive;
-		}
-
-		#endregion
-
-		#region Cell Notifications
-
+		// === Cell Notifications ===
+		
 		private void EnterCell(Vector2Int cell)
 		{
 			if (m_Player != null) {
 				m_LevelNodeService.NotifyActorEntered(cell, m_Player.gameObject);
 			}
 		}
-
 		private void LeaveCell(Vector2Int cell)
 		{
 			if (m_Player != null) {
@@ -146,16 +128,7 @@ namespace Gameplay.Player.Runtime
 			}
 		}
 
-		#endregion
-
-		#region Cleanup
-
-		private void HandleDeath()
-		{
-			LeaveCell(m_Controller.State.Position);
-			ClearGridActor();
-			m_GameplayStateService.End(GameplayEndReason.PlayerDefeated);
-		}
+		// === Cleanup ===
 
 		private void ClearGridActor()
 		{
@@ -163,14 +136,11 @@ namespace Gameplay.Player.Runtime
 				m_NavigationService.TryClearEntity(m_GridActor.Cell, m_GridActor);
 			}
 		}
-
 		private void DestroyPlayerObject()
 		{
 			if (m_Player != null) {
 				Object.Destroy(m_Player.gameObject);
 			}
 		}
-
-		#endregion
 	}
 }
