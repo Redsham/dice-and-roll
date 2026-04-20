@@ -17,12 +17,12 @@ namespace MainMenu
 		[SerializeField] private float m_DragRadiusPixels = 180f;
 		[SerializeField] private float m_ClickMaxDragPixels = 12f;
 
-		private Vector2    _pressPointerPosition;
-		private RaycastHit _pressHit;
-		private bool       _isPointerDownOnDice;
-		private bool       _isDragging;
-		private Renderer[] _renderers;
-		private Collider[] _colliders;
+		private Vector2    m_PressPointerPosition;
+		private RaycastHit m_PressHit;
+		private bool       m_IsPointerDownOnDice;
+		private bool       m_IsDragging;
+		private Renderer[] m_Renderers;
+		private Collider[] m_Colliders;
 
 		private void Awake()
 		{
@@ -32,8 +32,8 @@ namespace MainMenu
 			if (m_Shooter == null)
 				m_Shooter = GetComponent<MenuDiceShooter>();
 
-			_renderers = GetComponentsInChildren<Renderer>();
-			_colliders = GetComponentsInChildren<Collider>();
+			m_Renderers = GetComponentsInChildren<Renderer>();
+			m_Colliders = GetComponentsInChildren<Collider>();
 		}
 
 		private void Update()
@@ -47,48 +47,48 @@ namespace MainMenu
 			Vector2 pointerPosition = mouse.position.ReadValue();
 
 			if (mouse.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject() && TryGetDiceHit(pointerPosition, inputCamera, out RaycastHit hit)) {
-				_isPointerDownOnDice = true;
-				_isDragging = false;
-				_pressPointerPosition = pointerPosition;
-				_pressHit = hit;
+				m_IsPointerDownOnDice = true;
+				m_IsDragging = false;
+				m_PressPointerPosition = pointerPosition;
+				m_PressHit = hit;
 			}
 
-			if (_isPointerDownOnDice && !_isDragging && mouse.leftButton.isPressed) {
-				if ((pointerPosition - _pressPointerPosition).sqrMagnitude > m_ClickMaxDragPixels * m_ClickMaxDragPixels) {
-					_isDragging = true;
-					m_Rotator?.BeginDrag(_pressPointerPosition);
+			if (m_IsPointerDownOnDice && !m_IsDragging && mouse.leftButton.isPressed) {
+				if ((pointerPosition - m_PressPointerPosition).sqrMagnitude > m_ClickMaxDragPixels * m_ClickMaxDragPixels) {
+					m_IsDragging = true;
+					m_Rotator?.BeginDrag(m_PressPointerPosition);
 				}
 			}
 
-			if (_isDragging && mouse.leftButton.isPressed)
+			if (m_IsDragging && mouse.leftButton.isPressed)
 				m_Rotator?.DragTo(pointerPosition, inputCamera, deltaTime);
 
-			if (_isPointerDownOnDice && mouse.leftButton.wasReleasedThisFrame) {
-				if (_isDragging) {
+			if (m_IsPointerDownOnDice && mouse.leftButton.wasReleasedThisFrame) {
+				if (m_IsDragging) {
 					m_Rotator?.EndDrag();
 				}
 				else {
-					m_Shooter?.Shoot(_pressHit);
+					m_Shooter?.Shoot(m_PressHit);
 				}
 
-				_isPointerDownOnDice = false;
-				_isDragging = false;
+				m_IsPointerDownOnDice = false;
+				m_IsDragging = false;
 			}
 		}
 
 		private void OnDisable()
 		{
-			if (_isDragging)
+			if (m_IsDragging)
 				m_Rotator?.EndDrag();
 
-			_isPointerDownOnDice = false;
-			_isDragging = false;
+			m_IsPointerDownOnDice = false;
+			m_IsDragging = false;
 		}
 
 		private bool TryGetDiceHit(Vector2 pointerPosition, Camera inputCamera, out RaycastHit hit)
 		{
 			Ray ray = inputCamera.ScreenPointToRay(pointerPosition);
-			if (_colliders != null && _colliders.Length > 0 && Physics.Raycast(ray, out hit, float.MaxValue))
+			if (m_Colliders is { Length: > 0 } && Physics.Raycast(ray, out hit, float.MaxValue))
 				return hit.transform == transform || hit.transform.IsChildOf(transform);
 
 			hit = default;
@@ -99,10 +99,10 @@ namespace MainMenu
 		{
 			Vector3 worldCenter = transform.position;
 
-			if (_renderers != null && _renderers.Length > 0) {
-				Bounds bounds = _renderers[0].bounds;
-				for (int i = 1; i < _renderers.Length; i++)
-					bounds.Encapsulate(_renderers[i].bounds);
+			if (m_Renderers != null && m_Renderers.Length > 0) {
+				Bounds bounds = m_Renderers[0].bounds;
+				for (int i = 1; i < m_Renderers.Length; i++)
+					bounds.Encapsulate(m_Renderers[i].bounds);
 
 				worldCenter = bounds.center;
 			}
