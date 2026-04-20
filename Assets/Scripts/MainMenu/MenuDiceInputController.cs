@@ -1,5 +1,6 @@
 using TriInspector;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
@@ -45,7 +46,7 @@ namespace MainMenu
 			float deltaTime = Time.unscaledDeltaTime;
 			Vector2 pointerPosition = mouse.position.ReadValue();
 
-			if (mouse.leftButton.wasPressedThisFrame && TryGetDiceHit(pointerPosition, inputCamera, out RaycastHit hit)) {
+			if (mouse.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject() && TryGetDiceHit(pointerPosition, inputCamera, out RaycastHit hit)) {
 				_isPointerDownOnDice = true;
 				_isDragging = false;
 				_pressPointerPosition = pointerPosition;
