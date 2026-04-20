@@ -45,11 +45,11 @@ namespace Gameplay.Player.Runtime
 			}
 
 			traceResult = NavGridLineTrace.Trace(
-			                                    m_NavigationService.Grid,
-			                                    state.Position,
-			                                    shot.Direction.ToVector2Int(),
-			                                    maxDistance
-			                                   );
+			                                     m_NavigationService.Grid,
+			                                     state.Position,
+			                                     shot.Direction.ToVector2Int(),
+			                                     maxDistance
+			                                    );
 			return true;
 		}
 	}

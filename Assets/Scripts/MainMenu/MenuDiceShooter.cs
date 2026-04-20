@@ -61,14 +61,28 @@ namespace MainMenu
 
 		private IEnumerator PlayShotSequence(Vector3 hitNormal, ParticleSystem[] shotVfx, int shotCount)
 		{
-			int[] playOrder = CreatePlayOrder(shotVfx.Length);
+			int[] burstOrder = CreateBurstOrder(shotVfx.Length);
+			int burstIndex = 0;
 			float elapsed = 0f;
 			float finish = 0f;
 
+			if (burstOrder.Length > 1) {
+				ShuffleBurstOrder(burstOrder);
+			}
+
 			for (int shotIndex = 0; shotIndex < shotCount; shotIndex++) {
+				if (burstIndex >= burstOrder.Length && burstOrder.Length > 0) {
+					burstIndex = 0;
+					if (burstOrder.Length > 1) {
+						ShuffleBurstOrder(burstOrder);
+					}
+				}
+
+				int muzzleIndex = burstOrder.Length > 0 ? burstOrder[burstIndex] : -1;
 				PlayShotAudio((shotIndex + 1) / (float)shotCount);
 				PlayRecoil(hitNormal);
-				finish = Mathf.Max(finish, PlayShotVfx(shotVfx, playOrder, shotIndex, elapsed));
+				finish = Mathf.Max(finish, PlayShotVfx(shotVfx, muzzleIndex, elapsed));
+				burstIndex++;
 
 				if (shotIndex < shotCount - 1 && m_BurstDelay > 0f) {
 					yield return new WaitForSecondsRealtime(m_BurstDelay);
@@ -159,12 +173,12 @@ namespace MainMenu
 			return bestFace;
 		}
 
-		private static float PlayShotVfx(ParticleSystem[] shotVfx, int[] playOrder, int shotIndex, float elapsedSeconds)
+		private static float PlayShotVfx(ParticleSystem[] shotVfx, int muzzleIndex, float elapsedSeconds)
 		{
-			if (shotVfx.Length == 0)
+			if (shotVfx.Length == 0 || muzzleIndex < 0 || muzzleIndex >= shotVfx.Length)
 				return elapsedSeconds;
 
-			ParticleSystem vfx = shotVfx[playOrder[shotIndex % playOrder.Length]];
+			ParticleSystem vfx = shotVfx[muzzleIndex];
 			if (vfx == null)
 				return elapsedSeconds;
 
@@ -172,7 +186,7 @@ namespace MainMenu
 			return elapsedSeconds + GetDurationSeconds(vfx);
 		}
 
-		private static int[] CreatePlayOrder(int count)
+		private static int[] CreateBurstOrder(int count)
 		{
 			if (count <= 0)
 				return Array.Empty<int>();
@@ -182,12 +196,15 @@ namespace MainMenu
 				order[i] = i;
 			}
 
-			for (int i = count - 1; i > 0; i--) {
+			return order;
+		}
+
+		private static void ShuffleBurstOrder(int[] order)
+		{
+			for (int i = order.Length - 1; i > 0; i--) {
 				int swapIndex = UnityEngine.Random.Range(0, i + 1);
 				(order[i], order[swapIndex]) = (order[swapIndex], order[i]);
 			}
-
-			return order;
 		}
 
 		private static float GetDurationSeconds(ParticleSystem particleSystem)

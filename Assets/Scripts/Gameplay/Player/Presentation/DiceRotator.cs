@@ -72,10 +72,10 @@ namespace Gameplay.Player.Presentation
 			float halfCell = cellSize * 0.5f;
 
 			return direction switch {
-				RollDirection.North => new Vector3(0.0f, -halfCell, halfCell),
-				RollDirection.South => new Vector3(0.0f, -halfCell, -halfCell),
-				RollDirection.East  => new Vector3(halfCell, -halfCell, 0.0f),
-				RollDirection.West  => new Vector3(-halfCell, -halfCell, 0.0f),
+				RollDirection.North => new(0.0f, -halfCell, halfCell),
+				RollDirection.South => new(0.0f,      -halfCell, -halfCell),
+				RollDirection.East  => new(halfCell,  -halfCell, 0.0f),
+				RollDirection.West  => new(-halfCell, -halfCell, 0.0f),
 				_                   => Vector3.zero
 			};
 		}

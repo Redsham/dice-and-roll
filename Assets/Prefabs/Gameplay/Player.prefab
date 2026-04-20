@@ -35,6 +35,7 @@ Transform:
   - {fileID: 1008}
   - {fileID: 1010}
   - {fileID: 5404207527113671124}
+  - {fileID: 2575852069676994525}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1002
@@ -84,48 +85,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d1060c25e74246bbebdac9d040c0ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Dice.View.DiceView
-  m_ShotFaces:
-  - <Face>k__BackingField: 0
-    <ShotVfx>k__BackingField:
-    - {fileID: 3133852497315751994}
-  - <Face>k__BackingField: 1
-    <ShotVfx>k__BackingField:
-    - {fileID: 504517366667012721}
-    - {fileID: 4438118747926518291}
-    - {fileID: 4486001066822839218}
-    - {fileID: 6158819006073299664}
-    - {fileID: 5654325384313740217}
-    - {fileID: 3058249332408137129}
-  - <Face>k__BackingField: 2
-    <ShotVfx>k__BackingField:
-    - {fileID: 3280360617332270909}
-    - {fileID: 9023379678899587415}
-    - {fileID: 8334052452288971606}
-  - <Face>k__BackingField: 3
-    <ShotVfx>k__BackingField:
-    - {fileID: 4713584124772452897}
-    - {fileID: 6791288673789631543}
-    - {fileID: 7524934887797822248}
-    - {fileID: 429059987988739276}
-  - <Face>k__BackingField: 4
-    <ShotVfx>k__BackingField:
-    - {fileID: 9176857903254181472}
-    - {fileID: 6938309610101994043}
-    - {fileID: 981167157515148428}
-    - {fileID: 2323724621665188442}
-    - {fileID: 4890843010185402392}
-  - <Face>k__BackingField: 5
-    <ShotVfx>k__BackingField:
-    - {fileID: 165277354574145831}
-    - {fileID: 3970693755481706272}
-  m_ShootCameraShake:
-    Amplitude: 0.2
-    Duration: 0.18
-    Frequency: 28
-    RotationalAmplitude: 1.2
   <Model>k__BackingField: {fileID: 1008}
+  <Burst>k__BackingField: {fileID: 2911361698507419994}
+  <Audio>k__BackingField: {fileID: 0}
   m_ShotDirectionView: {fileID: 1011}
-  m_Audio: {fileID: 2476398649066522975}
 --- !u!1 &1007
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +191,7 @@ GameObject:
   - component: {fileID: 1010}
   - component: {fileID: 1011}
   m_Layer: 0
-  m_Name: ShotDirection
+  m_Name: Shot-Direction-View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,6 +231,89 @@ MonoBehaviour:
   m_BeamThickness: 1
   m_DirectionAnimTime: 0.25
   m_DamageText: {fileID: 4840217605936471699}
+--- !u!1 &222489557969343809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2668259816858276080}
+  - component: {fileID: 2911361698507419994}
+  m_Layer: 0
+  m_Name: Burst
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2668259816858276080
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222489557969343809}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2575852069676994525}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2911361698507419994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222489557969343809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 142767871d9ba0944a7083c029dd4885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Player.Presentation.Combat.DiceShotBurstView
+  m_ShotFaces:
+  - <Face>k__BackingField: 0
+    <ShotVfx>k__BackingField:
+    - {fileID: 3133852497315751994}
+  - <Face>k__BackingField: 1
+    <ShotVfx>k__BackingField:
+    - {fileID: 504517366667012721}
+    - {fileID: 4438118747926518291}
+    - {fileID: 4486001066822839218}
+    - {fileID: 6158819006073299664}
+    - {fileID: 5654325384313740217}
+    - {fileID: 3058249332408137129}
+  - <Face>k__BackingField: 2
+    <ShotVfx>k__BackingField:
+    - {fileID: 3280360617332270909}
+    - {fileID: 9023379678899587415}
+    - {fileID: 8334052452288971606}
+  - <Face>k__BackingField: 3
+    <ShotVfx>k__BackingField:
+    - {fileID: 4713584124772452897}
+    - {fileID: 6791288673789631543}
+    - {fileID: 7524934887797822248}
+    - {fileID: 429059987988739276}
+  - <Face>k__BackingField: 4
+    <ShotVfx>k__BackingField:
+    - {fileID: 9176857903254181472}
+    - {fileID: 6938309610101994043}
+    - {fileID: 981167157515148428}
+    - {fileID: 2323724621665188442}
+    - {fileID: 4890843010185402392}
+  - <Face>k__BackingField: 5
+    <ShotVfx>k__BackingField:
+    - {fileID: 165277354574145831}
+    - {fileID: 3970693755481706272}
+  m_ShootCameraShake:
+    Amplitude: 0.2
+    Duration: 0.18
+    Frequency: 28
+    RotationalAmplitude: 1.2
 --- !u!1 &1011861080384050518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1172,38 @@ Transform:
   - {fileID: 3827426871648108549}
   - {fileID: 7922130839814122325}
   m_Father: {fileID: 1411891818738982050}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8851213008387729987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2575852069676994525}
+  m_Layer: 0
+  m_Name: Components
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2575852069676994525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8851213008387729987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2668259816858276080}
+  m_Father: {fileID: 1001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &284802946544704614
 PrefabInstance:

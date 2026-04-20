@@ -1,5 +1,6 @@
 using Gameplay.Player.Configuration;
 using Gameplay.Player.Presentation;
+using Gameplay.Player.Presentation.Combat;
 using TriInspector;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Gameplay.Player.Authoring
 		#region Inspector
 		// === References ===
 		[Title("References")]
-		[field: SerializeField, Required] public DiceView View { get; private set; }
+		[field: SerializeField, Required] public DiceView          View          { get; private set; }
 
 		// === Config ===
 		[Title("Config")]

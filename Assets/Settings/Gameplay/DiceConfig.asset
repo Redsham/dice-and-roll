@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Player.Configuration.DiceConfig
   <MaxHealth>k__BackingField: 12
   <ShootRange>k__BackingField: 3
-  <ShootBurstDelay>k__BackingField: 0.1
+  <ShootBurstDelay>k__BackingField: 0.06
