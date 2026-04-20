@@ -1,8 +1,10 @@
 using System;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Camera.Models;
+using Gameplay.Navigation.Tracing;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
+using Gameplay.World.Runtime;
 using TriInspector;
 using UnityEngine;
 using VContainer;
@@ -12,9 +14,9 @@ namespace Gameplay.Player.Presentation.Combat
 {
 	public sealed class DiceShotBurstView : MonoBehaviour
 	{
-		[Title("Shoot")]
-		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces = Array.Empty<DiceShotFaceDescriptor>();
-		[SerializeField] private CameraShakeSettings m_ShootCameraShake = CameraShakeSettings.Default;
+		[SerializeField] private DiceShotFaceDescriptor[] m_ShotFaces        = Array.Empty<DiceShotFaceDescriptor>();
+		[SerializeField] private CameraShakeSettings      m_ShootCameraShake = CameraShakeSettings.Default;
+		[SerializeField] private ParticleSystem           m_HitVfxPrefab;
 
 		private DiceView         m_View;
 		private DiceAudio        m_Audio;
@@ -45,11 +47,9 @@ namespace Gameplay.Player.Presentation.Combat
 				ShuffleBurstOrder(m_BurstOrder);
 			}
 		}
-		public void NextBurst()
+		public void NextBurst(GridTraceResult hit, GridBasis basis)
 		{
-			if (m_BurstShotCount <= 0) {
-				return;
-			}
+			if (m_BurstShotCount <= 0) return;
 
 			if (m_BurstOrder.Length > 0) {
 				if (m_BurstIndex >= m_BurstOrder.Length) {
@@ -68,6 +68,11 @@ namespace Gameplay.Player.Presentation.Combat
 			m_Audio?.PlayShot(normalizedShotProgress);
 			m_GameCameraController?.Shake(m_ShootCameraShake);
 			m_BurstShotProgress = Mathf.Min(m_BurstShotProgress + 1, m_BurstShotCount);
+
+			if (hit && m_HitVfxPrefab) {
+				Vector3 hitPosition = basis.GetCellCenter(hit.Point) + Vector3.up * 0.5f;
+				Instantiate(m_HitVfxPrefab, hitPosition, Quaternion.identity);
+			}
 		}
 		public void EndBurst()
 		{

@@ -87,7 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Dice.View.DiceView
   <Model>k__BackingField: {fileID: 1008}
   <Burst>k__BackingField: {fileID: 2911361698507419994}
-  <Audio>k__BackingField: {fileID: 0}
+  <Audio>k__BackingField: {fileID: 2476398649066522975}
   m_ShotDirectionView: {fileID: 1011}
 --- !u!1 &1007
 GameObject:
@@ -314,6 +314,7 @@ MonoBehaviour:
     Duration: 0.18
     Frequency: 28
     RotationalAmplitude: 1.2
+  m_HitVfxPrefab: {fileID: 6870930968389686395, guid: 46dd7036b09a269459044d6a9016b01c, type: 3}
 --- !u!1 &1011861080384050518
 GameObject:
   m_ObjectHideFlags: 0

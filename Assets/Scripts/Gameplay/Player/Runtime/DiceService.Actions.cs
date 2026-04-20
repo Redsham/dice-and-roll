@@ -54,7 +54,7 @@ namespace Gameplay.Player.Runtime
 					                                                     shot.Direction.ToVector2Int(),
 					                                                     m_Config.ShootRange);
 
-					m_DiceView.Burst.NextBurst();
+					m_DiceView.Burst.NextBurst(traceResult, basis);
 					traceResult.Entity?.ApplyDamage(1, m_Player.gameObject);
 
 					if (shotIndex < shot.ShotCount - 1) {

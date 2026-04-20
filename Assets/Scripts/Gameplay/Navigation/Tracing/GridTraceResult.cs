@@ -19,5 +19,7 @@ namespace Gameplay.Navigation.Tracing
 			Point        = point;
 			Entity       = entity;
 		}
+		
+		public static implicit operator bool(GridTraceResult result) => result.Hit;
 	}
 }
