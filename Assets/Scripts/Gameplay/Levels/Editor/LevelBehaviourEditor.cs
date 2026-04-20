@@ -13,6 +13,7 @@ namespace Gameplay.Levels.Editor
 	{
 		private static readonly Color PaintPreviewColor = new(0.22f, 0.78f, 0.32f, 0.2f);
 		private static Vector2Int? m_LastDraggedCell;
+		private static LevelBehaviour s_PendingPreviewSyncLevel;
 
 		public override void OnInspectorGUI()
 		{
@@ -38,6 +39,7 @@ namespace Gameplay.Levels.Editor
 		private void OnSceneGUI()
 		{
 			if (!LevelPaletteState.IsEnabled) {
+				FlushPendingPreviewSync();
 				m_LastDraggedCell = null;
 				return;
 			}
@@ -50,6 +52,7 @@ namespace Gameplay.Levels.Editor
 			Event sceneEvent = Event.current;
 			if (!TryGetHoveredCell(level.NavGrid, sceneEvent.mousePosition, out Vector2Int hoveredCell)) {
 				if (sceneEvent.type == EventType.MouseUp) {
+					FlushPendingPreviewSync();
 					m_LastDraggedCell = null;
 				}
 
@@ -64,7 +67,7 @@ namespace Gameplay.Levels.Editor
 
 			if (sceneEvent.type == EventType.MouseDown && sceneEvent.button == 0 && !sceneEvent.alt) {
 				m_LastDraggedCell = hoveredCell;
-				ApplyTool(level, hoveredCell);
+				ApplyTool(level, hoveredCell, flushPreviewImmediately: LevelPaletteState.ActiveTool == PaletteTool.Fill);
 				SceneView.RepaintAll();
 				sceneEvent.Use();
 				return;
@@ -73,7 +76,7 @@ namespace Gameplay.Levels.Editor
 			if (sceneEvent.type == EventType.MouseDrag && sceneEvent.button == 0 && !sceneEvent.alt) {
 				if (m_LastDraggedCell != hoveredCell) {
 					m_LastDraggedCell = hoveredCell;
-					ApplyTool(level, hoveredCell);
+					ApplyTool(level, hoveredCell, flushPreviewImmediately: false);
 					SceneView.RepaintAll();
 				}
 
@@ -82,11 +85,12 @@ namespace Gameplay.Levels.Editor
 			}
 
 			if (sceneEvent.type == EventType.MouseUp && sceneEvent.button == 0) {
+				FlushPendingPreviewSync();
 				m_LastDraggedCell = null;
 			}
 		}
 
-		private static void ApplyTool(LevelBehaviour level, Vector2Int cell)
+		private static void ApplyTool(LevelBehaviour level, Vector2Int cell, bool flushPreviewImmediately)
 		{
 			switch (LevelPaletteState.ActiveTool) {
 				case PaletteTool.Paint:
@@ -108,7 +112,20 @@ namespace Gameplay.Levels.Editor
 				EditorUtility.SetDirty(level.NavGrid);
 			}
 
-			level.PreviewNodesToGrid();
+			s_PendingPreviewSyncLevel = level;
+			if (flushPreviewImmediately) {
+				FlushPendingPreviewSync();
+			}
+		}
+
+		private static void FlushPendingPreviewSync()
+		{
+			if (s_PendingPreviewSyncLevel == null) {
+				return;
+			}
+
+			s_PendingPreviewSyncLevel.PreviewNodesToGrid();
+			s_PendingPreviewSyncLevel = null;
 		}
 
 		private static void PaintCell(LevelBehaviour level, Vector2Int cell)

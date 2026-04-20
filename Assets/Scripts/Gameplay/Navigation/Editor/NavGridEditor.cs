@@ -18,6 +18,16 @@ namespace Gameplay.Navigation.Editor
 		private static readonly Color CrushablePropOutlineColor       = new(0.98f, 0.92f, 0.35f, 0.9f);
 		private static readonly Color ActorFillColor                  = new(0.22f, 0.5f, 0.95f, 0.32f);
 		private static readonly Color ActorOutlineColor               = new(0.42f, 0.68f, 1.0f, 0.92f);
+		
+		private const float LABEL_VISIBILITY_PIXEL_THRESHOLD = 42f;
+
+		private static readonly Vector3[] CellCorners = new Vector3[4];
+		private static readonly Vector3[] InsetCellCorners = new Vector3[4];
+		private static Vector3[] s_GridLinePoints;
+		private static readonly GUIStyle LabelStyle = new(EditorStyles.boldLabel) {
+			alignment = TextAnchor.MiddleCenter,
+			normal = { textColor = Color.white }
+		};
 
 		public override void OnInspectorGUI()
 		{
@@ -43,15 +53,31 @@ namespace Gameplay.Navigation.Editor
 
 		private static void DrawGrid(NavGrid navGrid)
 		{
-			Vector3[] cellCorners = new Vector3[4];
 			Handles.color = GridColor;
-
-			for (int y = 0; y < navGrid.Height; y++) {
-				for (int x = 0; x < navGrid.Width; x++) {
-					GetCellCorners(navGrid, x, y, cellCorners);
-					Handles.DrawPolyLine(cellCorners[0], cellCorners[1], cellCorners[2], cellCorners[3], cellCorners[0]);
-				}
+			Vector3 origin = navGrid.transform.position;
+			Vector3 right = navGrid.transform.right;
+			Vector3 forward = navGrid.transform.forward;
+			int lineCount = navGrid.Width + navGrid.Height + 2;
+			int pointCount = lineCount * 2;
+			if (s_GridLinePoints == null || s_GridLinePoints.Length != pointCount) {
+				s_GridLinePoints = new Vector3[pointCount];
 			}
+
+			int pointIndex = 0;
+
+			for (int x = 0; x <= navGrid.Width; x++) {
+				Vector3 lineOrigin = origin + right * x;
+				s_GridLinePoints[pointIndex++] = lineOrigin;
+				s_GridLinePoints[pointIndex++] = lineOrigin + forward * navGrid.Height;
+			}
+
+			for (int y = 0; y <= navGrid.Height; y++) {
+				Vector3 lineOrigin = origin + forward * y;
+				s_GridLinePoints[pointIndex++] = lineOrigin;
+				s_GridLinePoints[pointIndex++] = lineOrigin + right * navGrid.Width;
+			}
+
+			Handles.DrawLines(s_GridLinePoints);
 		}
 
 		private static void DrawOccupiedCells(NavGrid navGrid)
@@ -60,27 +86,29 @@ namespace Gameplay.Navigation.Editor
 				return;
 			}
 
-			Vector3[] cellCorners = new Vector3[4];
+			bool shouldDrawLabels = ShouldDrawLabels(navGrid);
 
 			for (int y = 0; y < navGrid.Height; y++) {
 				for (int x = 0; x < navGrid.Width; x++) {
-					GetCellCorners(navGrid, x, y, cellCorners);
-					DrawEntity(navGrid.Nodes[x, y].Tile, navGrid, x, y, cellCorners, 0.0f);
-					DrawEntity(navGrid.Nodes[x, y].Actor, navGrid, x, y, cellCorners, 0.18f);
+					GetCellCorners(navGrid, x, y, CellCorners);
+					DrawEntity(navGrid.Nodes[x, y].Tile, navGrid, x, y, CellCorners, 0.0f, shouldDrawLabels);
+					DrawEntity(navGrid.Nodes[x, y].Actor, navGrid, x, y, CellCorners, 0.18f, shouldDrawLabels);
 				}
 			}
 		}
 
-		private static void DrawEntity(INavCellEntity entity, NavGrid navGrid, int x, int y, Vector3[] cellCorners, float inset)
+		private static void DrawEntity(INavCellEntity entity, NavGrid navGrid, int x, int y, Vector3[] cellCorners, float inset, bool shouldDrawLabel)
 		{
 			if (entity == null) {
 				return;
 			}
 
-			Vector3[] corners = inset <= 0.0f ? cellCorners : InsetCorners(cellCorners, inset);
+			Vector3[] corners = inset <= 0.0f ? cellCorners : InsetCorners(cellCorners, inset, InsetCellCorners);
 			GetColors(entity, out Color fillColor, out Color outlineColor);
 			Handles.DrawSolidRectangleWithOutline(corners, fillColor, outlineColor);
-			Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity));
+			if (shouldDrawLabel) {
+				Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity), LabelStyle);
+			}
 		}
 
 		private static void GetCellCorners(NavGrid navGrid, int x, int y, Vector3[] corners)
@@ -95,15 +123,27 @@ namespace Gameplay.Navigation.Editor
 			corners[3] = origin + right;
 		}
 
-		private static Vector3[] InsetCorners(Vector3[] corners, float inset)
+		private static Vector3[] InsetCorners(Vector3[] corners, float inset, Vector3[] buffer)
 		{
 			Vector3 center = (corners[0] + corners[2]) * 0.5f;
-			return new[] {
-				Vector3.Lerp(corners[0], center, inset),
-				Vector3.Lerp(corners[1], center, inset),
-				Vector3.Lerp(corners[2], center, inset),
-				Vector3.Lerp(corners[3], center, inset)
-			};
+			buffer[0] = Vector3.Lerp(corners[0], center, inset);
+			buffer[1] = Vector3.Lerp(corners[1], center, inset);
+			buffer[2] = Vector3.Lerp(corners[2], center, inset);
+			buffer[3] = Vector3.Lerp(corners[3], center, inset);
+			return buffer;
+		}
+
+		private static bool ShouldDrawLabels(NavGrid navGrid)
+		{
+			SceneView sceneView = SceneView.currentDrawingSceneView;
+			if (sceneView == null || sceneView.camera == null) {
+				return false;
+			}
+
+			Vector3 origin = navGrid.GetCellWorldCorner(0, 0);
+			Vector2 a = HandleUtility.WorldToGUIPoint(origin);
+			Vector2 b = HandleUtility.WorldToGUIPoint(origin + navGrid.transform.right);
+			return (b - a).sqrMagnitude >= LABEL_VISIBILITY_PIXEL_THRESHOLD * LABEL_VISIBILITY_PIXEL_THRESHOLD;
 		}
 
 		private static void RebuildGrid(NavGrid navGrid)

@@ -86,7 +86,11 @@ namespace Gameplay.Levels.Editor
 		private static void DrawToolToolbar()
 		{
 			EditorGUILayout.LabelField("Tool", EditorStyles.boldLabel);
-			LevelPaletteState.ActiveTool = (PaletteTool)GUILayout.Toolbar((int)LevelPaletteState.ActiveTool, s_ToolContents, GUILayout.Height(28f));
+			PaletteTool activeTool = LevelPaletteState.ActiveTool;
+			PaletteTool nextTool = (PaletteTool)GUILayout.Toolbar((int)activeTool, s_ToolContents, GUILayout.Height(28f));
+			if (nextTool != activeTool) {
+				LevelPaletteState.ActiveTool = nextTool;
+			}
 		}
 
 		private void DrawFloorLibrary(LevelPaletteSettings settings)

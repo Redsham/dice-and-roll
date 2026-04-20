@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: LevelPaletteSettings
+  m_EditorClassIdentifier: Assembly-CSharp-Editor:Gameplay.Levels.Editor:LevelPaletteSettings
+  m_IsEnabled: 1
+  m_ActiveLayer: 1
+  m_ActiveTool: 3
+  m_SelectedFloor: 0
+  m_SelectedObject: 1
+  m_FloorPrefabs:
+  - {fileID: 4682464217302211130, guid: 2b0c066499761d04896d6b3603e06a23, type: 3}
+  - {fileID: 4483130957580612544, guid: b4b2d254ed10be04484dabba277b0ee4, type: 3}
+  m_ObjectPrefabs:
+  - Prefab: {fileID: 8528683544836060527, guid: 6d97351b0d5680c42857435b04b8f1eb, type: 3}
+    Category: 0
+  - Prefab: {fileID: 3312406705695679734, guid: f7cf5a10c060ae048ac0fed574881490, type: 3}
+    Category: 0
+  - Prefab: {fileID: 6633064781729920729, guid: c4ffb22e4a744494d99ec41a3f063979, type: 3}
+    Category: 0
+  - Prefab: {fileID: 4109916336932565838, guid: a06f755fdab0a824caa5faf208a1d2b2, type: 3}
+    Category: 0
