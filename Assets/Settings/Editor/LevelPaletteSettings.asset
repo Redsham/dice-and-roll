@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-Editor:Gameplay.Levels.Editor:LevelPaletteSettings
   m_IsEnabled: 1
   m_ActiveLayer: 1
-  m_ActiveTool: 3
+  m_ActiveTool: 0
   m_SelectedFloor: 0
-  m_SelectedObject: 1
+  m_SelectedObject: 0
   m_FloorPrefabs:
   - {fileID: 4682464217302211130, guid: 2b0c066499761d04896d6b3603e06a23, type: 3}
   - {fileID: 4483130957580612544, guid: b4b2d254ed10be04484dabba277b0ee4, type: 3}

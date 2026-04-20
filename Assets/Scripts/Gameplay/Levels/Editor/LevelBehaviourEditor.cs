@@ -67,7 +67,8 @@ namespace Gameplay.Levels.Editor
 
 			if (sceneEvent.type == EventType.MouseDown && sceneEvent.button == 0 && !sceneEvent.alt) {
 				m_LastDraggedCell = hoveredCell;
-				ApplyTool(level, hoveredCell, flushPreviewImmediately: LevelPaletteState.ActiveTool == PaletteTool.Fill);
+				PaletteTool effectiveTool = GetEffectiveTool(sceneEvent);
+				ApplyTool(level, hoveredCell, effectiveTool, rotateBackwards: ShouldRotateBackwards(sceneEvent), flushPreviewImmediately: effectiveTool == PaletteTool.Fill);
 				SceneView.RepaintAll();
 				sceneEvent.Use();
 				return;
@@ -76,7 +77,7 @@ namespace Gameplay.Levels.Editor
 			if (sceneEvent.type == EventType.MouseDrag && sceneEvent.button == 0 && !sceneEvent.alt) {
 				if (m_LastDraggedCell != hoveredCell) {
 					m_LastDraggedCell = hoveredCell;
-					ApplyTool(level, hoveredCell, flushPreviewImmediately: false);
+					ApplyTool(level, hoveredCell, GetEffectiveTool(sceneEvent), rotateBackwards: ShouldRotateBackwards(sceneEvent), flushPreviewImmediately: false);
 					SceneView.RepaintAll();
 				}
 
@@ -90,9 +91,9 @@ namespace Gameplay.Levels.Editor
 			}
 		}
 
-		private static void ApplyTool(LevelBehaviour level, Vector2Int cell, bool flushPreviewImmediately)
+		private static void ApplyTool(LevelBehaviour level, Vector2Int cell, PaletteTool tool, bool rotateBackwards, bool flushPreviewImmediately)
 		{
-			switch (LevelPaletteState.ActiveTool) {
+			switch (tool) {
 				case PaletteTool.Paint:
 					PaintCell(level, cell);
 					break;
@@ -103,7 +104,7 @@ namespace Gameplay.Levels.Editor
 					EraseCell(level, cell);
 					break;
 				case PaletteTool.Rotate:
-					RotateCell(level, cell);
+					RotateCell(level, cell, rotateBackwards);
 					break;
 			}
 
@@ -116,6 +117,18 @@ namespace Gameplay.Levels.Editor
 			if (flushPreviewImmediately) {
 				FlushPendingPreviewSync();
 			}
+		}
+
+		private static PaletteTool GetEffectiveTool(Event sceneEvent)
+		{
+			return sceneEvent.shift && LevelPaletteState.ActiveTool == PaletteTool.Paint
+				? PaletteTool.Erase
+				: LevelPaletteState.ActiveTool;
+		}
+
+		private static bool ShouldRotateBackwards(Event sceneEvent)
+		{
+			return sceneEvent.shift && LevelPaletteState.ActiveTool == PaletteTool.Rotate;
 		}
 
 		private static void FlushPendingPreviewSync()
@@ -175,19 +188,27 @@ namespace Gameplay.Levels.Editor
 			}
 		}
 
-		private static void RotateCell(LevelBehaviour level, Vector2Int cell)
+		private static void RotateCell(LevelBehaviour level, Vector2Int cell, bool rotateBackwards)
 		{
 			switch (LevelPaletteState.ActiveLayer) {
 				case PaletteLayer.Floor:
 					if (level.TryGetTile(cell, out TileFloor tile) && tile != null) {
-						Undo.RecordObject(tile.transform, "Rotate Tile");
-						level.RotateTile(cell);
+						Undo.RecordObject(tile.transform, rotateBackwards ? "Rotate Tile Backward" : "Rotate Tile");
+						if (rotateBackwards) {
+							level.RotateTileBackward(cell);
+						} else {
+							level.RotateTile(cell);
+						}
 					}
 					break;
 				case PaletteLayer.Object:
 					if (level.TryGetTileBehaviourAt(cell, out TileBehaviour tileBehaviour) && tileBehaviour != null) {
-						Undo.RecordObject(tileBehaviour.transform, "Rotate TileBehaviour");
-						level.RotateTileBehaviour(cell);
+						Undo.RecordObject(tileBehaviour.transform, rotateBackwards ? "Rotate TileBehaviour Backward" : "Rotate TileBehaviour");
+						if (rotateBackwards) {
+							level.RotateTileBehaviourBackward(cell);
+						} else {
+							level.RotateTileBehaviour(cell);
+						}
 					}
 					break;
 			}

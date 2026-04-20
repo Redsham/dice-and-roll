@@ -127,6 +127,17 @@ namespace Gameplay.Levels.Authoring
 			return true;
 		}
 
+		public bool RotateTileBackward(Vector2Int gridPosition)
+		{
+			if (!TryGetTile(gridPosition, out TileFloor tile) || tile == null) {
+				return false;
+			}
+
+			tile.transform.Rotate(Vector3.up, -90f, Space.Self);
+			MarkTileChanged(tile);
+			return true;
+		}
+
 		public bool RotateTileBehaviour(Vector2Int gridPosition)
 		{
 			if (!TryGetTileBehaviourAt(gridPosition, out TileBehaviour tileBehaviour) || tileBehaviour == null) {
@@ -134,6 +145,17 @@ namespace Gameplay.Levels.Authoring
 			}
 
 			tileBehaviour.transform.Rotate(Vector3.up, 90f, Space.Self);
+			MarkTileBehaviourChanged(tileBehaviour);
+			return true;
+		}
+
+		public bool RotateTileBehaviourBackward(Vector2Int gridPosition)
+		{
+			if (!TryGetTileBehaviourAt(gridPosition, out TileBehaviour tileBehaviour) || tileBehaviour == null) {
+				return false;
+			}
+
+			tileBehaviour.transform.Rotate(Vector3.up, -90f, Space.Self);
 			MarkTileBehaviourChanged(tileBehaviour);
 			return true;
 		}
