@@ -17,7 +17,7 @@ using Gameplay.Navigation;
 using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
-using UI.Gameplay;
+using UI.Scenes.Gameplay;
 using VContainer;
 using VContainer.Unity;
 

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using VContainer;
 
 
-namespace UI.Gameplay
+namespace UI.Scenes.Gameplay.Elements
 {
 	public class PlayerHealthView : MonoBehaviour
 	{

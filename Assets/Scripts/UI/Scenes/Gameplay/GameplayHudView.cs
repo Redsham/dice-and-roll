@@ -1,9 +1,10 @@
 using Infrastructure.Services.Scenes;
+using UI.Scenes.Gameplay.Elements;
 using UnityEngine;
 using VContainer;
 
 
-namespace UI.Gameplay
+namespace UI.Scenes.Gameplay
 {
 	public sealed class GameplayHudView : MonoBehaviour
 	{

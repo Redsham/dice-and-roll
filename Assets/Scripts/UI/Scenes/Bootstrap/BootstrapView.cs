@@ -7,7 +7,7 @@ using UnityEngine;
 using VContainer;
 
 
-namespace UI.Bootstrap
+namespace UI.Scenes.Bootstrap
 {
 	public class BootstrapView : MonoBehaviour
 	{

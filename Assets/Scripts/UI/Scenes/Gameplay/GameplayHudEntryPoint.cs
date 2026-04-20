@@ -5,7 +5,7 @@ using VContainer;
 using VContainer.Unity;
 
 
-namespace UI.Gameplay
+namespace UI.Scenes.Gameplay
 {
 	public sealed class GameplayHudEntryPoint : IStartable, IDisposable
 	{

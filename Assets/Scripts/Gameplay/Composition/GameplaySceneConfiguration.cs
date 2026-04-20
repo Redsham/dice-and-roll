@@ -1,7 +1,7 @@
 using Gameplay.Levels.Data;
 using Gameplay.Player.Authoring;
 using TriInspector;
-using UI.Gameplay;
+using UI.Scenes.Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

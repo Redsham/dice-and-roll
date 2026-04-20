@@ -1,4 +1,4 @@
-using UI.Menu;
+using UI.Scenes.Menu;
 using VContainer;
 using VContainer.Unity;
 
