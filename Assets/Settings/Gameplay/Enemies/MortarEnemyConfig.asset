@@ -13,6 +13,24 @@ MonoBehaviour:
   m_Name: MortarEnemyConfig
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Enemies.Configs.MortarEnemyConfig
   <Id>k__BackingField: enemy_mortar
+  <DisplayName>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: Enemies
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: enemy_name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: Enemies
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: enemy_description
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <MaxHealth>k__BackingField: 5
   <ContactDamage>k__BackingField: 1
   <MoveDuration>k__BackingField: 0.24
@@ -22,3 +40,6 @@ MonoBehaviour:
   <BombardmentRadius>k__BackingField: 2
   <BombardmentDamage>k__BackingField: 3
   <PreferredDistance>k__BackingField: 4
+  references:
+    version: 2
+    RefIds: []

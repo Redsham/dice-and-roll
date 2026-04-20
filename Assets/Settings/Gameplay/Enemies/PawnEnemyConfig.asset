@@ -13,6 +13,24 @@ MonoBehaviour:
   m_Name: PawnEnemyConfig
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Enemies.Configs.PawnEnemyConfig
   <Id>k__BackingField: enemy_pawn
+  <DisplayName>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: Enemies
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: enemy_name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: Enemies
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: enemy_description
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <MaxHealth>k__BackingField: 4
   <ContactDamage>k__BackingField: 1
   <MoveDuration>k__BackingField: 0.22
@@ -20,3 +38,6 @@ MonoBehaviour:
   <SpawnDuration>k__BackingField: 0.3
   <ShootRange>k__BackingField: 2
   <ShootDamage>k__BackingField: 1
+  references:
+    version: 2
+    RefIds: []
