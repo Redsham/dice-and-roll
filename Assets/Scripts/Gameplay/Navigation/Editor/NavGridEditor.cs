@@ -24,10 +24,7 @@ namespace Gameplay.Navigation.Editor
 		private static readonly Vector3[] CellCorners = new Vector3[4];
 		private static readonly Vector3[] InsetCellCorners = new Vector3[4];
 		private static Vector3[] s_GridLinePoints;
-		private static readonly GUIStyle LabelStyle = new(EditorStyles.boldLabel) {
-			alignment = TextAnchor.MiddleCenter,
-			normal = { textColor = Color.white }
-		};
+		private static GUIStyle s_LabelStyle;
 
 		public override void OnInspectorGUI()
 		{
@@ -107,7 +104,7 @@ namespace Gameplay.Navigation.Editor
 			GetColors(entity, out Color fillColor, out Color outlineColor);
 			Handles.DrawSolidRectangleWithOutline(corners, fillColor, outlineColor);
 			if (shouldDrawLabel) {
-				Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity), LabelStyle);
+				Handles.Label(navGrid.GetCellWorldCenter(x, y), GetLabel(entity), GetLabelStyle());
 			}
 		}
 
@@ -144,6 +141,18 @@ namespace Gameplay.Navigation.Editor
 			Vector2 a = HandleUtility.WorldToGUIPoint(origin);
 			Vector2 b = HandleUtility.WorldToGUIPoint(origin + navGrid.transform.right);
 			return (b - a).sqrMagnitude >= LABEL_VISIBILITY_PIXEL_THRESHOLD * LABEL_VISIBILITY_PIXEL_THRESHOLD;
+		}
+
+		private static GUIStyle GetLabelStyle()
+		{
+			if (s_LabelStyle != null) {
+				return s_LabelStyle;
+			}
+
+			s_LabelStyle = new GUIStyle(EditorStyles.boldLabel);
+			s_LabelStyle.alignment = TextAnchor.MiddleCenter;
+			s_LabelStyle.normal.textColor = Color.white;
+			return s_LabelStyle;
 		}
 
 		private static void RebuildGrid(NavGrid navGrid)

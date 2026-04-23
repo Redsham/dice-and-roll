@@ -66,7 +66,7 @@ Material:
     - _Use_HDR: 0
     - _edge_2: 0.1
     m_Colors:
-    - _FogColor: {r: 0.65739584, g: 0.71148026, b: 0.745283, a: 1}
+    - _FogColor: {r: 0.102127075, g: 0.14150941, b: 0.12181824, a: 1}
     - _HDRColor: {r: 194.0117, g: 0, b: 0, a: 0}
     - _poos: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
