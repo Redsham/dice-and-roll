@@ -109,6 +109,15 @@ namespace Gameplay.Player.Runtime
 			return consumedDamage;
 		}
 
+		public void SuppressShotPreview()
+		{
+			m_DiceView?.SuppressShotPreview();
+		}
+		public void ReleaseShotPreviewSuppression()
+		{
+			m_DiceView?.ReleaseShotPreviewSuppression();
+		}
+
 		// === Cell Notifications ===
 		
 		private void EnterCell(Vector2Int cell)

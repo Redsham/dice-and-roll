@@ -69,6 +69,8 @@ MonoBehaviour:
   - {fileID: 2875784608312422757, guid: 1eae5112190bf48d7944d74c63043d29, type: 3}
   - {fileID: 6729876539980891950, guid: fa5fc1d86c0d54df59bbc2ab71578478, type: 3}
   <SpawnCount>k__BackingField: 5
+  <InitialSpawnDelay>k__BackingField: 1.25
+  <DelayBetweenSpawns>k__BackingField: 0.8
   <SpawnEffectPrefab>k__BackingField: {fileID: 1550618328887076099, guid: 1110ec3c657f6ea46978e4a87994c2b3, type: 3}
 --- !u!1 &2100
 GameObject:

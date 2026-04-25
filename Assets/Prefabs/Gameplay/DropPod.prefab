@@ -90,6 +90,14 @@ MonoBehaviour:
   m_FinalDropDuration: 0.18
   m_GroundSinkDepth: 1
   m_SpawnRevealDelay: 0.1
+  m_CameraStartFieldOfView: 20
+  m_CameraEndFieldOfView: 30
+  m_CameraFieldOfViewSmoothTime: 0.2
+  m_ImpactCameraShake:
+    Amplitude: 0.18
+    Duration: 0.22
+    Frequency: 24
+    RotationalAmplitude: 0.8
   m_WingClosedAngle: 0
   m_WingOpenedAngle: 90
   m_WingDeployDuration: 0.4

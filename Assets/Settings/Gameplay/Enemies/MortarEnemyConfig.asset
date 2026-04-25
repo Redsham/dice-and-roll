@@ -31,11 +31,10 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <MaxHealth>k__BackingField: 5
+  <MaxHealth>k__BackingField: 3
   <ContactDamage>k__BackingField: 1
   <MoveDuration>k__BackingField: 0.24
   <RotateDuration>k__BackingField: 0.18
-  <SpawnDuration>k__BackingField: 0.36
   <BombardmentIntervalTurns>k__BackingField: 3
   <BombardmentRadius>k__BackingField: 2
   <BombardmentDamage>k__BackingField: 3

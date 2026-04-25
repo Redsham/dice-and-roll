@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Gameplay.Camera.Abstractions;
+using Gameplay.Camera.Models;
 using LitMotion;
 using LitMotion.Extensions;
 using TriInspector;
 using UnityEngine;
+using VContainer;
 
 
 namespace Gameplay.Flow.Spawning.Effects
@@ -13,6 +16,36 @@ namespace Gameplay.Flow.Spawning.Effects
 	public sealed class DropPodSpawnEffect : EnemySpawnEffectBehaviour
 	{
 		private const float DUST_LIFETIME_PADDING = 0.25f;
+
+		private readonly struct FlightPath
+		{
+			public readonly Vector3    StartPosition;
+			public readonly Vector3    ThrusterPoint;
+			public readonly Vector3    HoverPoint;
+			public readonly Vector3    ImpactPoint;
+			public readonly Vector3    TargetPosition;
+			public readonly Vector3    Up;
+			public readonly Quaternion Rotation;
+
+			public FlightPath(
+				Vector3    startPosition,
+				Vector3    thrusterPoint,
+				Vector3    hoverPoint,
+				Vector3    impactPoint,
+				Vector3    targetPosition,
+				Vector3    up,
+				Quaternion rotation
+			)
+			{
+				StartPosition  = startPosition;
+				ThrusterPoint  = thrusterPoint;
+				HoverPoint     = hoverPoint;
+				ImpactPoint    = impactPoint;
+				TargetPosition = targetPosition;
+				Up             = up;
+				Rotation       = rotation;
+			}
+		}
 
 		[Title("References")]
 		[SerializeField] private Transform m_PodRoot;
@@ -28,6 +61,17 @@ namespace Gameplay.Flow.Spawning.Effects
 		[SerializeField, Min(0.05f)] private float m_FinalDropDuration   = 0.18f;
 		[SerializeField, Min(0f)]    private float m_GroundSinkDepth     = 0.08f;
 		[SerializeField, Min(0f)]    private float m_SpawnRevealDelay    = 0.2f;
+
+		[Title("Camera")]
+		[SerializeField, Min(1f)]    private float m_CameraStartFieldOfView = 47f;
+		[SerializeField, Min(1f)]    private float m_CameraEndFieldOfView   = 52f;
+		[SerializeField, Min(0.01f)] private float m_CameraFieldOfViewSmoothTime = 0.2f;
+		[SerializeField]             private CameraShakeSettings m_ImpactCameraShake = new() {
+			Amplitude           = 0.18f,
+			Duration            = 0.22f,
+			Frequency           = 24.0f,
+			RotationalAmplitude = 0.8f
+		};
 
 		[Title("Wings")]
 		[SerializeField] private float m_WingClosedAngle = 0f;
@@ -47,71 +91,85 @@ namespace Gameplay.Flow.Spawning.Effects
 		private readonly List<Vector3>        m_WingOpenAngles = new();
 		private readonly List<ParticleSystem> m_Thrusters      = new();
 
+		[Inject] private readonly IGameCameraController m_GameCameraController;
 
 		[Button]
 		private void AutoBind() => ResolveReferences();
 
-		public override async UniTask PlayAsync(EnemySpawnEffectContext context, CancellationToken cancellationToken)
+		public override Transform GetCameraFocusTarget() => ResolvePodRoot();
+
+		public override bool TryGetCameraFieldOfViewProfile(out SpawnEffectCameraFieldOfViewProfile profile)
+		{
+			profile = new() {
+				StartFieldOfView = m_CameraStartFieldOfView,
+				EndFieldOfView   = m_CameraEndFieldOfView,
+				SmoothTime       = m_CameraFieldOfViewSmoothTime
+			};
+
+			return true;
+		}
+		public override void Prepare(in EnemySpawnEffectContext context)
 		{
 			Transform podRoot = ResolvePodRoot();
-			ResolveReferences();
-
 			if (podRoot == null) {
 				throw new InvalidOperationException($"{nameof(DropPodSpawnEffect)} requires a root transform.");
 			}
 
-			Vector3    up             = context.Basis.Up;
-			Vector3    targetPosition = context.TargetPosition;
-			Vector3    startPosition  = targetPosition + up * m_InitialHeight;
-			Vector3    thrusterPoint  = targetPosition + up * m_ThrusterStartHeight;
-			Vector3    hoverPoint     = targetPosition + up * m_HoverHeight;
-			Vector3    impactPoint    = targetPosition - up * m_GroundSinkDepth;
-			Quaternion upright        = Quaternion.LookRotation(context.Basis.Forward, up);
-
+			FlightPath path = BuildFlightPath(context);
+			ResolveReferences();
 			podRoot.SetParent(context.Parent, worldPositionStays: true);
-			podRoot.SetPositionAndRotation(startPosition, upright);
+			podRoot.SetPositionAndRotation(path.StartPosition, path.Rotation);
 			ResetWings();
 			SetThrustersActive(false);
+		}
 
-			UniTask wingDeployTask = PlayWingDeployWhenReadyAsync(podRoot, targetPosition, up, m_WingDeployHeight, cancellationToken);
+		public override async UniTask PlayAsync(EnemySpawnEffectContext context, CancellationToken cancellationToken)
+		{
+			Transform podRoot = ResolvePodRoot();
+			Prepare(context);
+			FlightPath path   = BuildFlightPath(context);
+			UniTask    wingTask = PlayWingDeployWhenReadyAsync(podRoot, path, cancellationToken);
+			UniTask    fovTask  = ReportCameraFieldOfViewProgressAsync(podRoot, path, cancellationToken);
 
 			try {
-				await LMotion.Create(startPosition, thrusterPoint, m_FastDescentDuration)
-				             .WithEase(Ease.InQuad)
-				             .BindToPosition(podRoot)
-				             .ToUniTask(cancellationToken: cancellationToken);
-
-				SetThrustersActive(true);
-
-				await LMotion.Create(podRoot.position, hoverPoint, m_BrakeDuration)
-				             .WithEase(Ease.OutCubic)
-				             .BindToPosition(podRoot)
-				             .ToUniTask(cancellationToken: cancellationToken);
-
-				SetThrustersActive(false);
-
-				await LMotion.Create(podRoot.position, impactPoint, m_FinalDropDuration)
-				             .WithEase(Ease.InQuad)
-				             .BindToPosition(podRoot)
-				             .ToUniTask(cancellationToken: cancellationToken);
-
-				await wingDeployTask;
-
-				SpawnDust(targetPosition, upright, context.Parent);
-				if (m_SpawnRevealDelay > 0f) {
-					await UniTask.Delay(TimeSpan.FromSeconds(m_SpawnRevealDelay), cancellationToken: cancellationToken);
-				}
-			} finally {
+				await PlayLandingSequenceAsync(podRoot, path, cancellationToken);
+				await wingTask;
+				await PlayRevealSequenceAsync(path, context.Parent, cancellationToken);
+				await fovTask;
+			}
+			finally {
+				NotifyCameraFieldOfViewProgress(1.0f);
 				Destroy(podRoot.gameObject);
 			}
 		}
 
+		private FlightPath BuildFlightPath(in EnemySpawnEffectContext context)
+		{
+			Vector3 up             = context.Basis.Up;
+			Vector3 targetPosition = context.TargetPosition;
+
+			return new(
+				targetPosition + up * m_InitialHeight,
+				targetPosition + up * m_ThrusterStartHeight,
+				targetPosition + up * m_HoverHeight,
+				targetPosition - up * m_GroundSinkDepth,
+				targetPosition,
+				up,
+				Quaternion.LookRotation(context.Basis.Forward, up)
+			);
+		}
+
 		private Transform ResolvePodRoot()
 		{
-			if (m_PodRoot != null) return m_PodRoot;
+			if (m_PodRoot != null) {
+				return m_PodRoot;
+			}
 
-			return transform.parent != null ? transform.parent : transform;
+			return transform.parent != null
+				? transform.parent
+				: transform;
 		}
+
 		private void ResolveReferences()
 		{
 			Transform podRoot = ResolvePodRoot();
@@ -152,8 +210,6 @@ namespace Gameplay.Flow.Spawning.Effects
 			m_ThrusterCount = m_Thrusters.Count;
 		}
 
-		// === Wings ===
-		
 		private void ResetWings()
 		{
 			for (int i = 0; i < m_Wings.Count; i++) {
@@ -165,6 +221,7 @@ namespace Gameplay.Flow.Spawning.Effects
 				SetWingAngle(wing, m_WingClosedAngle);
 			}
 		}
+
 		private async UniTask PlayWingDeployAsync(CancellationToken cancellationToken)
 		{
 			if (m_Wings.Count == 0) {
@@ -188,12 +245,15 @@ namespace Gameplay.Flow.Spawning.Effects
 
 			await UniTask.WhenAll(tasks);
 		}
-		private async UniTask PlayWingDeployWhenReadyAsync(Transform podRoot, Vector3 targetPosition, Vector3 up, float deployHeight, CancellationToken cancellationToken)
-		{
-			if (m_Wings.Count == 0) return;
 
-			float deployDistance = Vector3.Dot(targetPosition + up * deployHeight, up);
-			while (podRoot != null && Vector3.Dot(podRoot.position, up) > deployDistance) {
+		private async UniTask PlayWingDeployWhenReadyAsync(Transform podRoot, FlightPath path, CancellationToken cancellationToken)
+		{
+			if (m_Wings.Count == 0) {
+				return;
+			}
+
+			float deployDistance = Vector3.Dot(path.TargetPosition + path.Up * m_WingDeployHeight, path.Up);
+			while (podRoot != null && Vector3.Dot(podRoot.position, path.Up) > deployDistance) {
 				cancellationToken.ThrowIfCancellationRequested();
 				await UniTask.Yield(cancellationToken);
 			}
@@ -201,8 +261,58 @@ namespace Gameplay.Flow.Spawning.Effects
 			await PlayWingDeployAsync(cancellationToken);
 		}
 
-		// === Thrusters ===
-		
+		private async UniTask PlayLandingSequenceAsync(Transform podRoot, FlightPath path, CancellationToken cancellationToken)
+		{
+			await MovePodAsync(podRoot, path.StartPosition, path.ThrusterPoint, m_FastDescentDuration, Ease.InQuad, cancellationToken);
+
+			SetThrustersActive(true);
+			await MovePodAsync(podRoot, podRoot.position, path.HoverPoint, m_BrakeDuration, Ease.OutCubic, cancellationToken);
+
+			SetThrustersActive(false);
+			await MovePodAsync(podRoot, podRoot.position, path.ImpactPoint, m_FinalDropDuration, Ease.InQuad, cancellationToken);
+			m_GameCameraController?.Shake(m_ImpactCameraShake);
+		}
+
+		private async UniTask MovePodAsync(Transform podRoot, Vector3 from, Vector3 to, float duration, Ease ease, CancellationToken cancellationToken)
+		{
+			await LMotion.Create(from, to, duration)
+			             .WithEase(ease)
+			             .BindToPosition(podRoot)
+			             .ToUniTask(cancellationToken: cancellationToken);
+		}
+
+		private async UniTask PlayRevealSequenceAsync(FlightPath path, Transform parent, CancellationToken cancellationToken)
+		{
+			SpawnDust(path.TargetPosition, path.Rotation, parent);
+			if (m_SpawnRevealDelay <= 0f) {
+				return;
+			}
+
+			await UniTask.Delay(TimeSpan.FromSeconds(m_SpawnRevealDelay), cancellationToken: cancellationToken);
+		}
+
+		private async UniTask ReportCameraFieldOfViewProgressAsync(Transform podRoot, FlightPath path, CancellationToken cancellationToken)
+		{
+			float totalDistance = Mathf.Max(0.001f, Vector3.Dot(path.StartPosition - path.ImpactPoint, path.Up));
+			NotifyCameraFieldOfViewProgress(0.0f);
+
+			while (podRoot != null) {
+				cancellationToken.ThrowIfCancellationRequested();
+
+				float remainingDistance = Vector3.Dot(podRoot.position - path.ImpactPoint, path.Up);
+				float progress          = 1.0f - Mathf.Clamp01(remainingDistance / totalDistance);
+				NotifyCameraFieldOfViewProgress(progress);
+
+				if (progress >= 0.999f) {
+					break;
+				}
+
+				await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
+			}
+
+			NotifyCameraFieldOfViewProgress(1.0f);
+		}
+
 		private void SetThrustersActive(bool isActive)
 		{
 			for (int i = 0; i < m_Thrusters.Count; i++) {
@@ -221,9 +331,7 @@ namespace Gameplay.Flow.Spawning.Effects
 				}
 			}
 		}
-		
-		// === VFX ===
-		
+
 		private void SpawnDust(Vector3 position, Quaternion rotation, Transform parent)
 		{
 			if (m_DustVfxPrefab == null) {
@@ -237,8 +345,6 @@ namespace Gameplay.Flow.Spawning.Effects
 			Destroy(dustInstance, lifetime);
 		}
 
-		// === Utils ===
-		
 		private static float GetParticleLifetime(GameObject root)
 		{
 			ParticleSystem[] systems = root.GetComponentsInChildren<ParticleSystem>(true);
@@ -257,10 +363,11 @@ namespace Gameplay.Flow.Spawning.Effects
 
 			return result;
 		}
+
 		private static void SetWingAngle(Transform wing, float angle)
 		{
 			Vector3 localEulerAngles = wing.localEulerAngles;
-			localEulerAngles.x    = angle;
+			localEulerAngles.x = angle;
 			wing.localEulerAngles = localEulerAngles;
 		}
 	}

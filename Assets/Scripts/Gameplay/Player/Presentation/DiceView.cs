@@ -31,6 +31,7 @@ namespace Gameplay.Player.Presentation
 		private int       m_ShootRange;
 		private bool      m_IsInitialized;
 		private bool      m_SuppressShotPreview;
+		private int       m_ExternalShotPreviewSuppressionCount;
 
 		[Inject] private readonly DiceShotAimService m_ShotAimService;
 
@@ -49,7 +50,7 @@ namespace Gameplay.Player.Presentation
 		}
 		private void Update()
 		{
-			if (!m_IsInitialized || m_SuppressShotPreview) {
+			if (!m_IsInitialized || IsShotPreviewSuppressed) {
 				return;
 			}
 
@@ -85,7 +86,21 @@ namespace Gameplay.Player.Presentation
 		public void ShowShotPreview()
 		{
 			m_SuppressShotPreview = false;
-			RefreshShotDirectionPreview(false);
+			if (!IsShotPreviewSuppressed) {
+				RefreshShotDirectionPreview(false);
+			}
+		}
+		public void SuppressShotPreview()
+		{
+			m_ExternalShotPreviewSuppressionCount++;
+			m_ShotDirectionView?.Hide();
+		}
+		public void ReleaseShotPreviewSuppression()
+		{
+			m_ExternalShotPreviewSuppressionCount = Mathf.Max(0, m_ExternalShotPreviewSuppressionCount - 1);
+			if (!IsShotPreviewSuppressed) {
+				RefreshShotDirectionPreview(false);
+			}
 		}
 
 		private void RefreshShotDirectionPreview(bool animateOnDirectionChange)
@@ -111,11 +126,15 @@ namespace Gameplay.Player.Presentation
 			m_SuppressShotPreview = !visible;
 
 			if (visible) {
-				RefreshShotDirectionPreview(false);
+				if (!IsShotPreviewSuppressed) {
+					RefreshShotDirectionPreview(false);
+				}
 				return;
 			}
 
 			m_ShotDirectionView?.Hide();
 		}
+
+		private bool IsShotPreviewSuppressed => m_SuppressShotPreview || m_ExternalShotPreviewSuppressionCount > 0;
 	}
 }
