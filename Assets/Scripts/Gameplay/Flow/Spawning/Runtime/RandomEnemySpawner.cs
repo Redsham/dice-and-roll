@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Enemies.Authoring;
-using Gameplay.Enemies.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Authoring.Enemies;
 using Gameplay.Levels.Runtime;
@@ -19,19 +18,24 @@ namespace Gameplay.Flow.Spawning.Runtime
 		private readonly LevelService       m_LevelService;
 		private readonly INavigationService m_NavigationService;
 		private readonly DiceService        m_PlayerService;
-		private readonly EnemyService       m_EnemyService;
+		private readonly EnemySpawnEffectPlayer m_SpawnEffectPlayer;
 
-		public RandomEnemySpawner(LevelService levelService, INavigationService navigationService, DiceService playerService, EnemyService enemyService)
+		public RandomEnemySpawner(
+			LevelService            levelService,
+			INavigationService      navigationService,
+			DiceService             playerService,
+			EnemySpawnEffectPlayer  spawnEffectPlayer
+		)
 		{
 			m_LevelService      = levelService;
 			m_NavigationService = navigationService;
 			m_PlayerService     = playerService;
-			m_EnemyService      = enemyService;
+			m_SpawnEffectPlayer = spawnEffectPlayer;
 		}
 
 		public async UniTask SpawnAsync(CancellationToken cancellationToken)
 		{
-			m_EnemyService.Clear();
+			m_SpawnEffectPlayer.Clear();
 
 			LevelBehaviour              level   = m_LevelService.CurrentLevel;
 			RandomEnemySpawnerAuthoring spawner = level != null ? level.GetComponentInChildren<RandomEnemySpawnerAuthoring>(true) : null;
@@ -53,7 +57,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 					continue;
 				}
 
-				await m_EnemyService.SpawnAsync(enemyPrefab, cell, cancellationToken);
+				await m_SpawnEffectPlayer.SpawnAsync(enemyPrefab, cell, spawner.SpawnEffectPrefab, cancellationToken);
 			}
 		}
 

@@ -41,6 +41,7 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.Register<DiceService>(Lifetime.Scoped);
 			builder.Register<DiceShotAimService>(Lifetime.Scoped);
 			builder.Register<EnemyService>(Lifetime.Scoped);
+			builder.Register<EnemySpawnEffectPlayer>(Lifetime.Scoped);
 
 			builder.Register<SingleLevelSequence>(Lifetime.Scoped).As<ILevelSequence>();
 			builder.Register<RandomEnemySpawner>(Lifetime.Scoped).As<IEnemySpawner>();

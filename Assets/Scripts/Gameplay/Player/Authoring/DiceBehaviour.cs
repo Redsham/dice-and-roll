@@ -1,6 +1,5 @@
 using Gameplay.Player.Configuration;
 using Gameplay.Player.Presentation;
-using Gameplay.Player.Presentation.Combat;
 using TriInspector;
 using UnityEngine;
 

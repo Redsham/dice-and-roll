@@ -35,6 +35,64 @@ Transform:
   - {fileID: 2809757342875644171}
   m_Father: {fileID: 2220054211611492281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &770000000000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 770000000000000002}
+  - component: {fileID: 770000000000000003}
+  m_Layer: 0
+  m_Name: SpawnEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &770000000000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770000000000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2220054211611492281}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &770000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20984ce0247450bb75d5c1d3beab0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Flow.Spawning.DropPodSpawnEffect
+  m_PodRoot: {fileID: 2220054211611492281}
+  m_DustVfxPrefab: {fileID: 259810849284661702, guid: b37634098d7b27b4dbd5eeae4243ac02, type: 3}
+  m_InitialHeight: 12
+  m_WingDeployHeight: 2.6
+  m_ThrusterStartHeight: 2
+  m_HoverHeight: 0.75
+  m_FastDescentDuration: 1
+  m_BrakeDuration: 0.35
+  m_FinalDropDuration: 0.18
+  m_GroundSinkDepth: 1
+  m_SpawnRevealDelay: 0.1
+  m_WingClosedAngle: 0
+  m_WingOpenedAngle: 90
+  m_WingDeployDuration: 0.4
 --- !u!1001 &1821018813559937106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130,6 +188,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 305fcac00b298624981e7908aca4249c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5491752530227699324}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 305fcac00b298624981e7908aca4249c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 770000000000000002}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 305fcac00b298624981e7908aca4249c, type: 3}
 --- !u!4 &2220054211611492281 stripped

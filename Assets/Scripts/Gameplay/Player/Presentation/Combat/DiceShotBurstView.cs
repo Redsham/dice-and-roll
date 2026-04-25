@@ -5,7 +5,6 @@ using Gameplay.Navigation.Tracing;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Domain.Combat;
 using Gameplay.World.Runtime;
-using TriInspector;
 using UnityEngine;
 using VContainer;
 

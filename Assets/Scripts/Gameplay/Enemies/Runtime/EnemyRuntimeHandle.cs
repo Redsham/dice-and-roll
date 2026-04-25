@@ -106,13 +106,19 @@ namespace Gameplay.Enemies.Runtime
 
 		// === Lifecycle ===
 
-		public async UniTask SpawnAsync(CancellationToken cancellationToken)
+		public async UniTask SpawnAsync(bool playSpawnAnimation, CancellationToken cancellationToken)
 		{
 			if (Behaviour is MortarEnemyBehaviour mortar && mortar.AimMarker != null) {
 				mortar.AimMarker.Hide();
 			}
 
-			await m_View.PlaySpawnAsync(m_State.Position, m_State.Facing, m_NavigationService.Basis, Config.SpawnDuration, cancellationToken);
+			if (playSpawnAnimation) {
+				await m_View.PlaySpawnAsync(m_State.Position, m_State.Facing, m_NavigationService.Basis, Config.SpawnDuration, cancellationToken);
+			}
+			else {
+				m_View.Snap(m_State.Position, m_State.Facing, m_NavigationService.Basis);
+			}
+
 			m_LevelNodeService.NotifyActorEntered(m_State.Position, Behaviour.gameObject);
 		}
 
