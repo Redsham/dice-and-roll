@@ -61,7 +61,7 @@ namespace Infrastructure.Services
 			Message.Value = "Loading menu...";
 			await m_Fade.ActionAsync(async () => {
 				await UniTask.WaitForSeconds(0.25f);
-				await m_SceneService.LoadSceneAsync("Menu");
+				await m_SceneService.LoadSceneAsync("1.Menu");
 			});
 		}
 

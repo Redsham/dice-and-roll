@@ -21,10 +21,10 @@ namespace Infrastructure.Scopes.Root
 		public async UniTask StartAsync(CancellationToken cancellation = new())
 		{
 			string startupScene = m_SceneService.GetActiveScene();
-			bool   isBootstrap  = startupScene == "Bootstrap";
+			bool   isBootstrap  = startupScene == "0.Bootstrap";
 
 			if (!isBootstrap) {
-				await m_SceneService.LoadSceneAsync("Bootstrap");
+				await m_SceneService.LoadSceneAsync("0.Bootstrap");
 			}
 
 			await UniTask.WaitUntil(() => m_BootstrapService.Initialized, cancellationToken: cancellation);

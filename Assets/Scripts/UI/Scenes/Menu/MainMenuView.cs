@@ -16,7 +16,7 @@ namespace UI.Scenes.Menu
 		public void Play()
 		{
 			Debug.Log($"[{nameof(MainMenuView)}] Starting game...");
-			m_Fade.ActionAsync(() => m_SceneService.LoadSceneAsync("Gameplay")).Forget();
+			m_Fade.ActionAsync(() => m_SceneService.LoadSceneAsync("2.Gameplay")).Forget();
 		}
 
 		public void Quit()

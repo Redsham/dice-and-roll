@@ -19,6 +19,8 @@ namespace Gameplay.Enemies.Runtime
 {
 	public sealed class EnemyRuntimeHandle : INavCellEntity
 	{
+		public event Action<EnemyRuntimeHandle> OnDied = delegate { };
+
 		// === Dependencies ===
 
 		private readonly DiceService            m_PlayerService;
@@ -34,6 +36,7 @@ namespace Gameplay.Enemies.Runtime
 
 		private          EnemyState         m_State;
 		private          Vector2Int?        m_PendingMortarCell;
+		private          bool               m_HasRaisedDied;
 
 		public EnemyRuntimeHandle(
 			EnemyBehaviour         enemyBehaviour,
@@ -145,6 +148,7 @@ namespace Gameplay.Enemies.Runtime
 					mortar.AimMarker.Hide();
 				}
 
+				RaiseDied();
 				Object.Destroy(Behaviour.gameObject);
 			}
 
@@ -272,6 +276,16 @@ namespace Gameplay.Enemies.Runtime
 			}
 
 			MortarTurnsUntilImpact--;
+		}
+
+		private void RaiseDied()
+		{
+			if (m_HasRaisedDied) {
+				return;
+			}
+
+			m_HasRaisedDied = true;
+			OnDied.Invoke(this);
 		}
 	}
 }

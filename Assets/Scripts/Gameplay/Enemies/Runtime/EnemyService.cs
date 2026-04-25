@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Composition;
@@ -32,55 +33,60 @@ namespace Gameplay.Enemies.Runtime
 		// === Runtime ===
 
 		private readonly List<EnemyRuntimeHandle> m_Enemies = new();
+		private          int                      m_AliveCount;
+		private          int                      m_SpawnedCount;
+		private          int                      m_DiedCount;
+		private          int?                     m_PlannedEnemyCount;
+
+		// === Events ===
+
+		public event Action<EnemyRuntimeHandle> OnSpawned         = delegate { };
+		public event Action<EnemyRuntimeHandle> OnDied            = delegate { };
+		public event Action                     OnTrackingChanged = delegate { };
 
 		public EnemyService(
-			GameplaySceneConfiguration configuration,
-			IObjectResolver            objectResolver,
-			INavigationService         navigationService,
-			DiceService                playerService,
-			IGameplayStateService      gameplayStateService,
-			LevelNodeService           levelNodeService
-		)
+			GameplaySceneConfiguration configuration, IObjectResolver       objectResolver,       INavigationService navigationService,
+			DiceService                playerService, IGameplayStateService gameplayStateService, LevelNodeService   levelNodeService)
 		{
-			m_Configuration         = configuration;
-			m_ObjectResolver        = objectResolver;
-			m_NavigationService     = navigationService;
-			m_PlayerService         = playerService;
-			m_GameplayStateService  = gameplayStateService;
-			m_LevelNodeService      = levelNodeService;
+			m_Configuration        = configuration;
+			m_ObjectResolver       = objectResolver;
+			m_NavigationService    = navigationService;
+			m_PlayerService        = playerService;
+			m_GameplayStateService = gameplayStateService;
+			m_LevelNodeService     = levelNodeService;
 		}
 
-		public int AliveCount
-		{
-			get
-			{
-				int count = 0;
-				for (int i = 0; i < m_Enemies.Count; i++) {
-					if (m_Enemies[i].IsAlive) {
-						count++;
-					}
-				}
-
-				return count;
-			}
-		}
+		public int  AliveCount                 => m_AliveCount;
+		public int  SpawnedCount               => m_SpawnedCount;
+		public int  DiedCount                  => m_DiedCount;
+		public int? PlannedEnemyCount          => m_PlannedEnemyCount;
+		public bool HasFinitePlannedEnemyCount => m_PlannedEnemyCount.HasValue;
+		public bool IsEncounterCleared         => HasFinitePlannedEnemyCount && m_AliveCount == 0 && m_DiedCount >= m_PlannedEnemyCount.Value;
 
 		public IReadOnlyList<EnemyRuntimeHandle> Enemies => m_Enemies;
 
 		public void Clear()
 		{
-			for (int i = 0; i < m_Enemies.Count; i++) {
-				if (m_Enemies[i].IsAlive) {
-					m_LevelNodeService.NotifyActorLeft(m_Enemies[i].State.Position, m_Enemies[i].Behaviour.gameObject);
-					m_NavigationService.TryClearEntity(m_Enemies[i].Cell, m_Enemies[i]);
-					Object.Destroy(m_Enemies[i].Behaviour.gameObject);
+			foreach (EnemyRuntimeHandle t in m_Enemies) {
+				t.OnDied -= HandleEnemyDied;
+				if (!t.IsAlive) {
+					continue;
 				}
+
+				m_LevelNodeService.NotifyActorLeft(t.State.Position, t.Behaviour.gameObject);
+				m_NavigationService.TryClearEntity(t.Cell, t);
+				Object.Destroy(t.Behaviour.gameObject);
 			}
 
 			m_Enemies.Clear();
+			m_AliveCount        = 0;
+			m_SpawnedCount      = 0;
+			m_DiedCount         = 0;
+			m_PlannedEnemyCount = 0;
+			OnTrackingChanged.Invoke();
 		}
 
-		public EnemyRuntimeHandle Spawn(EnemyBehaviour prefab, Vector2Int     cell)
+		public EnemyRuntimeHandle Spawn(EnemyBehaviour prefab, Vector2Int cell)
 		{
 			// === Validation ===
 
@@ -89,7 +95,7 @@ namespace Gameplay.Enemies.Runtime
 			}
 
 			EnemyBehaviour enemyBehaviour = m_ObjectResolver.Instantiate(prefab, m_Configuration.ActorParent);
-			GridBasis basis = m_NavigationService.Basis;
+			GridBasis      basis          = m_NavigationService.Basis;
 			enemyBehaviour.transform.SetPositionAndRotation(
 			                                                basis.GetCellCenter(cell) + basis.Up * ACTOR_HEIGHT_OFFSET,
 			                                                Quaternion.identity
@@ -98,35 +104,71 @@ namespace Gameplay.Enemies.Runtime
 			OverrideSpawnCell(enemyBehaviour, cell);
 
 			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_LevelNodeService);
+
 			m_Enemies.Add(handle);
+			handle.OnDied += HandleEnemyDied;
+
 			m_NavigationService.TrySetEntity(handle.Cell, handle);
 			handle.Spawn();
-			
+
+			m_AliveCount++;
+			m_SpawnedCount++;
+
+			OnSpawned.Invoke(handle);
+
 			return handle;
+		}
+
+		public void SetPlannedEnemyCount(int? count)
+		{
+			m_PlannedEnemyCount = count.HasValue ? Mathf.Max(0, count.Value) : null;
+			OnTrackingChanged.Invoke();
+		}
+
+		public void AddPlannedEnemyCount(int count)
+		{
+			if (count <= 0 || !m_PlannedEnemyCount.HasValue) {
+				return;
+			}
+
+			m_PlannedEnemyCount += count;
+			OnTrackingChanged.Invoke();
+		}
+
+		public void RemovePlannedEnemyCount(int count)
+		{
+			if (count <= 0 || !m_PlannedEnemyCount.HasValue) {
+				return;
+			}
+
+			m_PlannedEnemyCount = Mathf.Max(0, m_PlannedEnemyCount.Value - count);
+			OnTrackingChanged.Invoke();
 		}
 
 		public async UniTask ExecuteTurnAsync(CancellationToken cancellationToken)
 		{
 			for (int i = m_Enemies.Count - 1; i >= 0; i--) {
 				if (!m_Enemies[i].IsAlive) {
+					m_Enemies[i].OnDied -= HandleEnemyDied;
 					m_Enemies.RemoveAt(i);
 				}
 			}
 
-			for (int i = 0; i < m_Enemies.Count; i++) {
-				if (!m_Enemies[i].IsAlive) {
-					continue;
-				}
-
-				await m_Enemies[i].ExecuteTurnAsync(cancellationToken);
-				if (m_GameplayStateService.HasEnded) {
-					return;
-				}
+			foreach (EnemyRuntimeHandle t in m_Enemies.Where(t => t.IsAlive)) {
+				await t.ExecuteTurnAsync(cancellationToken);
+				if (m_GameplayStateService.HasEnded) return;
 			}
 
-			if (AliveCount == 0) {
+			if (IsEncounterCleared) {
 				m_GameplayStateService.End(GameplayEndReason.LevelCleared);
 			}
+		}
+
+		private void HandleEnemyDied(EnemyRuntimeHandle handle)
+		{
+			m_AliveCount = Mathf.Max(0, m_AliveCount - 1);
+			m_DiedCount++;
+			OnDied.Invoke(handle);
 		}
 
 		private static void OverrideSpawnCell(EnemyBehaviour enemyBehaviour, Vector2Int cell)

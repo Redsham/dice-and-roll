@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Gameplay.Camera.Abstractions;
 using Gameplay.Enemies.Authoring;
+using Gameplay.Enemies.Runtime;
 using Gameplay.Levels.Authoring;
 using Gameplay.Levels.Authoring.Enemies;
 using Gameplay.Levels.Runtime;
@@ -20,6 +21,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 		private readonly IGameCameraController m_GameCameraController;
 		private readonly INavigationService m_NavigationService;
 		private readonly DiceService        m_PlayerService;
+		private readonly EnemyService       m_EnemyService;
 		private readonly EnemySpawnEffectPlayer m_SpawnEffectPlayer;
 		private const float CAMERA_RETURN_BLEND_DURATION = 0.85f;
 
@@ -28,6 +30,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 			IGameCameraController   gameCameraController,
 			INavigationService      navigationService,
 			DiceService             playerService,
+			EnemyService            enemyService,
 			EnemySpawnEffectPlayer  spawnEffectPlayer
 		)
 		{
@@ -35,6 +38,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 			m_GameCameraController = gameCameraController;
 			m_NavigationService    = navigationService;
 			m_PlayerService        = playerService;
+			m_EnemyService         = enemyService;
 			m_SpawnEffectPlayer    = spawnEffectPlayer;
 		}
 
@@ -45,11 +49,19 @@ namespace Gameplay.Flow.Spawning.Runtime
 			LevelBehaviour              level   = m_LevelService.CurrentLevel;
 			RandomEnemySpawnerAuthoring spawner = level != null ? level.GetComponentInChildren<RandomEnemySpawnerAuthoring>(true) : null;
 			if (spawner == null || spawner.EnemyPrefabs == null || spawner.EnemyPrefabs.Length == 0 || spawner.SpawnCount <= 0) {
+				m_EnemyService.SetPlannedEnemyCount(0);
 				return;
 			}
 
+			m_EnemyService.SetPlannedEnemyCount(spawner.SpawnCount);
+
 			List<Vector2Int> availableCells = CollectAvailableCells(level.NavGrid, m_PlayerService.Position);
 			int              spawnCount     = Mathf.Min(spawner.SpawnCount, availableCells.Count);
+			int              skippedCount   = Mathf.Max(0, spawner.SpawnCount - spawnCount);
+
+			if (skippedCount > 0) {
+				m_EnemyService.RemovePlannedEnemyCount(skippedCount);
+			}
 
 			m_PlayerService.SuppressShotPreview();
 

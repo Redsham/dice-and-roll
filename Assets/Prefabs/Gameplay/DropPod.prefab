@@ -82,7 +82,7 @@ MonoBehaviour:
   m_PodRoot: {fileID: 2220054211611492281}
   m_DustVfxPrefab: {fileID: 259810849284661702, guid: b37634098d7b27b4dbd5eeae4243ac02, type: 3}
   m_InitialHeight: 12
-  m_WingDeployHeight: 2.6
+  m_WingDeployHeight: 4.2
   m_ThrusterStartHeight: 2
   m_HoverHeight: 0.75
   m_FastDescentDuration: 1
