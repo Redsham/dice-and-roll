@@ -15,19 +15,19 @@ MonoBehaviour:
   <Id>k__BackingField: enemy_mortar
   <DisplayName>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: Enemies
+      m_TableCollectionName: GUID:7f43b7197428432ea6f1121d6ae617c1
     m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: enemy_name
+      m_KeyId: 103
+      m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   <Description>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: Enemies
+      m_TableCollectionName: GUID:7f43b7197428432ea6f1121d6ae617c1
     m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: enemy_description
+      m_KeyId: 104
+      m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

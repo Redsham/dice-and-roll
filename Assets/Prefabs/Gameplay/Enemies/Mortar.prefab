@@ -393,6 +393,8 @@ GameObject:
   - component: {fileID: 8269672383073431476}
   - component: {fileID: 6729876539980891950}
   - component: {fileID: 8024660407220915919}
+  - component: {fileID: 1259588498812822524}
+  - component: {fileID: 509407162090812844}
   m_Layer: 0
   m_Name: Mortar
   m_TagString: Untagged
@@ -448,6 +450,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Enemies.Presentation.EnemyView
   m_ModelRoot: {fileID: 1794332173826160511}
+--- !u!114 &1259588498812822524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8502020848466261859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a15cba69f388754a99988583178d37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Tooltips.EnemyTooltipTrigger
+  m_Enemy: {fileID: 6729876539980891950}
+  m_TooltipPrefab: {fileID: 747338195328343464, guid: 58ec5c0a35ca0b7459c0943fbd68ed89, type: 3}
+  m_PresentationMode: 2
+  m_ScreenOffset: {x: 28, y: 20}
+  m_WorldAnchor: {fileID: 8269672383073431476}
+  m_WorldOffset: {x: 0, y: 0.5, z: 0}
+--- !u!65 &509407162090812844
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8502020848466261859}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &6944893221983038672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -474,11 +515,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8492f99ec54d4741997e695d538145e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8492f99ec54d4741997e695d538145e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8492f99ec54d4741997e695d538145e, type: 3}
       propertyPath: m_LocalRotation.w

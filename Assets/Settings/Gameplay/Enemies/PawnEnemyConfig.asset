@@ -15,19 +15,19 @@ MonoBehaviour:
   <Id>k__BackingField: enemy_pawn
   <DisplayName>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: Enemies
+      m_TableCollectionName: GUID:7f43b7197428432ea6f1121d6ae617c1
     m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: enemy_name
+      m_KeyId: 101
+      m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   <Description>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: Enemies
+      m_TableCollectionName: GUID:7f43b7197428432ea6f1121d6ae617c1
     m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: enemy_description
+      m_KeyId: 102
+      m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -35,7 +35,6 @@ MonoBehaviour:
   <ContactDamage>k__BackingField: 2
   <MoveDuration>k__BackingField: 0.22
   <RotateDuration>k__BackingField: 0.17
-  <SpawnDuration>k__BackingField: 0.3
   <ShootRange>k__BackingField: 2
   <ShootDamage>k__BackingField: 1
   references:

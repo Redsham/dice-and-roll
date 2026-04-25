@@ -186,9 +186,24 @@ namespace Gameplay.Camera.Runtime
 			m_ShakeRotationalAmplitude = Mathf.Max(m_ShakeRotationalAmplitude, settings.RotationalAmplitude);
 		}
 
+		public bool TryCreateScreenRay(Vector2 screenPosition, out Ray ray)
+		{
+			if (m_Camera == null) {
+				ray = default;
+				return false;
+			}
+
+			ray = m_Camera.ScreenPointToRay(screenPosition);
+			return true;
+		}
+
 		public bool TryProjectScreenPointToPlane(Vector2 screenPosition, Vector3 planeOrigin, Vector3 planeNormal, out Vector3 worldPoint)
 		{
-			Ray   ray   = m_Camera.ScreenPointToRay(screenPosition);
+			if (!TryCreateScreenRay(screenPosition, out Ray ray)) {
+				worldPoint = default;
+				return false;
+			}
+
 			Plane plane = new(planeNormal, planeOrigin);
 			if (plane.Raycast(ray, out float distance)) {
 				worldPoint = ray.GetPoint(distance);
@@ -197,6 +212,20 @@ namespace Gameplay.Camera.Runtime
 
 			worldPoint = default;
 			return false;
+		}
+
+		public bool TryProjectWorldToScreenPoint(Vector3 worldPoint, out Vector2 screenPoint, out bool isBehindCamera)
+		{
+			if (m_Camera == null) {
+				screenPoint    = default;
+				isBehindCamera = true;
+				return false;
+			}
+
+			Vector3 projectedPoint = m_Camera.WorldToScreenPoint(worldPoint);
+			screenPoint    = projectedPoint;
+			isBehindCamera = projectedPoint.z < 0.0f;
+			return !isBehindCamera;
 		}
 
 		private CameraPose EvaluatePose(float deltaTime)
