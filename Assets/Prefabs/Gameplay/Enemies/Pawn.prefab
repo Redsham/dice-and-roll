@@ -248,6 +248,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pawn
       objectReference: {fileID: 0}
+    - target: {fileID: 1748274172000990438, guid: 03befb8d7cd5bd845ade70237dc7d743, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f82d01b7171bef43aaf5e375c1fc4c0, type: 2}
     - target: {fileID: 2645455325476648588, guid: 03befb8d7cd5bd845ade70237dc7d743, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.93513525
