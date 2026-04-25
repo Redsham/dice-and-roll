@@ -29,18 +29,6 @@ namespace Gameplay.Enemies.Presentation
 			                                );
 		}
 
-		public async UniTask PlaySpawnAsync(Vector2Int cell, RollDirection facing, GridBasis basis, float duration, CancellationToken cancellationToken)
-		{
-			Snap(cell, facing, basis);
-
-			Vector3 targetScale = ModelRoot.localScale;
-			ModelRoot.localScale = Vector3.zero;
-
-			await LMotion.Create(Vector3.zero, targetScale, duration)
-			             .BindToLocalScale(ModelRoot)
-			             .ToUniTask(cancellationToken: cancellationToken);
-		}
-
 		public async UniTask PlayMoveAsync(Vector2Int from, Vector2Int to, GridBasis basis, float duration, CancellationToken cancellationToken)
 		{
 			await LMotion.Create(GetCellPosition(from, basis), GetCellPosition(to, basis), duration)

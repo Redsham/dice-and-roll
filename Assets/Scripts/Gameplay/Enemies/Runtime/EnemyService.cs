@@ -80,17 +80,7 @@ namespace Gameplay.Enemies.Runtime
 			m_Enemies.Clear();
 		}
 
-		public UniTask<EnemyRuntimeHandle> SpawnAsync(EnemyBehaviour prefab, Vector2Int cell, CancellationToken cancellationToken)
-		{
-			return SpawnAsync(prefab, cell, playSpawnAnimation: true, cancellationToken);
-		}
-
-		public async UniTask<EnemyRuntimeHandle> SpawnAsync(
-			EnemyBehaviour prefab,
-			Vector2Int     cell,
-			bool           playSpawnAnimation,
-			CancellationToken cancellationToken
-		)
+		public EnemyRuntimeHandle Spawn(EnemyBehaviour prefab, Vector2Int     cell)
 		{
 			// === Validation ===
 
@@ -110,7 +100,8 @@ namespace Gameplay.Enemies.Runtime
 			EnemyRuntimeHandle handle = new(enemyBehaviour, m_PlayerService, m_NavigationService, m_LevelNodeService);
 			m_Enemies.Add(handle);
 			m_NavigationService.TrySetEntity(handle.Cell, handle);
-			await handle.SpawnAsync(playSpawnAnimation, cancellationToken);
+			handle.Spawn();
+			
 			return handle;
 		}
 

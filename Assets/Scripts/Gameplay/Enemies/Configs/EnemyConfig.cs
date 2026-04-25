@@ -32,6 +32,5 @@ namespace Gameplay.Enemies.Configs
 		[Title("Animation")]
 		[field: SerializeField, Min(0.01f)] public float MoveDuration { get;   private set; } = 0.2f;
 		[field: SerializeField, Min(0.01f)] public float RotateDuration { get; private set; } = 0.18f;
-		[field: SerializeField, Min(0.01f)] public float SpawnDuration  { get; private set; } = 0.35f;
 	}
 }

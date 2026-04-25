@@ -31,8 +31,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <MaxHealth>k__BackingField: 4
-  <ContactDamage>k__BackingField: 1
+  <MaxHealth>k__BackingField: 5
+  <ContactDamage>k__BackingField: 2
   <MoveDuration>k__BackingField: 0.22
   <RotateDuration>k__BackingField: 0.17
   <SpawnDuration>k__BackingField: 0.3

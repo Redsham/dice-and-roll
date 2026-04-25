@@ -42,7 +42,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 		)
 		{
 			if (spawnEffectPrefab == null) {
-				return await m_EnemyService.SpawnAsync(enemyPrefab, cell, cancellationToken);
+				return m_EnemyService.Spawn(enemyPrefab, cell);
 			}
 
 			GameObject spawnEffectInstance = Object.Instantiate(spawnEffectPrefab, m_Configuration.ActorParent);
@@ -60,7 +60,7 @@ namespace Gameplay.Flow.Spawning.Runtime
 			                                    );
 
 			await spawnEffect.PlayAsync(context, cancellationToken);
-			return await m_EnemyService.SpawnAsync(enemyPrefab, cell, playSpawnAnimation: false, cancellationToken);
+			return m_EnemyService.Spawn(enemyPrefab, cell);
 		}
 	}
 }
