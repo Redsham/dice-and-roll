@@ -33,9 +33,11 @@ namespace Infrastructure.Scopes.Root
 			builder.Register<UIFade>(Lifetime.Singleton);
 
 			builder.Register<BootstrapService>(Lifetime.Singleton);
+			builder.Register<PlayerControlStateService>(Lifetime.Singleton);
 
 			// Register entry point
 			builder.RegisterEntryPoint<RootEntryPoint>();
+			builder.RegisterEntryPoint<UI.Tooltips.TooltipService>();
 		}
 	}
 }

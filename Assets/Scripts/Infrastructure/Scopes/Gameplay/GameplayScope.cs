@@ -18,7 +18,6 @@ using Gameplay.Nodes.Runtime;
 using Gameplay.Player.Runtime;
 using Gameplay.World.Runtime;
 using UI.Scenes.Gameplay;
-using UI.Tooltips;
 using VContainer;
 using VContainer.Unity;
 
@@ -56,7 +55,6 @@ namespace Infrastructure.Scopes.Gameplay
 			builder.RegisterEntryPoint<GameplayCameraInput>();
 			builder.RegisterEntryPoint<GameplayEntryPoint>();
 			builder.RegisterEntryPoint<GameplayHudEntryPoint>();
-			builder.RegisterEntryPoint<TooltipService>();
 		}
 	}
 }

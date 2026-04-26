@@ -10,6 +10,7 @@ namespace UI.Tooltips
 		[Title("Tooltip")]
 		[SerializeField] private TooltipBase             m_TooltipPrefab;
 		[SerializeField] private TooltipPresentationMode m_PresentationMode = TooltipPresentationMode.Automatic;
+		[SerializeField] private TooltipAvailability     m_Availability     = TooltipAvailability.Always;
 		[SerializeField] private Vector2                 m_ScreenOffset     = new(20.0f, 20.0f);
 
 		[Title("Content")]
@@ -23,6 +24,7 @@ namespace UI.Tooltips
 		public bool IsTooltipEnabled => isActiveAndEnabled && m_TooltipPrefab != null;
 		public TooltipBase TooltipPrefab => m_TooltipPrefab;
 		public TooltipPresentationMode PresentationMode => m_PresentationMode;
+		public TooltipAvailability Availability => m_Availability;
 		public Vector2 ScreenOffset => m_ScreenOffset;
 
 		public bool TryGetWorldAnchor(out Vector3 worldAnchor)

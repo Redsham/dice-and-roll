@@ -8,6 +8,7 @@ namespace UI.Tooltips
 		bool IsTooltipEnabled { get; }
 		TooltipBase TooltipPrefab { get; }
 		TooltipPresentationMode PresentationMode { get; }
+		TooltipAvailability Availability { get; }
 		Vector2 ScreenOffset { get; }
 
 		bool TryGetWorldAnchor(out Vector3 worldAnchor);

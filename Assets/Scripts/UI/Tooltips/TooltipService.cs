@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Gameplay.Camera.Abstractions;
+using Infrastructure.Services;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -16,10 +16,10 @@ namespace UI.Tooltips
 	{
 		private const int TOOLTIP_SORTING_ORDER = 2500;
 
-		[Inject] private readonly IObjectResolver        m_Resolver;
-		[Inject] private readonly ICameraScreenProjector m_CameraScreenProjector;
+		[Inject] private readonly IObjectResolver            m_Resolver;
+		[Inject] private readonly PlayerControlStateService  m_PlayerControlStateService;
 
-		private readonly List<RaycastResult> m_RaycastResults = new(); 
+		private readonly List<RaycastResult> m_RaycastResults = new();
 		private readonly RaycastHit[]        m_RaycastHits    = new RaycastHit[16];
 
 		private Canvas         m_Canvas;
@@ -32,6 +32,8 @@ namespace UI.Tooltips
 		public void Start()
 		{
 			GameObject canvasRoot = new("TooltipCanvas");
+			Object.DontDestroyOnLoad(canvasRoot);
+			
 			m_Canvas = canvasRoot.AddComponent<Canvas>();
 			m_Canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
 			m_Canvas.sortingOrder = TOOLTIP_SORTING_ORDER;
@@ -50,6 +52,11 @@ namespace UI.Tooltips
 			}
 
 			if (!TryResolveHoveredTrigger(pointerPosition, out HoveredTrigger hoveredTrigger)) {
+				HideCurrentTooltip();
+				return;
+			}
+
+			if (!IsTriggerAvailable(hoveredTrigger.Trigger)) {
 				HideCurrentTooltip();
 				return;
 			}
@@ -148,7 +155,7 @@ namespace UI.Tooltips
 
 			Vector2 screenAnchor = hoveredTrigger.ScreenAnchor;
 			if (hoveredTrigger.HasWorldAnchor) {
-				if (!m_CameraScreenProjector.TryProjectWorldToScreenPoint(hoveredTrigger.WorldAnchor, out screenAnchor, out bool isBehindCamera) || isBehindCamera) {
+				if (!TryProjectWorldToScreenPoint(hoveredTrigger.WorldAnchor, out screenAnchor, out bool isBehindCamera) || isBehindCamera) {
 					HideCurrentTooltip();
 					return;
 				}
@@ -230,7 +237,7 @@ namespace UI.Tooltips
 		private bool TryResolveWorldTrigger(Vector2 pointerPosition, out HoveredTrigger hoveredTrigger)
 		{
 			hoveredTrigger = default;
-			if (!m_CameraScreenProjector.TryCreateScreenRay(pointerPosition, out Ray ray)) {
+			if (!TryCreateScreenRay(pointerPosition, out Ray ray)) {
 				return false;
 			}
 
@@ -273,6 +280,51 @@ namespace UI.Tooltips
 
 			pointerPosition = default;
 			return false;
+		}
+
+		private bool IsTriggerAvailable(ITooltipTrigger trigger)
+		{
+			return trigger.Availability switch {
+				TooltipAvailability.Always                => true,
+				TooltipAvailability.RequiresPlayerControl => m_PlayerControlStateService.HasControl,
+				_                                         => true
+			};
+		}
+
+		private static bool TryCreateScreenRay(Vector2 screenPosition, out Ray ray)
+		{
+			Camera camera = GetCurrentCamera();
+			if (camera == null) {
+				ray = default;
+				return false;
+			}
+
+			ray = camera.ScreenPointToRay(screenPosition);
+			return true;
+		}
+
+		private static bool TryProjectWorldToScreenPoint(Vector3 worldPoint, out Vector2 screenPoint, out bool isBehindCamera)
+		{
+			Camera camera = GetCurrentCamera();
+			if (camera == null) {
+				screenPoint    = default;
+				isBehindCamera = true;
+				return false;
+			}
+
+			Vector3 projectedPoint = camera.WorldToScreenPoint(worldPoint);
+			screenPoint    = projectedPoint;
+			isBehindCamera = projectedPoint.z < 0.0f;
+			return !isBehindCamera;
+		}
+
+		private static Camera GetCurrentCamera()
+		{
+			if (Camera.main != null) {
+				return Camera.main;
+			}
+
+			return Object.FindFirstObjectByType<Camera>();
 		}
 
 		private static TooltipPresentationMode ResolvePresentationMode(HoveredTrigger hoveredTrigger)

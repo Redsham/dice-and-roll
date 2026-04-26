@@ -5,6 +5,7 @@ using Gameplay.Camera.Abstractions;
 using Gameplay.Composition;
 using Gameplay.Player.Domain;
 using Gameplay.Player.Runtime;
+using Infrastructure.Services;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,13 +21,15 @@ namespace Gameplay.Flow.Input
 		private readonly InputAction            m_ShootAction;
 		private readonly ICameraGridOrientation m_CameraGridOrientation;
 		private readonly DiceShotAimService     m_ShotAimService;
+		private readonly PlayerControlStateService m_PlayerControlStateService;
 
 		private UniTaskCompletionSource<PlayerTurnCommand> m_PendingTurn;
 
 		public KeyboardPlayerTurnSource(
 			GameplaySceneConfiguration configuration,
 			ICameraGridOrientation     cameraGridOrientation,
-			DiceShotAimService         shotAimService
+			DiceShotAimService         shotAimService,
+			PlayerControlStateService  playerControlStateService
 		)
 		{
 			if (configuration.InputActions == null) {
@@ -35,6 +38,7 @@ namespace Gameplay.Flow.Input
 
 			m_CameraGridOrientation =  cameraGridOrientation;
 			m_ShotAimService        =  shotAimService;
+			m_PlayerControlStateService = playerControlStateService;
 			m_MoveAction            =  configuration.InputActions.FindAction(PLAYER_MOVE_ACTION_NAME,  throwIfNotFound: true);
 			m_ShootAction           =  configuration.InputActions.FindAction(PLAYER_SHOOT_ACTION_NAME, throwIfNotFound: true);
 			m_MoveAction.performed  += OnMovePerformed;
@@ -50,6 +54,7 @@ namespace Gameplay.Flow.Input
 			}
 
 			m_PendingTurn = new();
+			m_PlayerControlStateService.SetControl(true);
 			cancellationToken.Register(() => {
 				UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 				if (pendingTurn == null) {
@@ -57,6 +62,7 @@ namespace Gameplay.Flow.Input
 				}
 
 				m_PendingTurn = null;
+				m_PlayerControlStateService.SetControl(false);
 				pendingTurn.TrySetCanceled(cancellationToken);
 			});
 
@@ -65,6 +71,7 @@ namespace Gameplay.Flow.Input
 
 		public void Dispose()
 		{
+			m_PlayerControlStateService.SetControl(false);
 			m_MoveAction.performed  -= OnMovePerformed;
 			m_ShootAction.performed -= OnShootPerformed;
 			m_MoveAction.Disable();
@@ -86,6 +93,7 @@ namespace Gameplay.Flow.Input
 
 				UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 				m_PendingTurn = null;
+				m_PlayerControlStateService.SetControl(false);
 				pendingTurn.TrySetResult(PlayerTurnCommand.Move(direction));
 			}
 		}
@@ -102,6 +110,7 @@ namespace Gameplay.Flow.Input
 
 			UniTaskCompletionSource<PlayerTurnCommand> pendingTurn = m_PendingTurn;
 			m_PendingTurn = null;
+			m_PlayerControlStateService.SetControl(false);
 			pendingTurn.TrySetResult(PlayerTurnCommand.Shoot(worldPoint));
 		}
 

@@ -24,6 +24,7 @@ namespace UI.Tooltips
 		public bool IsTooltipEnabled => isActiveAndEnabled && m_Enemy != null && m_TooltipPrefab != null;
 		public TooltipBase TooltipPrefab => m_TooltipPrefab;
 		public TooltipPresentationMode PresentationMode => m_PresentationMode;
+		public TooltipAvailability Availability => TooltipAvailability.RequiresPlayerControl;
 		public Vector2 ScreenOffset => m_ScreenOffset;
 
 		private void Reset()
