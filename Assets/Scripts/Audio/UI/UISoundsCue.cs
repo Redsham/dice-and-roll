@@ -3,6 +3,7 @@ namespace Audio.UI
 	public enum UISoundsCue
 	{
 		Click,
-		Hover
+		Hover,
+		Scroll
 	}
 }

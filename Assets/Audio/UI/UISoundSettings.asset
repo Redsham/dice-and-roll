@@ -29,6 +29,14 @@ MonoBehaviour:
       m_SubObjectGUID: 
       m_EditorAssetChanged: 0
     <Volume>k__BackingField: 0.3
+  - <Cue>k__BackingField: 2
+    <Sound>k__BackingField:
+      m_AssetGUID: 9ca7680e13b6547b8bbe0f2367bd3b63
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    <Volume>k__BackingField: 0.2
   m_Source:
     PlayOnAwake: 0
     Loop: 0

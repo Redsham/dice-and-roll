@@ -654,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5997869199544494413}
   - component: {fileID: 5971921792246410497}
+  - component: {fileID: 7526094311882609153}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -731,6 +732,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!114 &7526094311882609153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4094993285647658458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0852760c26194231a9f427258d735e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effects.UIDropdownItemSounds
+  m_Hover: 1
 --- !u!1 &4715586150664769013
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,6 +969,7 @@ GameObject:
   - component: {fileID: 651063841060049484}
   - component: {fileID: 8642771916245866735}
   - component: {fileID: 8619375943095352909}
+  - component: {fileID: 4189063752148306725}
   m_Layer: 5
   m_Name: UIDropdown
   m_TagString: Untagged
@@ -1086,6 +1101,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &4189063752148306725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378154975993251960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e479de5012114c2bac66c4afca1615ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effects.UIDropdownSounds
+  m_Click: 1
+  m_Hover: 1
+  m_ValueChanged: 1
 --- !u!1 &5525534597158555610
 GameObject:
   m_ObjectHideFlags: 0
