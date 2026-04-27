@@ -7,6 +7,8 @@ namespace Gameplay.Camera.Modes
 {
 	public sealed class OrbitCameraMode : ICameraMode, IOrbitCameraControl, IOrbitCameraZoomControl
 	{
+		private const float ROTATION_PREVIEW_SMOOTH_TIME = 0.045f;
+
 		private readonly OrbitCameraSettings m_Settings;
 
 		private Vector3 m_FocusPosition;
@@ -14,6 +16,7 @@ namespace Gameplay.Camera.Modes
 		private float   m_FocusHeight;
 		private float   m_CurrentYaw;
 		private float   m_YawVelocity;
+		private float   m_RotationPreviewYawOffset;
 		private float   m_CurrentZoomDistance;
 		private float   m_TargetZoomDistance;
 		private float   m_ZoomVelocity;
@@ -52,11 +55,18 @@ namespace Gameplay.Camera.Modes
 		public void RotateLeft()
 		{
 			QuarterTurns--;
+			m_RotationPreviewYawOffset = 0.0f;
 		}
 
 		public void RotateRight()
 		{
 			QuarterTurns++;
+			m_RotationPreviewYawOffset = 0.0f;
+		}
+
+		public void SetRotationPreview(float yawOffset)
+		{
+			m_RotationPreviewYawOffset = yawOffset;
 		}
 
 		public void AddZoomInput(float delta)
@@ -95,12 +105,15 @@ namespace Gameplay.Camera.Modes
 			                                     deltaTime
 			                                    );
 
-			float targetYaw = m_Settings.Yaw + 90.0f * QuarterTurns;
+			float targetYaw = m_Settings.Yaw + 90.0f * QuarterTurns + m_RotationPreviewYawOffset;
+			float rotationSmoothTime = Mathf.Approximately(m_RotationPreviewYawOffset, 0.0f)
+				                           ? m_Settings.RotationSmoothTime
+				                           : ROTATION_PREVIEW_SMOOTH_TIME;
 			m_CurrentYaw = Mathf.SmoothDampAngle(
 			                                     m_CurrentYaw,
 			                                     targetYaw,
 			                                     ref m_YawVelocity,
-			                                     m_Settings.RotationSmoothTime,
+			                                     rotationSmoothTime,
 			                                     Mathf.Infinity,
 			                                     deltaTime
 			                                    );
