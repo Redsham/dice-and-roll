@@ -134,6 +134,13 @@ namespace Gameplay.Camera.Runtime
 			}
 		}
 
+		public void SetOrbitRotationPreview(float yawOffset)
+		{
+			if (m_CurrentMode is IOrbitCameraControl orbitCameraControl) {
+				orbitCameraControl.SetRotationPreview(yawOffset);
+			}
+		}
+
 		public void AdjustOrbitZoom(float delta)
 		{
 			if (m_CurrentMode is IOrbitCameraZoomControl orbitCameraZoomControl) {

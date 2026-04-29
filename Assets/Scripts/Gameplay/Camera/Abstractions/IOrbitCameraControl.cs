@@ -5,5 +5,6 @@ namespace Gameplay.Camera.Abstractions
 		int  QuarterTurns { get; }
 		void RotateLeft();
 		void RotateRight();
+		void SetRotationPreview(float yawOffset);
 	}
 }

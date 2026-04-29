@@ -16,6 +16,7 @@ namespace Gameplay.Camera.Abstractions
 		void ClearTarget();
 		void RotateOrbitLeft();
 		void RotateOrbitRight();
+		void SetOrbitRotationPreview(float yawOffset);
 		void AdjustOrbitZoom(float     delta);
 		void SetFieldOfView(float fieldOfView, float smoothTime = 0.2f);
 		void Shake(CameraShakeSettings settings);

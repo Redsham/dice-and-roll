@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: UI-Sounds
   m_GUID: 4df97bf229b3a495a9228d2c067b5189
   m_SerializeEntries:
+  - m_GUID: 1d10f70d1bae24f0e83eeecd2a768bd4
+    m_Address: Assets/Audio/UI/UI_Scroll.ogg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9ca7680e13b6547b8bbe0f2367bd3b63
     m_Address: Assets/Audio/UI/UI_Click.wav
     m_ReadOnly: 0

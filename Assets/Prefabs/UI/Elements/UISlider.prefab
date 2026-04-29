@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 6598657317595619689}
   - component: {fileID: 9124422918713898664}
   - component: {fileID: 1746788977879396562}
+  - component: {fileID: 3579216048731564201}
   m_Layer: 5
   m_Name: UISlider
   m_TagString: Untagged
@@ -249,6 +250,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.Elements.UISlider
   m_Slider: {fileID: 9124422918713898664}
   m_Text: {fileID: 0}
+--- !u!114 &3579216048731564201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342459532324881437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af6127e422644ae9c4dc87e90cda896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effects.UISliderSounds
+  m_Click: 1
+  m_Hover: 1
+  m_Scroll: 1
+  m_ScrollCooldown: 0.05
 --- !u!1 &6674185098738340897
 GameObject:
   m_ObjectHideFlags: 0
